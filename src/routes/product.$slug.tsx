@@ -91,7 +91,7 @@ function ProductPage() {
   return (
     <>
       <section className="container mx-auto px-4 pt-10 pb-6">
-        <h1 className="text-center font-display text-3xl text-brand-ink">{product.name.includes("Acrylic") || product.name.includes("Photo") || product.name.includes("Clock") || product.name.includes("Pillow") || product.name.includes("Cutout") || product.name.includes("Album") || product.name.includes("Luggage") || product.name.includes("Monogram") || product.name.includes("Desk") || product.name.includes("Keychain") || product.name.includes("Fridge") || product.name.includes("Name plate") || product.name.includes("Name Plate") ? "Custom Acrylic Pictures" : product.name}</h1>
+        <h1 className="text-center font-display text-3xl text-brand-ink">Custom Acrylic Pictures</h1>
         <nav className="mt-4 text-xs text-muted-foreground text-center">
           <Link to="/" className="hover:text-brand-red">Home</Link>
           <span className="mx-1">/</span>
