@@ -25,25 +25,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-function Splash({ tone = "pink", children }: { tone?: "pink" | "yellow"; children: React.ReactNode }) {
-  const color = tone === "pink" ? "bg-brand-pink/70" : "bg-brand-yellow/70";
-  return (
-    <div className="relative mx-auto w-44 h-44">
-      <div className={`absolute inset-2 -rotate-6 rounded-[40%_60%_55%_45%/50%_45%_55%_50%] ${color} blur-[1px]`} />
-      <div className="absolute inset-0 grid place-items-center">{children}</div>
-    </div>
-  );
-}
-
-function PhotoBox({ label }: { label?: string }) {
-  return (
-    <div className="grid h-full w-full place-items-center rounded-lg bg-white shadow-md">
-      <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
-      {label && <span className="sr-only">{label}</span>}
-    </div>
-  );
-}
-
 function HomePage() {
   return (
     <>
