@@ -7,6 +7,11 @@ import { ProductTile } from "@/components/product/ProductTile";
 import banner1 from "@/assets/banner-1.png.asset.json";
 import banner2 from "@/assets/banner-2.png.asset.json";
 import banner3 from "@/assets/banner-3.png.asset.json";
+import cat1 from "@/assets/Cat1.png.asset.json";
+import cat2 from "@/assets/Cat2.png.asset.json";
+import cat3 from "@/assets/Cat3.png.asset.json";
+import catBg1 from "@/assets/Category_Bg1.png.asset.json";
+import catBg2 from "@/assets/Category_Bg2.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
