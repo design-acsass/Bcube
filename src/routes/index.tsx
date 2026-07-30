@@ -101,7 +101,7 @@ function Hero() {
               key={s.tagline}
               aria-label={`Go to slide ${k + 1}`}
               onClick={() => go(k)}
-              className={`h-2 rounded-full transition-all ${k === i ? "w-6 bg-brand-yellow" : "w-2 bg-white/70"}`}
+              className={`h-2 rounded-full transition-all ${k === i ? "w-6 bg-brand-yellow" : "w-2 bg-brand-ink/30"}`}
             />
           ))}
         </div>
