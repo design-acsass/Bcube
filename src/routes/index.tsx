@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Gift, Phone, Mail, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { customAcrylic, testimonials } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
+import banner1 from "@/assets/banner-1.png.asset.json";
+import banner2 from "@/assets/banner-2.png.asset.json";
+import banner3 from "@/assets/banner-3.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -53,33 +56,74 @@ function HomePage() {
   );
 }
 
-function Hero() {
-  return (
-    <section className="container mx-auto px-4 pt-10 pb-16">
-      <div className="text-center">
-        <h1 className="font-display text-4xl md:text-6xl text-brand-ink italic">
-          More Than Décor. <span className="text-brand-red not-italic">It's Personal.</span>
-        </h1>
-        <div className="mt-6">
-          <Link to="/product" className="inline-flex items-center gap-2 rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-brand-red-dark">
-            Explore <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
+const slides = [
+  { img: banner1.url, tagline: "More than Decor. It's Personal", alt: "Wall of framed family photographs" },
+  { img: banner2.url, tagline: "Show Appreciation in the right way!", alt: "Row of golden trophies and awards" },
+  { img: banner3.url, tagline: "Find the right gift for every story", alt: "Gift boxes tied with ribbons on a red backdrop" },
+];
 
-      {/* wall of frames */}
-      <div className="mt-12 rounded-3xl bg-muted/60 p-6">
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 h-64">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className={`rounded-md bg-white shadow ${i % 3 === 0 ? "row-span-2" : ""}`}>
-              <PhotoBox />
+function Hero() {
+  const [i, setI] = useState(0);
+  const go = (n: number) => setI((n + slides.length) % slides.length);
+
+  useEffect(() => {
+    const t = setInterval(() => setI((p) => (p + 1) % slides.length), 6000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <section className="container mx-auto px-4 pt-6 pb-14">
+      <div className="relative overflow-hidden rounded-3xl shadow-lg">
+        <div className="flex transition-transform duration-700 ease-out" style={{ transform: `translateX(-${i * 100}%)` }}>
+          {slides.map((s) => (
+            <div key={s.tagline} className="relative w-full shrink-0">
+              <img src={s.img} alt={s.alt} className="h-[300px] w-full object-cover md:h-[460px]" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
+              <div className="absolute inset-0 flex flex-col items-start justify-center gap-6 px-8 md:px-16">
+                <h1 className="max-w-xl font-display text-3xl italic leading-tight text-white drop-shadow md:text-5xl">
+                  {s.tagline}
+                </h1>
+                <Link
+                  to="/product"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-brand-red-dark"
+                >
+                  Explore <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
+          ))}
+        </div>
+
+        <button
+          aria-label="Previous slide"
+          onClick={() => go(i - 1)}
+          className="absolute left-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-brand-red shadow hover:bg-white"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          aria-label="Next slide"
+          onClick={() => go(i + 1)}
+          className="absolute right-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-brand-red shadow hover:bg-white"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+
+        <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2">
+          {slides.map((s, k) => (
+            <button
+              key={s.tagline}
+              aria-label={`Go to slide ${k + 1}`}
+              onClick={() => go(k)}
+              className={`h-2 rounded-full transition-all ${k === i ? "w-6 bg-brand-yellow" : "w-2 bg-white/70"}`}
+            />
           ))}
         </div>
       </div>
     </section>
   );
 }
+
 
 function Spotlight() {
   const items = [
