@@ -117,7 +117,7 @@ function Spotlight() {
             <div className="relative h-52 w-52">
               <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
               <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-32 w-32 object-contain drop-shadow-md" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-40 w-40 object-contain drop-shadow-md" />
             </div>
             <p className="mt-3 text-sm font-medium text-brand-ink">{it.label}</p>
           </Link>
