@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Gift, Phone, Mail, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { customAcrylic, testimonials } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
+import banner1 from "@/assets/banner-1.png.asset.json";
+import banner2 from "@/assets/banner-2.png.asset.json";
+import banner3 from "@/assets/banner-3.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
