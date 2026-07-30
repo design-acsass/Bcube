@@ -113,23 +113,28 @@ function Hero() {
 
 function Spotlight() {
   const items = [
-    { label: "Acrylic Photo", tone: "pink" as const },
-    { label: "Tumbler", tone: "pink" as const },
-    { label: "Monogram Mug", tone: "yellow" as const },
+    { label: "Custom Acrylic Pictures", img: cat1.url, tab: "custom" as const },
+    { label: "Corporate Gifting", img: cat2.url, tab: "corporate" as const },
+    { label: "Return Gifts", img: cat3.url, tab: "return" as const },
   ];
   return (
     <section className="container mx-auto px-4 py-10">
       <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
       <div className="mt-8 grid gap-8 sm:grid-cols-3 place-items-center">
         {items.map((it) => (
-          <div key={it.label} className="flex flex-col items-center">
-            <Splash tone={it.tone}>
-              <div className="h-28 w-28">
-                <PhotoBox />
-              </div>
-            </Splash>
+          <Link
+            key={it.label}
+            to="/product"
+            search={{ tab: it.tab }}
+            className="group flex flex-col items-center"
+          >
+            <div className="relative h-52 w-52">
+              <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
+              <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-32 w-32 object-contain drop-shadow-md" />
+            </div>
             <p className="mt-3 text-sm font-medium text-brand-ink">{it.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </section>
