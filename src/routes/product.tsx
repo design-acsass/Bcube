@@ -30,7 +30,9 @@ const tabs: { id: Tab; label: string; tone: "pink" | "yellow" | "mixed" }[] = [
 function ProductListing() {
   const { tab } = Route.useSearch();
   return (
-    <section className="container mx-auto px-4 py-12">
+    <section className="w-full px-4 md:px-10 py-12">
+      <h1 className="text-center font-display text-3xl text-brand-ink pt-6">Our Products</h1>
+
       <h1 className="text-center font-display text-3xl text-brand-ink">Our Products</h1>
 
       <div className="mt-10 grid gap-8 sm:grid-cols-3 place-items-center">

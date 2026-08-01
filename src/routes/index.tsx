@@ -67,12 +67,12 @@ function Hero() {
   }, []);
 
   return (
-    <section className="container mx-auto px-4 pt-6 pb-14">
-      <div className="relative overflow-hidden rounded-3xl shadow-lg">
+    <section className="w-full">
+      <div className="relative w-full overflow-hidden">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
-              <img src={s.img} alt={s.alt} className="h-[320px] w-full object-contain md:h-[560px]" loading="lazy" />
+              <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-8 text-center md:pt-14">
                 <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
