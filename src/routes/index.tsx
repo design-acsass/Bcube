@@ -72,7 +72,7 @@ function Hero() {
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
-              <img src={s.img} alt={s.alt} className="h-[300px] w-full object-cover md:h-[460px]" loading="lazy" />
+              <img src={s.img} alt={s.alt} className="h-[320px] w-full object-contain md:h-[560px]" loading="lazy" />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-8 text-center md:pt-14">
                 <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
@@ -205,21 +205,21 @@ function Testimonials() {
     { title: "Acrylic Nameplates", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail." },
   ];
   return (
-    <section className="container mx-auto px-4 py-12">
+    <section className="w-full py-12">
       <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Testimonials</h2>
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
-          <article key={it.title} className="rounded-2xl bg-brand-yellow p-6">
-            <div className="grid grid-cols-[1fr_140px] gap-4 items-start">
+          <article key={it.title} className="w-full bg-brand-yellow p-6">
+            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
+              <div className="aspect-video w-full rounded-lg bg-white/70 grid place-items-center">
+                <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
+              </div>
               <div>
                 <h3 className="font-display text-xl text-brand-ink">{it.title}</h3>
                 <p className="mt-2 text-sm text-brand-ink/80">{it.body}</p>
                 <button className="mt-4 inline-flex items-center gap-1 rounded-full border border-brand-red px-4 py-1.5 text-xs font-semibold text-brand-red hover:bg-white/50">
                   Explore <ArrowRight className="h-3 w-3" />
                 </button>
-              </div>
-              <div className="aspect-square rounded-lg bg-white/70 grid place-items-center">
-                <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
               </div>
             </div>
           </article>
