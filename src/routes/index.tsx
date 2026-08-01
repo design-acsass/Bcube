@@ -12,6 +12,12 @@ import cat2 from "@/assets/Cat2.png.asset.json";
 import cat3 from "@/assets/Cat3.png.asset.json";
 import catBg1 from "@/assets/Category_Bg1.png.asset.json";
 import catBg2 from "@/assets/Category_Bg2.png.asset.json";
+import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
+import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
+import pPillow from "@/assets/Custom_Pillows.png.asset.json";
+import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
+import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
+import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
