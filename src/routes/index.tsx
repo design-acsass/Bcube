@@ -230,17 +230,10 @@ function Testimonials() {
 
 function ContactStrip() {
   return (
-    <section className="bg-brand-red text-white my-12">
-      <div className="container mx-auto px-4 py-10 flex flex-wrap items-center justify-between gap-6">
-        <div>
-          <h3 className="font-display italic text-2xl">To Know More About Our Products</h3>
-          <div className="mt-3 flex flex-wrap gap-6 text-sm">
-            <span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> Call: +91 xxxxx xxxxx</span>
-            <span className="inline-flex items-center gap-2"><Mail className="h-4 w-4" /> Email: hello@yourdomain.com</span>
-          </div>
-        </div>
-        <Link to="/contact" className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-brand-red">Contact us</Link>
-      </div>
+    <section className="my-12">
+      <Link to="/contact" className="block">
+        <img src={ad2.url} alt="To know more about our products — call +91 93632 96919 or email bcube@gmail.com" className="w-full" loading="lazy" />
+      </Link>
     </section>
   );
 }
