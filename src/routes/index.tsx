@@ -188,10 +188,8 @@ function FeaturedGrid() {
 
 function RelationshipBanner() {
   return (
-    <section className="bg-brand-red text-white my-12">
-      <div className="container mx-auto px-4 py-14 text-center">
-        <h2 className="font-display italic text-3xl md:text-4xl">Enriching Relationship Through Thoughtful Gifts</h2>
-      </div>
+    <section className="my-12">
+      <img src={ad1.url} alt="Enriching relationships through thoughtful gifts" className="w-full" loading="lazy" />
     </section>
   );
 }
