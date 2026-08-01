@@ -165,18 +165,26 @@ function EnquireBand() {
 }
 
 function FeaturedGrid() {
-  const featured = customAcrylic.slice(0, 6);
+  const featured = [
+    { slug: "premium-acrylic-photo", name: "Premium Acrylic Photo", img: pPremium.url },
+    { slug: "framed-acrylic-photo", name: "Framed Acrylic Photos", img: pFramed.url },
+    { slug: "pillows", name: "Custom Pillows", img: pPillow.url },
+    { slug: "fridge-magnet", name: "Fridge Magnets", img: pMagnet.url },
+    { slug: "name-plate", name: "Custom Name Plates", img: pNamePlate.url },
+    { slug: "keychain", name: "Custom Keychains", img: pKeychain.url },
+  ];
   return (
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
       <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
         {featured.map((p) => (
-          <ProductTile key={p.slug} name={p.name} slug={p.slug} />
+          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
         ))}
       </div>
     </section>
   );
 }
+
 
 function RelationshipBanner() {
   return (
