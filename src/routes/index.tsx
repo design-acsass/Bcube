@@ -18,6 +18,9 @@ import pPillow from "@/assets/Custom_Pillows.png.asset.json";
 import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
+import ad1 from "@/assets/Advertisment_Card.png.asset.json";
+import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
+import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
