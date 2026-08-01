@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Gift, Phone, Mail, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
-import { customAcrylic, testimonials } from "@/data/products";
+import { testimonials } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
 import banner1 from "@/assets/banner-1.png.asset.json";
 import banner2 from "@/assets/banner-2.png.asset.json";
@@ -12,6 +12,12 @@ import cat2 from "@/assets/Cat2.png.asset.json";
 import cat3 from "@/assets/Cat3.png.asset.json";
 import catBg1 from "@/assets/Category_Bg1.png.asset.json";
 import catBg2 from "@/assets/Category_Bg2.png.asset.json";
+import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
+import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
+import pPillow from "@/assets/Custom_Pillows.png.asset.json";
+import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
+import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
+import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -159,18 +165,26 @@ function EnquireBand() {
 }
 
 function FeaturedGrid() {
-  const featured = customAcrylic.slice(0, 6);
+  const featured = [
+    { slug: "premium-acrylic-photo", name: "Premium Acrylic Photo", img: pPremium.url },
+    { slug: "framed-acrylic-photo", name: "Framed Acrylic Photos", img: pFramed.url },
+    { slug: "pillows", name: "Custom Pillows", img: pPillow.url },
+    { slug: "fridge-magnet", name: "Fridge Magnets", img: pMagnet.url },
+    { slug: "name-plate", name: "Custom Name Plates", img: pNamePlate.url },
+    { slug: "keychain", name: "Custom Keychains", img: pKeychain.url },
+  ];
   return (
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
       <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
         {featured.map((p) => (
-          <ProductTile key={p.slug} name={p.name} slug={p.slug} />
+          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
         ))}
       </div>
     </section>
   );
 }
+
 
 function RelationshipBanner() {
   return (
