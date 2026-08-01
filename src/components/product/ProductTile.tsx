@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function ProductTile({ name, slug, img, size = "md" }: Props) {
-  const dims = size === "lg" ? "h-56" : size === "sm" ? "h-32" : "h-44";
+  const dims = size === "lg" ? "h-72" : size === "sm" ? "h-44" : "h-60";
   const body = (
     <div className="group flex flex-col items-center">
       <div className="relative w-full">
