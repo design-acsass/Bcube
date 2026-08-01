@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Gift, Phone, Mail, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { ArrowRight, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { testimonials } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
 import banner1 from "@/assets/banner-1.png.asset.json";
@@ -18,6 +18,9 @@ import pPillow from "@/assets/Custom_Pillows.png.asset.json";
 import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
+import ad1 from "@/assets/Advertisment_Card.png.asset.json";
+import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
+import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -188,10 +191,8 @@ function FeaturedGrid() {
 
 function RelationshipBanner() {
   return (
-    <section className="bg-brand-red text-white my-12">
-      <div className="container mx-auto px-4 py-14 text-center">
-        <h2 className="font-display italic text-3xl md:text-4xl">Enriching Relationship Through Thoughtful Gifts</h2>
-      </div>
+    <section className="my-12">
+      <img src={ad1.url} alt="Enriching relationships through thoughtful gifts" className="w-full" loading="lazy" />
     </section>
   );
 }
@@ -230,17 +231,10 @@ function Testimonials() {
 
 function ContactStrip() {
   return (
-    <section className="bg-brand-red text-white my-12">
-      <div className="container mx-auto px-4 py-10 flex flex-wrap items-center justify-between gap-6">
-        <div>
-          <h3 className="font-display italic text-2xl">To Know More About Our Products</h3>
-          <div className="mt-3 flex flex-wrap gap-6 text-sm">
-            <span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> Call: +91 xxxxx xxxxx</span>
-            <span className="inline-flex items-center gap-2"><Mail className="h-4 w-4" /> Email: hello@yourdomain.com</span>
-          </div>
-        </div>
-        <Link to="/contact" className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-brand-red">Contact us</Link>
-      </div>
+    <section className="my-12">
+      <Link to="/contact" className="block">
+        <img src={ad2.url} alt="To know more about our products — call +91 93632 96919 or email bcube@gmail.com" className="w-full" loading="lazy" />
+      </Link>
     </section>
   );
 }
@@ -264,14 +258,7 @@ function MakeSpecial() {
 function PerfectGifts() {
   return (
     <section className="my-12">
-      <div className="container mx-auto px-4">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 py-14 text-center shadow-inner">
-          <Gift className="absolute left-8 top-1/2 -translate-y-1/2 h-16 w-16 text-amber-500/40" />
-          <Gift className="absolute right-8 top-1/2 -translate-y-1/2 h-16 w-16 text-amber-500/40" />
-          <h2 className="font-display italic text-4xl text-amber-700">Find The Perfect Gifts</h2>
-          <p className="mt-2 text-sm text-amber-900/70">Discover gifts by occasion, recipient, and budget.</p>
-        </div>
-      </div>
+      <img src={ad3.url} alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions" className="w-full" loading="lazy" />
     </section>
   );
 }
