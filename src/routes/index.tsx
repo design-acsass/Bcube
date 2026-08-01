@@ -264,14 +264,7 @@ function MakeSpecial() {
 function PerfectGifts() {
   return (
     <section className="my-12">
-      <div className="container mx-auto px-4">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 py-14 text-center shadow-inner">
-          <Gift className="absolute left-8 top-1/2 -translate-y-1/2 h-16 w-16 text-amber-500/40" />
-          <Gift className="absolute right-8 top-1/2 -translate-y-1/2 h-16 w-16 text-amber-500/40" />
-          <h2 className="font-display italic text-4xl text-amber-700">Find The Perfect Gifts</h2>
-          <p className="mt-2 text-sm text-amber-900/70">Discover gifts by occasion, recipient, and budget.</p>
-        </div>
-      </div>
+      <img src={ad3.url} alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions" className="w-full" loading="lazy" />
     </section>
   );
 }
