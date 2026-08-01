@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Gift, Phone, Mail, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { ArrowRight, Star, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { testimonials } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
 import banner1 from "@/assets/banner-1.png.asset.json";
