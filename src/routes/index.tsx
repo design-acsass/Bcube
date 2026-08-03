@@ -67,8 +67,8 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full">
-      <div className="relative w-full overflow-hidden">
+    <section className="w-full p-[40px]">
+      <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
@@ -104,6 +104,38 @@ function Hero() {
     </section>
   );
 }
+
+
+function Spotlight() {
+  const items = [
+    { label: "Custom Acrylic Pictures", img: cat1.url, tab: "custom" as const },
+    { label: "Corporate Gifting", img: cat2.url, tab: "corporate" as const },
+    { label: "Return Gifts", img: cat3.url, tab: "return" as const },
+  ];
+  return (
+    <section className="container mx-auto px-4 py-14">
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</h2>
+      <div className="mt-12 grid gap-10 sm:grid-cols-3 place-items-center">
+        {items.map((it) => (
+          <Link
+            key={it.label}
+            to="/product"
+            search={{ tab: it.tab }}
+            className="group flex flex-col items-center"
+          >
+            <div className="relative h-72 w-72">
+              <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
+              <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-56 w-56 object-contain drop-shadow-md" />
+            </div>
+            <p className="mt-4 text-lg font-medium text-brand-ink">{it.label}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 
 
 function Spotlight() {
