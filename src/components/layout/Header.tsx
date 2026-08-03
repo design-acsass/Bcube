@@ -34,8 +34,6 @@ export function Header() {
 
         <div className="ml-auto flex items-center gap-2">
 
-
-        <div className="flex items-center gap-2">
           <button className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-4 py-1.5 text-sm font-medium text-brand-red hover:bg-brand-red/5">
             Cart <ShoppingCart className="h-4 w-4" />
             {count > 0 && (
