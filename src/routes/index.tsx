@@ -208,11 +208,11 @@ function Testimonials() {
     { title: "Acrylic Nameplates", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail." },
   ];
   return (
-    <section className="w-full py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Testimonials</h2>
+    <section className="w-full py-12 px-[40px]">
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Testimonials</h2>
       <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
-          <article key={it.title} className="w-full bg-brand-yellow p-6">
+          <article key={it.title} className="w-full bg-brand-yellow p-[40px] rounded-[25px]">
             <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
               <div className="aspect-video w-full rounded-lg bg-white/70 grid place-items-center">
                 <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
@@ -243,14 +243,19 @@ function ContactStrip() {
 }
 
 function MakeSpecial() {
-  const cats = ["Corporate Gifting", "Return Gifts", "Premium Gifting", "Customised Pictures"];
+  const cats = [
+    { name: "Corporate Gifting", img: gCorporate.url },
+    { name: "Customised Pictures", img: gAcrylic.url },
+    { name: "Premium Gifting", img: gPremium.url },
+    { name: "Return Gifts", img: gReturn.url },
+  ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
-        <h2 className="font-display text-3xl text-brand-ink">Make<br/>Celebrations<br/>Special With</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 items-center">
+        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left">Make<br/>Celebrations<br/>Special With</h2>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10">
           {cats.map((c) => (
-            <ProductTile key={c} name={c} size="sm" />
+            <ProductTile key={c.name} name={c.name} img={c.img} />
           ))}
         </div>
       </div>
