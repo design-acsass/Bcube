@@ -1,14 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingCart, LogIn } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
+import logo from "@/assets/LOGO_1.png.asset.json";
 
 export function Header() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border">
-      <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-brand-red text-white font-display text-xl font-bold shadow-md">B</div>
+      <div className="container mx-auto flex items-center gap-6 px-4 py-3">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <img src={logo.url} alt="B Cube logo" className="h-11 w-11 object-contain" />
           <span className="font-display text-lg font-semibold text-brand-ink hidden sm:block">B Cube</span>
         </Link>
 
@@ -30,6 +31,9 @@ export function Header() {
             </Link>
           ))}
         </nav>
+
+        <div className="ml-auto flex items-center gap-2">
+
 
         <div className="flex items-center gap-2">
           <button className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-4 py-1.5 text-sm font-medium text-brand-red hover:bg-brand-red/5">
