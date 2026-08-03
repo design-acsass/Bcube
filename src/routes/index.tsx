@@ -25,6 +25,15 @@ import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
 import gPremium from "@/assets/Premiuim_Gifting.png.asset.json";
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
+import v3 from "@/assets/3.mp4.asset.json";
+import v4 from "@/assets/4.mp4.asset.json";
+import v10 from "@/assets/10.mp4.asset.json";
+import v15 from "@/assets/15.mp4.asset.json";
+import v16 from "@/assets/16.mp4.asset.json";
+import v20 from "@/assets/20.mp4.asset.json";
+import v24 from "@/assets/24.mp4.asset.json";
+import v14 from "@/assets/14.mp4.asset.json";
+import v23 from "@/assets/23.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -206,10 +215,10 @@ function RelationshipBanner() {
 
 function Testimonials() {
   const items = [
-    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit." },
-    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom." },
-    { title: "Acrylic Wall Clock Photos", body: "A clock and a photograph in one — a quietly delightful piece that ties your story into every minute of the day." },
-    { title: "Acrylic Nameplates", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail." },
+    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url] },
+    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url] },
+    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url] },
+    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [] },
   ];
   return (
     <section className="w-full py-12 px-[40px]">
@@ -218,8 +227,25 @@ function Testimonials() {
         {items.map((it) => (
           <article key={it.title} className="w-full bg-brand-yellow p-[40px] rounded-[25px]">
             <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
-              <div className="aspect-video w-full rounded-lg bg-white/70 grid place-items-center">
-                <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
+              <div className="grid grid-cols-3 gap-3">
+                {(it.videos.length ? it.videos : [null, null, null]).map((src, k) =>
+                  src ? (
+                    <video
+                      key={k}
+                      src={src}
+                      className="h-[320px] w-full rounded-lg object-cover bg-black/5"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                    />
+                  ) : (
+                    <div key={k} className="h-[320px] w-full rounded-lg bg-white/70 grid place-items-center">
+                      <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
+                    </div>
+                  )
+                )}
               </div>
               <div>
                 <h3 className="font-display text-xl text-brand-ink">{it.title}</h3>
