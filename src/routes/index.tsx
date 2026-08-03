@@ -21,6 +21,10 @@ import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import ad1 from "@/assets/Advertisment_Card.png.asset.json";
 import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
 import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
+import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
+import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
+import gPremium from "@/assets/Premiuim_Gifting.png.asset.json";
+import gReturn from "@/assets/Return_Gifts.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,8 +71,8 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full">
-      <div className="relative w-full overflow-hidden">
+    <section className="w-full p-[40px]">
+      <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
@@ -113,9 +117,9 @@ function Spotlight() {
     { label: "Return Gifts", img: cat3.url, tab: "return" as const },
   ];
   return (
-    <section className="container mx-auto px-4 py-10">
-      <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
-      <div className="mt-8 grid gap-8 sm:grid-cols-3 place-items-center">
+    <section className="container mx-auto px-4 py-14">
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</h2>
+      <div className="mt-12 grid gap-10 sm:grid-cols-3 place-items-center">
         {items.map((it) => (
           <Link
             key={it.label}
@@ -123,18 +127,21 @@ function Spotlight() {
             search={{ tab: it.tab }}
             className="group flex flex-col items-center"
           >
-            <div className="relative h-52 w-52">
+            <div className="relative h-72 w-72">
               <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
               <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-40 w-40 object-contain drop-shadow-md" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-56 w-56 object-contain drop-shadow-md" />
             </div>
-            <p className="mt-3 text-sm font-medium text-brand-ink">{it.label}</p>
+            <p className="mt-4 text-lg font-medium text-brand-ink">{it.label}</p>
           </Link>
         ))}
       </div>
     </section>
   );
 }
+
+
+
 
 function EnquireBand() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
@@ -178,7 +185,7 @@ function FeaturedGrid() {
   ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
       <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
         {featured.map((p) => (
           <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
@@ -205,11 +212,11 @@ function Testimonials() {
     { title: "Acrylic Nameplates", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail." },
   ];
   return (
-    <section className="w-full py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Testimonials</h2>
+    <section className="w-full py-12 px-[40px]">
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Testimonials</h2>
       <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
-          <article key={it.title} className="w-full bg-brand-yellow p-6">
+          <article key={it.title} className="w-full bg-brand-yellow p-[40px] rounded-[25px]">
             <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
               <div className="aspect-video w-full rounded-lg bg-white/70 grid place-items-center">
                 <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
@@ -240,14 +247,19 @@ function ContactStrip() {
 }
 
 function MakeSpecial() {
-  const cats = ["Corporate Gifting", "Return Gifts", "Premium Gifting", "Customised Pictures"];
+  const cats = [
+    { name: "Corporate Gifting", img: gCorporate.url },
+    { name: "Customised Pictures", img: gAcrylic.url },
+    { name: "Premium Gifting", img: gPremium.url },
+    { name: "Return Gifts", img: gReturn.url },
+  ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center">
-        <h2 className="font-display text-3xl text-brand-ink">Make<br/>Celebrations<br/>Special With</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 items-center">
+        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left">Make<br/>Celebrations<br/>Special With</h2>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10">
           {cats.map((c) => (
-            <ProductTile key={c} name={c} size="sm" />
+            <ProductTile key={c.name} name={c.name} img={c.img} />
           ))}
         </div>
       </div>
@@ -268,7 +280,7 @@ function CustomerStories() {
   const items = testimonials;
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Customer's Stories</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Customer's Stories</h2>
       <div className="relative">
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((t) => (
