@@ -185,7 +185,7 @@ function FeaturedGrid() {
   ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
       <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
         {featured.map((p) => (
           <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
@@ -280,7 +280,7 @@ function CustomerStories() {
   const items = testimonials;
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Customer's Stories</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Customer's Stories</h2>
       <div className="relative">
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((t) => (
