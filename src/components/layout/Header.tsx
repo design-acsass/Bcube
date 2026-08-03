@@ -6,7 +6,7 @@ import logo from "@/assets/LOGO.png.asset.json";
 export function Header() {
   const { count } = useCart();
   return (
-    <header className="sticky top-0 z-40 bg-transparent">
+    <header className="sticky top-0 z-40 bg-white/30 backdrop-blur-xl border-b border-white/40">
       <div className="container mx-auto flex items-center gap-6 px-4 py-3">
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <img src={logo.url} alt="B Cube logo" className="h-11 w-11 object-contain" />
