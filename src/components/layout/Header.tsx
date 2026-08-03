@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingCart, LogIn } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
-import logo from "@/assets/LOGO_1.png.asset.json";
+import logo from "@/assets/LOGO.png.asset.json";
 
 export function Header() {
   const { count } = useCart();
   return (
-    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border">
+    <header className="sticky top-0 z-40 bg-transparent">
       <div className="container mx-auto flex items-center gap-6 px-4 py-3">
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <img src={logo.url} alt="B Cube logo" className="h-11 w-11 object-contain" />
