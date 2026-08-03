@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Youtube, MessageCircle } from "lucide-react";
 import { NewsletterStrip } from "./NewsletterStrip";
+import logo from "@/assets/LOGO.png.asset.json";
 
 export function Footer() {
   return (
@@ -27,7 +28,7 @@ export function Footer() {
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-white/90">
             <span>© 2026 B Cube. All rights reserved.</span>
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-brand-ink text-brand-yellow font-display font-bold">B</div>
+            <img src={logo.url} alt="B Cube logo" className="h-12 w-12 rounded-full bg-white object-contain p-1" />
             <div className="flex gap-6">
               <a href="#" className="hover:underline">Terms of Service</a>
               <a href="#" className="hover:underline">Privacy Policy</a>
