@@ -10,12 +10,17 @@ type Props = {
 };
 
 export function ProductTile({ name, slug, img, size = "md" }: Props) {
-  const dims = size === "lg" ? "h-72" : size === "sm" ? "h-44" : "h-60";
+  const dims =
+    size === "lg"
+      ? "h-44 sm:h-56 md:h-72"
+      : size === "sm"
+        ? "h-28 sm:h-36 md:h-44"
+        : "h-36 sm:h-48 md:h-60";
   const body = (
-    <div className="group flex flex-col items-center">
+    <div className="group flex min-w-0 flex-col items-center">
       <div className="relative w-full">
         {/* red shelf */}
-        <div className="absolute inset-x-[22%] bottom-0 h-20 rounded-2xl bg-brand-red shadow-md" />
+        <div className="absolute inset-x-[22%] bottom-0 h-12 sm:h-16 md:h-20 rounded-xl md:rounded-2xl bg-brand-red shadow-md" />
         {/* product image */}
         <div className={`relative mx-auto flex ${dims} w-[80%] items-center justify-center transition-transform duration-300 group-hover:-translate-y-1`}>
           {img ? (
