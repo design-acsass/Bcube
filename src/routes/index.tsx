@@ -34,6 +34,16 @@ import v20 from "@/assets/20.mp4.asset.json";
 import v24 from "@/assets/24.mp4.asset.json";
 import v14 from "@/assets/14.mp4.asset.json";
 import v23 from "@/assets/23.mp4.asset.json";
+import v32 from "@/assets/32.mp4.asset.json";
+import v34 from "@/assets/3-2.mp4.asset.json";
+import v29 from "@/assets/29.mp4.asset.json";
+import v30 from "@/assets/30.mp4.asset.json";
+import v7 from "@/assets/7.mp4.asset.json";
+import v9 from "@/assets/9.mp4.asset.json";
+import v28 from "@/assets/28.mp4.asset.json";
+import v6 from "@/assets/6.mp4.asset.json";
+import v8 from "@/assets/8.mp4.asset.json";
+import v12 from "@/assets/12.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
