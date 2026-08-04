@@ -33,7 +33,7 @@ export function ProductTile({ name, slug, img, size = "md" }: Props) {
           <span className="sr-only">{name}</span>
         </div>
       </div>
-      <p className="mt-6 text-center text-sm font-medium text-brand-ink">{name}</p>
+      <p className="mt-4 md:mt-6 text-center text-xs sm:text-sm font-medium text-brand-ink">{name}</p>
     </div>
   );
   if (slug) {
