@@ -228,7 +228,7 @@ function Testimonials() {
     { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url] },
     { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url] },
     { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url] },
-    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url] },
+    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url] },
   ];
   return (
     <section className="w-full py-12 px-4 sm:px-6 md:px-[40px]">
