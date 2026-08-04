@@ -287,13 +287,13 @@ function MakeSpecial() {
   const cats = [
     { name: "Corporate Gifting", img: gCorporate.url },
     { name: "Customised Pictures", img: gAcrylic.url },
-    { name: "Premium Gifting", img: gPremium.url },
+    { name: "Premium Gifting", img: cat2.url },
     { name: "Return Gifts", img: gReturn.url },
   ];
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 items-center">
-        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left">Make<br/>Celebrations<br/>Special With</h2>
+        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left md:ml-16 lg:ml-24">Make<br/>Celebrations<br/>Special With</h2>
         <div className="grid grid-cols-2 gap-x-6 gap-y-10">
           {cats.map((c) => (
             <ProductTile key={c.name} name={c.name} img={c.img} />
@@ -317,18 +317,15 @@ function CustomerStories() {
   const items = testimonials;
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Customer's Stories</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Customer's Stories</h2>
+      <p className="mt-2 mb-8 text-center text-sm font-medium tracking-wide text-brand-ink/70">Customer Reviews for BCUBE</p>
       <div className="relative">
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((t) => (
             <article key={t.name} className="rounded-2xl bg-brand-red p-6 text-white text-center">
-              <div className="mx-auto h-32 w-32 rounded-lg bg-white/15 grid place-items-center">
-                <ImageIcon className="h-8 w-8 text-white/40" />
-              </div>
-              <div className="mt-4 flex justify-center gap-1 text-brand-yellow">
+              <div className="flex justify-center gap-1 text-brand-yellow">
                 {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
               </div>
-              <p className="mt-2 text-xs text-white/80">{t.date}</p>
               <p className="mt-3 font-display text-lg italic">"{t.quote}"</p>
               <p className="mt-2 text-xs text-white/80">~ {t.name}</p>
             </article>
