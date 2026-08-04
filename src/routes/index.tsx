@@ -23,7 +23,7 @@ import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
 import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
-import gPremium from "@/assets/Premiuim_Gifting.png.asset.json";
+
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
 import v3 from "@/assets/3.mp4.asset.json";
 import v4 from "@/assets/4.mp4.asset.json";
@@ -34,6 +34,16 @@ import v20 from "@/assets/20.mp4.asset.json";
 import v24 from "@/assets/24.mp4.asset.json";
 import v14 from "@/assets/14.mp4.asset.json";
 import v23 from "@/assets/23.mp4.asset.json";
+import v32 from "@/assets/32.mp4.asset.json";
+import v34 from "@/assets/3-2.mp4.asset.json";
+import v29 from "@/assets/29.mp4.asset.json";
+import v30 from "@/assets/30.mp4.asset.json";
+import v7 from "@/assets/7.mp4.asset.json";
+import v9 from "@/assets/9.mp4.asset.json";
+import v28 from "@/assets/28.mp4.asset.json";
+import v6 from "@/assets/6.mp4.asset.json";
+import v8 from "@/assets/8.mp4.asset.json";
+import v12 from "@/assets/12.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -80,13 +90,13 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full p-[40px]">
+    <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
       <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
               <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
-              <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-8 text-center md:pt-14">
+              <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
                 <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
@@ -128,20 +138,20 @@ function Spotlight() {
   return (
     <section className="container mx-auto px-4 py-14">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</h2>
-      <div className="mt-12 grid gap-10 sm:grid-cols-3 place-items-center">
+      <div className="mt-8 md:mt-12 grid gap-6 md:gap-10 grid-cols-3 place-items-center">
         {items.map((it) => (
           <Link
             key={it.label}
             to="/product"
             search={{ tab: it.tab }}
-            className="group flex flex-col items-center"
+            className="group flex min-w-0 flex-col items-center"
           >
-            <div className="relative h-72 w-72">
+            <div className="relative h-28 w-28 sm:h-48 sm:w-48 md:h-72 md:w-72">
               <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
               <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-56 w-56 object-contain drop-shadow-md" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-36 sm:w-36 md:h-56 md:w-56 object-contain drop-shadow-md" />
             </div>
-            <p className="mt-4 text-lg font-medium text-brand-ink">{it.label}</p>
+            <p className="mt-3 md:mt-4 text-center text-xs sm:text-base md:text-lg font-medium text-brand-ink">{it.label}</p>
           </Link>
         ))}
       </div>
@@ -195,7 +205,7 @@ function FeaturedGrid() {
   return (
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+      <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
         {featured.map((p) => (
           <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
         ))}
@@ -215,25 +225,26 @@ function RelationshipBanner() {
 
 function Testimonials() {
   const items = [
-    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url] },
-    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url] },
-    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url] },
-    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [] },
+    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url] },
+    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url] },
+    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url] },
+    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url] },
   ];
   return (
-    <section className="w-full py-12 px-[40px]">
+    <section className="w-full py-12 px-4 sm:px-6 md:px-[40px]">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Testimonials</h2>
       <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
-          <article key={it.title} className="w-full bg-brand-yellow p-[40px] rounded-[25px]">
-            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
-              <div className="grid grid-cols-3 gap-3">
-                {(it.videos.length ? it.videos : [null, null, null]).map((src, k) =>
-                  src ? (
+          <article key={it.title} className="w-full bg-brand-yellow p-5 sm:p-8 md:p-[40px] rounded-[25px]">
+            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-[2.4fr_1fr]">
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
+                {Array.from({ length: 5 }).map((_, k) => {
+                  const src = it.videos[k];
+                  return src ? (
                     <video
                       key={k}
                       src={src}
-                      className="h-[320px] w-full rounded-lg object-cover bg-black/5"
+                      className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg object-cover bg-black/5"
                       autoPlay
                       muted
                       loop
@@ -241,13 +252,13 @@ function Testimonials() {
                       preload="metadata"
                     />
                   ) : (
-                    <div key={k} className="h-[320px] w-full rounded-lg bg-white/70 grid place-items-center">
+                    <div key={k} className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg bg-white/70 grid place-items-center">
                       <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
                     </div>
-                  )
-                )}
+                  );
+                })}
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-display text-xl text-brand-ink">{it.title}</h3>
                 <p className="mt-2 text-sm text-brand-ink/80">{it.body}</p>
                 <button className="mt-4 inline-flex items-center gap-1 rounded-full border border-brand-red px-4 py-1.5 text-xs font-semibold text-brand-red hover:bg-white/50">
@@ -276,13 +287,13 @@ function MakeSpecial() {
   const cats = [
     { name: "Corporate Gifting", img: gCorporate.url },
     { name: "Customised Pictures", img: gAcrylic.url },
-    { name: "Premium Gifting", img: gPremium.url },
+    { name: "Premium Gifting", img: cat2.url },
     { name: "Return Gifts", img: gReturn.url },
   ];
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 items-center">
-        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left">Make<br/>Celebrations<br/>Special With</h2>
+        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left md:ml-16 lg:ml-24">Make<br/>Celebrations<br/>Special With</h2>
         <div className="grid grid-cols-2 gap-x-6 gap-y-10">
           {cats.map((c) => (
             <ProductTile key={c.name} name={c.name} img={c.img} />
@@ -306,18 +317,15 @@ function CustomerStories() {
   const items = testimonials;
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Customer's Stories</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Customer's Stories</h2>
+      <p className="mt-2 mb-8 text-center text-sm font-medium tracking-wide text-brand-ink/70">Customer Reviews for BCUBE</p>
       <div className="relative">
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((t) => (
             <article key={t.name} className="rounded-2xl bg-brand-red p-6 text-white text-center">
-              <div className="mx-auto h-32 w-32 rounded-lg bg-white/15 grid place-items-center">
-                <ImageIcon className="h-8 w-8 text-white/40" />
-              </div>
-              <div className="mt-4 flex justify-center gap-1 text-brand-yellow">
+              <div className="flex justify-center gap-1 text-brand-yellow">
                 {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
               </div>
-              <p className="mt-2 text-xs text-white/80">{t.date}</p>
               <p className="mt-3 font-display text-lg italic">"{t.quote}"</p>
               <p className="mt-2 text-xs text-white/80">~ {t.name}</p>
             </article>
