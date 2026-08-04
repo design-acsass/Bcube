@@ -23,7 +23,7 @@ import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
 import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
-import gPremium from "@/assets/Premiuim_Gifting.png.asset.json";
+
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
 import v3 from "@/assets/3.mp4.asset.json";
 import v4 from "@/assets/4.mp4.asset.json";
