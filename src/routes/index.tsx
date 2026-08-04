@@ -205,7 +205,7 @@ function FeaturedGrid() {
   return (
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+      <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
         {featured.map((p) => (
           <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
         ))}
@@ -225,25 +225,26 @@ function RelationshipBanner() {
 
 function Testimonials() {
   const items = [
-    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url] },
-    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url] },
-    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url] },
-    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [] },
+    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url] },
+    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url] },
+    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url] },
+    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom acrylic nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url] },
   ];
   return (
-    <section className="w-full py-12 px-[40px]">
+    <section className="w-full py-12 px-4 sm:px-6 md:px-[40px]">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Testimonials</h2>
       <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
-          <article key={it.title} className="w-full bg-brand-yellow p-[40px] rounded-[25px]">
-            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-2">
-              <div className="grid grid-cols-3 gap-3">
-                {(it.videos.length ? it.videos : [null, null, null]).map((src, k) =>
-                  src ? (
+          <article key={it.title} className="w-full bg-brand-yellow p-5 sm:p-8 md:p-[40px] rounded-[25px]">
+            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-[2.4fr_1fr]">
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
+                {Array.from({ length: 5 }).map((_, k) => {
+                  const src = it.videos[k];
+                  return src ? (
                     <video
                       key={k}
                       src={src}
-                      className="h-[320px] w-full rounded-lg object-cover bg-black/5"
+                      className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg object-cover bg-black/5"
                       autoPlay
                       muted
                       loop
@@ -251,13 +252,13 @@ function Testimonials() {
                       preload="metadata"
                     />
                   ) : (
-                    <div key={k} className="h-[320px] w-full rounded-lg bg-white/70 grid place-items-center">
+                    <div key={k} className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg bg-white/70 grid place-items-center">
                       <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
                     </div>
-                  )
-                )}
+                  );
+                })}
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-display text-xl text-brand-ink">{it.title}</h3>
                 <p className="mt-2 text-sm text-brand-ink/80">{it.body}</p>
                 <button className="mt-4 inline-flex items-center gap-1 rounded-full border border-brand-red px-4 py-1.5 text-xs font-semibold text-brand-red hover:bg-white/50">
