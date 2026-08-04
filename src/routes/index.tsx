@@ -90,13 +90,13 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full p-[40px]">
+    <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
       <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
           {slides.map((s) => (
             <div key={s.tagline} className="relative w-full shrink-0">
               <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
-              <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-8 text-center md:pt-14">
+              <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
                 <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
@@ -138,20 +138,20 @@ function Spotlight() {
   return (
     <section className="container mx-auto px-4 py-14">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</h2>
-      <div className="mt-12 grid gap-10 sm:grid-cols-3 place-items-center">
+      <div className="mt-8 md:mt-12 grid gap-6 md:gap-10 grid-cols-3 place-items-center">
         {items.map((it) => (
           <Link
             key={it.label}
             to="/product"
             search={{ tab: it.tab }}
-            className="group flex flex-col items-center"
+            className="group flex min-w-0 flex-col items-center"
           >
-            <div className="relative h-72 w-72">
+            <div className="relative h-28 w-28 sm:h-48 sm:w-48 md:h-72 md:w-72">
               <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
               <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-56 w-56 object-contain drop-shadow-md" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-36 sm:w-36 md:h-56 md:w-56 object-contain drop-shadow-md" />
             </div>
-            <p className="mt-4 text-lg font-medium text-brand-ink">{it.label}</p>
+            <p className="mt-3 md:mt-4 text-center text-xs sm:text-base md:text-lg font-medium text-brand-ink">{it.label}</p>
           </Link>
         ))}
       </div>
