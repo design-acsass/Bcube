@@ -81,3 +81,11 @@
     font-family: var(--font-display);
   }
 }
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee-x {
+  animation: marquee-x 60s linear infinite;
+}
