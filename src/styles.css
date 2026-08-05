@@ -35,8 +35,22 @@
   --color-brand-yellow: var(--brand-yellow);
   --color-brand-pink: var(--brand-pink);
   --color-brand-ink: var(--brand-ink);
-  --font-display: "Playfair Display", serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Gilda Display", serif;
+  --font-sans: "Gilroy", system-ui, sans-serif;
+}
+
+@font-face {
+  font-family: "Gilda Display";
+  src: url("/__l5e/assets-v1/b31e979c-30c9-4548-a5f7-02a6a0cc3140/GildaDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/__l5e/assets-v1/adababcf-1092-4761-a583-bb1a11208ea6/Gilroy-Regular.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
 }
 
 :root {

@@ -28,7 +28,7 @@ export function Footer() {
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-white/90">
             <span>© 2026 B Cube. All rights reserved.</span>
-            <img src={logo.url} alt="B Cube logo" className="h-12 w-12 rounded-full bg-white object-contain p-1" />
+            <img src={logo.url} alt="B Cube logo" className="h-20 w-20 rounded-full bg-white object-contain p-1.5" />
             <div className="flex gap-6">
               <a href="#" className="hover:underline">Terms of Service</a>
               <a href="#" className="hover:underline">Privacy Policy</a>
