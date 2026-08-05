@@ -1,7 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ImageIcon, Phone, Mail } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { ArrowRight } from "lucide-react";
 import { customAcrylic, corporateGifting, returnGifts } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
+import cat1 from "@/assets/Cat1.png.asset.json";
+import cat2 from "@/assets/Cat2.png.asset.json";
+import cat3 from "@/assets/Cat3.png.asset.json";
+import catBg1 from "@/assets/Category_Bg1.png.asset.json";
+import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
+import ad1 from "@/assets/Advertisment_Card.png.asset.json";
+import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
+import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
+import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
+import pPillow from "@/assets/Custom_Pillows.png.asset.json";
+import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
+import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
+import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
+import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
+import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
+import gReturn from "@/assets/Return_Gifts.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
@@ -12,113 +30,141 @@ export const Route = createFileRoute("/product")({
   },
   head: () => ({
     meta: [
-      { title: "Our Products — B Cube" },
-      { name: "description", content: "Explore B Cube's custom acrylic pictures, corporate gifting and return gifts collections." },
-      { property: "og:title", content: "Our Products — B Cube" },
-      { property: "og:description", content: "Custom acrylic, corporate gifting and return gifts." },
+      { title: "Our Products — B Cube Personalised Gifts" },
+      { name: "description", content: "Browse B Cube's custom acrylic pictures, corporate gifting and return gift collections — personalised, premium and made to order." },
+      { property: "og:title", content: "Our Products — B Cube Personalised Gifts" },
+      { property: "og:description", content: "Custom acrylic pictures, corporate gifting and return gifts by B Cube." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ProductListing,
 });
 
-const tabs: { id: Tab; label: string; tone: "pink" | "yellow" | "mixed" }[] = [
-  { id: "custom", label: "Custom Acrylic Pictures", tone: "pink" },
-  { id: "corporate", label: "Corporate Gifting", tone: "yellow" },
-  { id: "return", label: "Return Gifts", tone: "mixed" },
+const imgBySlug: Record<string, string> = {
+  "premium-acrylic-photo": pPremium.url,
+  "framed-acrylic-photo": pFramed.url,
+  pillows: pPillow.url,
+  "fridge-magnet": pMagnet.url,
+  "name-plate": pNamePlate.url,
+  keychain: pKeychain.url,
+  "acrylic-desk-photo": gAcrylic.url,
+};
+
+const tabs: { id: Tab; label: string; img: string }[] = [
+  { id: "custom", label: "Custom Acrylic Pictures", img: cat1.url },
+  { id: "corporate", label: "Corporate Gifting", img: cat2.url },
+  { id: "return", label: "Return Gifts", img: cat3.url },
 ];
 
 function ProductListing() {
   const { tab } = Route.useSearch();
   return (
-    <section className="w-full px-4 md:px-10 py-12">
-      <h1 className="text-center font-display text-3xl text-brand-ink pt-6">Our Products</h1>
+    <>
+      <section className="w-full px-4 sm:px-6 md:px-[56px] py-10 md:py-14">
+        <h1 className="text-center font-display text-3xl md:text-5xl text-brand-ink">Our Products</h1>
+        <p className="mx-auto mt-3 max-w-xl text-center text-sm text-brand-ink/70">
+          Pick a collection — every piece is personalised and made to order.
+        </p>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-3 place-items-center">
-        {tabs.map((t) => {
-          const active = t.id === tab;
-          return (
-            <Link
-              key={t.id}
-              to="/product"
-              search={{ tab: t.id }}
-              className="group flex flex-col items-center"
-              resetScroll={false}
-            >
-              <div className="relative w-44 h-44">
-                <div className={`absolute inset-2 -rotate-6 rounded-[40%_60%_55%_45%/50%_45%_55%_50%] ${t.tone === "pink" ? "bg-brand-pink/70" : t.tone === "yellow" ? "bg-brand-yellow/80" : "bg-gradient-to-br from-brand-pink/60 to-brand-yellow/70"} transition-transform group-hover:scale-105`} />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="h-24 w-24 rounded-lg bg-white shadow grid place-items-center">
-                    <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
-                  </div>
+        <div className="mt-8 md:mt-12 grid grid-cols-3 gap-6 md:gap-10 place-items-center">
+          {tabs.map((t) => {
+            const active = t.id === tab;
+            return (
+              <Link
+                key={t.id}
+                to="/product"
+                search={{ tab: t.id }}
+                resetScroll={false}
+                className="group flex min-w-0 flex-col items-center"
+              >
+                <div className="relative h-28 w-28 sm:h-48 sm:w-48 md:h-72 md:w-72">
+                  <img
+                    src={catBg1.url}
+                    alt=""
+                    aria-hidden
+                    className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${active ? "opacity-0" : "group-hover:opacity-0"}`}
+                  />
+                  <img
+                    src={catBg2.url}
+                    alt=""
+                    aria-hidden
+                    className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${active ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                  />
+                  <img src={t.img} alt={t.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-36 sm:w-36 md:h-56 md:w-56 object-contain drop-shadow-md" />
                 </div>
-              </div>
-              <p className={`mt-3 text-sm font-medium ${active ? "text-brand-red font-semibold" : "text-brand-ink"}`}>{t.label}</p>
-              {active && <span className="mt-1 h-1 w-12 rounded-full bg-brand-red" />}
-            </Link>
-          );
-        })}
-      </div>
+                <p className={`mt-3 md:mt-4 text-center text-xs sm:text-base md:text-lg font-medium ${active ? "text-brand-red font-semibold" : "text-brand-ink"}`}>
+                  {t.label}
+                </p>
+                {active && <span className="mt-2 h-1 w-12 rounded-full bg-brand-red" />}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
-      <div className="mt-16">
-        {tab === "custom" && <CustomPanel />}
-        {tab === "corporate" && <CorporatePanel />}
-        {tab === "return" && <ReturnPanel />}
+      <section className="container mx-auto px-4 pb-4">
+        {tab === "custom" && <Panel title="Custom Acrylic Pictures" items={customAcrylic} />}
+        {tab === "corporate" && <Panel title="Corporate Gifting" items={corporateGifting} fallback={gCorporate.url} />}
+        {tab === "return" && <Panel title="Return Gifts" items={returnGifts} fallback={gReturn.url} />}
+      </section>
+
+      <section className="my-12">
+        <img src={ad1.url} alt="Enriching relationships through thoughtful gifts" className="w-full" loading="lazy" />
+      </section>
+
+      <EnquireBand />
+
+      <section className="my-12">
+        <Link to="/contact" className="block">
+          <img src={ad2.url} alt="To know more about our products — call +91 93632 96919 or email bcube@gmail.com" className="w-full" loading="lazy" />
+        </Link>
+      </section>
+    </>
+  );
+}
+
+function Panel({ title, items, fallback }: { title: string; items: { slug: string; name: string }[]; fallback?: string }) {
+  return (
+    <>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">{title}</h2>
+      <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
+        {items.map((p) => (
+          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={imgBySlug[p.slug] ?? fallback} />
+        ))}
+      </div>
+    </>
+  );
+}
+
+function EnquireBand() {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  return (
+    <section className="bg-brand-yellow my-12">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 px-4 py-10 items-center">
+        <h2 className="font-display text-5xl text-brand-red leading-none rotate-[-2deg]">Enquire<br/>Now</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            toast.success("Enquiry sent — we'll be in touch!");
+            setForm({ name: "", email: "", phone: "", message: "" });
+          }}
+          className="grid gap-3 sm:grid-cols-2"
+        >
+          <input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-md bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red" />
+          <input required type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="rounded-md bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red" />
+          <input required placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="rounded-md bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red" />
+          <textarea placeholder="Message" rows={1} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="rounded-md bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red sm:row-span-2 sm:col-start-2 sm:row-start-1 sm:h-full" />
+          <div className="flex items-center justify-between sm:col-span-2">
+            <label className="inline-flex items-center gap-2 text-xs text-brand-ink">
+              <input type="checkbox" defaultChecked /> I agree to be contacted
+            </label>
+            <button className="inline-flex items-center gap-2 rounded-full bg-brand-red px-6 py-2 text-sm font-semibold text-white hover:bg-brand-red-dark">
+              Send <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </form>
       </div>
     </section>
-  );
-}
-
-function CustomPanel() {
-  return (
-    <>
-      <h2 className="text-center font-display text-3xl text-brand-ink">Custom Acrylic Pictures</h2>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14">
-        {customAcrylic.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} />)}
-      </div>
-    </>
-  );
-}
-
-function CorporatePanel() {
-  return (
-    <>
-      <div className="relative overflow-hidden rounded-3xl bg-brand-ink p-10 text-center text-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-transparent to-amber-300/10" />
-        <div className="relative">
-          <p className="text-brand-red font-semibold">Show Appreciation & Gratitude with</p>
-          <h2 className="font-display text-3xl md:text-4xl mt-2">Rewards & Recognition<br/>Corporate Gifts</h2>
-          <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-red px-5 py-2 text-sm font-semibold hover:bg-brand-red-dark">Explore now <ArrowRight className="h-4 w-4" /></button>
-        </div>
-      </div>
-      <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14">
-        {corporateGifting.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} />)}
-      </div>
-      <div className="mt-16">
-        <div className="rounded-3xl bg-brand-red/95 p-6 text-center">
-          <div className="mx-auto h-48 max-w-2xl rounded-2xl bg-white/10 grid place-items-center">
-            <ImageIcon className="h-10 w-10 text-white/40" />
-          </div>
-          <p className="mt-4 text-sm font-medium text-white">Awards</p>
-        </div>
-      </div>
-      <div className="mt-12 rounded-3xl bg-brand-red px-8 py-10 text-white flex flex-wrap items-center justify-between gap-6">
-        <h3 className="font-display italic text-2xl">To Know More About Our Products</h3>
-        <div className="text-sm space-y-1">
-          <p className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> Call: +91 xxxxx xxxxx</p><br/>
-          <p className="inline-flex items-center gap-2"><Mail className="h-4 w-4" /> Email: hello@yourdomain.com</p>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function ReturnPanel() {
-  return (
-    <>
-      <h2 className="text-center font-display text-3xl text-brand-ink">Return Gifts</h2>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14">
-        {returnGifts.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} />)}
-      </div>
-    </>
   );
 }
