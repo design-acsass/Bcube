@@ -6,12 +6,12 @@ import logo from "@/assets/LOGO.png.asset.json";
 export function Header() {
   const { count } = useCart();
   return (
-    <header className="sticky top-0 z-40 bg-white/75 backdrop-blur-xl border-b border-brand-ink/10 shadow-sm">
+    <header className="sticky top-0 z-40 border-b border-white/40 bg-white/30 shadow-sm backdrop-blur-2xl backdrop-saturate-150">
       <div className="container mx-auto flex items-center gap-6 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img src={logo.url} alt="B Cube logo" className="h-11 w-11 object-contain" />
-          <span className="font-display text-lg font-semibold text-brand-ink hidden sm:block">B Cube</span>
+        <Link to="/" className="flex items-center shrink-0">
+          <img src={logo.url} alt="B Cube logo" className="h-16 w-16 md:h-20 md:w-20 object-contain" />
         </Link>
+
 
         <nav className="flex items-center gap-1 rounded-full bg-brand-yellow px-2 py-1.5 shadow-sm">
           {[

@@ -10,7 +10,7 @@ import cat1 from "@/assets/Cat1.png.asset.json";
 import cat2 from "@/assets/Cat2.png.asset.json";
 import cat3 from "@/assets/Cat3.png.asset.json";
 import catBg1 from "@/assets/Category_Bg1.png.asset.json";
-import catBg2 from "@/assets/Category_Bg2.png.asset.json";
+import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
 import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
 import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
 import pPillow from "@/assets/Custom_Pillows.png.asset.json";
@@ -44,6 +44,10 @@ import v28 from "@/assets/28.mp4.asset.json";
 import v6 from "@/assets/6.mp4.asset.json";
 import v8 from "@/assets/8.mp4.asset.json";
 import v12 from "@/assets/12.mp4.asset.json";
+import v33 from "@/assets/33.mp4.asset.json";
+import v31 from "@/assets/31.mp4.asset.json";
+import v22 from "@/assets/22.mp4.asset.json";
+import v2 from "@/assets/2.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -97,7 +101,7 @@ function Hero() {
             <div key={s.tagline} className="relative w-full shrink-0">
               <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
-                <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
+                <h1 className={`max-w-2xl md:max-w-none md:whitespace-nowrap font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
                 <Link
@@ -225,10 +229,10 @@ function RelationshipBanner() {
 
 function Testimonials() {
   const items = [
-    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url] },
-    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url] },
-    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url] },
-    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url, v5.url] },
+    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints — polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url, v33.url] },
+    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url, v31.url] },
+    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url, v22.url] },
+    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url, v5.url, v2.url] },
   ];
   return (
     <section className="w-full py-12 px-4 sm:px-6 md:px-[40px]">
@@ -236,9 +240,9 @@ function Testimonials() {
       <div className="flex w-full flex-col gap-6">
         {items.map((it) => (
           <article key={it.title} className="w-full bg-brand-yellow p-5 sm:p-8 md:p-[40px] rounded-[25px]">
-            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-[2.4fr_1fr]">
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
-                {Array.from({ length: 5 }).map((_, k) => {
+            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-[3fr_1fr]">
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+                {Array.from({ length: 6 }).map((_, k) => {
                   const src = it.videos[k];
                   return src ? (
                     <video
