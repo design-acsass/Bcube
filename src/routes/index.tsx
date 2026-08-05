@@ -10,7 +10,7 @@ import cat1 from "@/assets/Cat1.png.asset.json";
 import cat2 from "@/assets/Cat2.png.asset.json";
 import cat3 from "@/assets/Cat3.png.asset.json";
 import catBg1 from "@/assets/Category_Bg1.png.asset.json";
-import catBg2 from "@/assets/Category_Bg2.png.asset.json";
+import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
 import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
 import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
 import pPillow from "@/assets/Custom_Pillows.png.asset.json";
@@ -44,6 +44,10 @@ import v28 from "@/assets/28.mp4.asset.json";
 import v6 from "@/assets/6.mp4.asset.json";
 import v8 from "@/assets/8.mp4.asset.json";
 import v12 from "@/assets/12.mp4.asset.json";
+import v33 from "@/assets/33.mp4.asset.json";
+import v31 from "@/assets/31.mp4.asset.json";
+import v22 from "@/assets/22.mp4.asset.json";
+import v2 from "@/assets/2.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -97,7 +101,7 @@ function Hero() {
             <div key={s.tagline} className="relative w-full shrink-0">
               <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
-                <h1 className={`max-w-2xl font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
+                <h1 className={`max-w-2xl md:max-w-none md:whitespace-nowrap font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
                 <Link
