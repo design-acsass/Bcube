@@ -79,37 +79,49 @@ const STEPS = [
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
+  const mode = getProductMode(product.slug);
   const [state, dispatch] = useReducer(reducer, initial);
   const { addItem } = useCart();
 
   const onBuy = (buyerInfo: Record<string, string>) => {
-    addItem({ slug: product.slug, name: product.name, config: { ...state, buyerInfo } });
-    toast.success(`${product.name} added to cart!`);
+    addItem({ slug: product.slug, name: product.name, config: { ...state, mode, buyerInfo } });
+    toast.success(
+      mode === "wizard" ? `${product.name} added to cart!` : "Thanks! We'll get back to you shortly.",
+    );
     dispatch({ type: "reset" });
   };
 
   return (
     <>
       <section className="container mx-auto px-4 pt-10 pb-6">
-        <h1 className="text-center font-display text-3xl text-brand-ink">Custom Acrylic Pictures</h1>
+        <h1 className="text-center font-display text-3xl text-brand-ink">{product.name}</h1>
         <nav className="mt-4 text-xs text-muted-foreground text-center">
           <Link to="/" className="hover:text-brand-red">Home</Link>
           <span className="mx-1">/</span>
-          <Link to="/product" className="hover:text-brand-red">Custom Acrylic Pictures</Link>
+          <Link to="/product" className="hover:text-brand-red">Products</Link>
           <span className="mx-1">/</span>
           <span className="text-brand-red font-medium">{product.name}</span>
         </nav>
 
-        <Stepper current={state.step} onGo={(s) => dispatch({ type: "go", step: s })} />
+        {mode === "wizard" && <Stepper current={state.step} onGo={(s) => dispatch({ type: "go", step: s })} />}
 
         <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <PreviewPane state={state} />
+          {mode === "wizard" ? <PreviewPane state={state} /> : <EnquiryPitch mode={mode} name={product.name} />}
           <div className="rounded-2xl bg-white border border-border p-6 shadow-sm">
-            {state.step === 1 && <StepUpload state={state} dispatch={dispatch} />}
-            {state.step === 2 && <StepFrame state={state} dispatch={dispatch} />}
-            {state.step === 3 && <StepLayout state={state} dispatch={dispatch} />}
-            {state.step === 4 && <StepSize state={state} dispatch={dispatch} />}
-            {state.step === 5 && <StepPreviewForm onBuy={onBuy} />}
+            {mode !== "wizard" ? (
+              <StepPreviewForm
+                onBuy={onBuy}
+                ctaLabel={mode === "bulk" ? "Get Bulk Quote" : "Send Enquiry"}
+              />
+            ) : (
+              <>
+                {state.step === 1 && <StepUpload state={state} dispatch={dispatch} />}
+                {state.step === 2 && <StepFrame state={state} dispatch={dispatch} />}
+                {state.step === 3 && <StepLayout state={state} dispatch={dispatch} />}
+                {state.step === 4 && <StepSize state={state} dispatch={dispatch} />}
+                {state.step === 5 && <StepPreviewForm onBuy={onBuy} />}
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -120,6 +132,26 @@ function ProductPage() {
     </>
   );
 }
+
+function EnquiryPitch({ mode, name }: { mode: "custom-enquiry" | "bulk"; name: string }) {
+  return (
+    <div className="relative grid place-items-center overflow-hidden rounded-2xl bg-brand-red p-10 text-center text-white">
+      <div>
+        <p className="font-display text-3xl leading-snug">
+          {mode === "bulk"
+            ? "Order in bulk"
+            : "Contact us for your own custom gifts and ideas"}
+        </p>
+        <p className="mt-4 text-sm text-white/85">
+          {mode === "bulk"
+            ? `${name} is crafted and shipped in bulk quantities. Share your details and quantity — we'll send you a tailored quote.`
+            : "We'll make it come to real-life."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 
 // --- Stepper ---
 
