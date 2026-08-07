@@ -23,7 +23,7 @@ import gReturn from "@/assets/Return_Gifts.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
-export const Route = createFileRoute("/product")({
+export const Route = createFileRoute("/product/")({
   validateSearch: (search: Record<string, unknown>): { tab: Tab } => {
     const t = search.tab;
     return { tab: t === "corporate" || t === "return" ? t : "custom" };
