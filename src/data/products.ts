@@ -40,6 +40,18 @@ export function findProduct(slug: string): Product | undefined {
   return [...customAcrylic, ...corporateGifting, ...returnGifts].find((p) => p.slug === slug);
 }
 
+/** Products that use the full 5-step customisation wizard. */
+export const wizardSlugs = ["premium-acrylic-photo", "framed-acrylic-photo", "wall-clocks"];
+
+export type ProductMode = "wizard" | "custom-enquiry" | "bulk";
+
+export function getProductMode(slug: string): ProductMode {
+  if (wizardSlugs.includes(slug)) return "wizard";
+  if (corporateGifting.some((p) => p.slug === slug) || returnGifts.some((p) => p.slug === slug)) return "bulk";
+  return "custom-enquiry";
+}
+
+
 export const testimonials = [
   { name: "Harikrishnan", date: "28th February 2026", quote: "Thanks For The Amazing Service" },
   { name: "Kavya", date: "28th February 2026", quote: "All The Products Are Great" },
