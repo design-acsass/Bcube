@@ -448,7 +448,7 @@ function StepPreviewForm({ onBuy, ctaLabel = "Buy Now" }: { onBuy: (info: Record
               placeholder="Enter Pincode"
               className="flex-1 rounded-full border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
             />
-            <button type="submit" className="rounded-full bg-brand-yellow px-5 py-2 text-sm font-semibold text-brand-ink">Buy Now</button>
+            <button type="submit" className="rounded-full bg-brand-yellow px-5 py-2 text-sm font-semibold text-brand-ink whitespace-nowrap">{ctaLabel}</button>
           </div>
         </div>
         <label className="flex items-center gap-2 text-xs">
