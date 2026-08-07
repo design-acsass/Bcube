@@ -406,7 +406,7 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
   );
 }
 
-function StepPreviewForm({ onBuy }: { onBuy: (info: Record<string, string>) => void }) {
+function StepPreviewForm({ onBuy, ctaLabel = "Buy Now" }: { onBuy: (info: Record<string, string>) => void; ctaLabel?: string }) {
   const [form, setForm] = useState({ name: "", phone: "", email: "", pincode: "" });
   const [accepted, setAccepted] = useState(true);
   return (
