@@ -5,7 +5,7 @@ import {
   Check, UploadCloud, Shapes, LayoutPanelTop, Ruler, MousePointerClick,
   Square, Circle, Triangle, Hexagon, Heart, ImageIcon, ChevronLeft, ChevronRight, Star,
 } from "lucide-react";
-import { findProduct, customAcrylic, testimonials } from "@/data/products";
+import { findProduct, customAcrylic, testimonials, getProductMode } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
 import { useCart } from "@/hooks/use-cart";
 
