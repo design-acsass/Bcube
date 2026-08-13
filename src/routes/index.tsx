@@ -15,6 +15,7 @@ import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
 import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
 import pPillow from "@/assets/Custom_Pillows.png.asset.json";
 import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
+import pClock from "@/assets/Wall_Clocks.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import ad1 from "@/assets/Advertisment_Card.png.asset.json";
