@@ -15,6 +15,7 @@ import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
 import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
 import pPillow from "@/assets/Custom_Pillows.png.asset.json";
 import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
+import pClock from "@/assets/Wall_Clocks.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import ad1 from "@/assets/Advertisment_Card.png.asset.json";
@@ -207,6 +208,7 @@ function FeaturedGrid() {
     { slug: "fridge-magnet", name: "Fridge Magnets", img: pMagnet.url },
     { slug: "name-plate", name: "Custom Name Plates", img: pNamePlate.url },
     { slug: "keychain", name: "Custom Keychains", img: pKeychain.url },
+    { slug: "wall-clocks", name: "Wall Clocks", img: pClock.url },
   ];
   return (
     <section className="container mx-auto px-4 py-12">
