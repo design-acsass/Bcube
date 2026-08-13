@@ -18,8 +18,18 @@ import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
-import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
+
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
+import pCutout from "@/assets/Acrylic_Cutout_Decor.png.asset.json";
+import pDesk from "@/assets/Acrylic_Desk_Photos.png.asset.json";
+import pMonogram from "@/assets/Acrylic_Monogram.png.asset.json";
+import pCap from "@/assets/Cap.png.asset.json";
+import pBottle from "@/assets/Cup_Waterbottle.png.asset.json";
+import pHoodie from "@/assets/Hoodies.png.asset.json";
+import pJute from "@/assets/Jute_Bag.png.asset.json";
+import pLaptop from "@/assets/Laptop_Bags.png.asset.json";
+import pLuggage from "@/assets/Luggage_tags.png.asset.json";
+import pContainer from "@/assets/Lunch_Container.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
@@ -48,7 +58,16 @@ const imgBySlug: Record<string, string> = {
   "fridge-magnet": pMagnet.url,
   "name-plate": pNamePlate.url,
   keychain: pKeychain.url,
-  "acrylic-desk-photo": gAcrylic.url,
+  "acrylic-cutouts-decor": pCutout.url,
+  "acrylic-desk-photo": pDesk.url,
+  "acrylic-monogram": pMonogram.url,
+  "luggage-tags": pLuggage.url,
+  hoodies: pHoodie.url,
+  "laptop-bag": pLaptop.url,
+  "water-bottle": pBottle.url,
+  cap: pCap.url,
+  "jute-bag": pJute.url,
+  container: pContainer.url,
 };
 
 const tabs: { id: Tab; label: string; img: string }[] = [
