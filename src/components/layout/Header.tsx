@@ -65,7 +65,6 @@ export function Header() {
           </Link>
         ))}
       </nav>
-      <div className="h-20 md:hidden" aria-hidden />
     </>
   );
 }
