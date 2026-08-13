@@ -101,7 +101,7 @@ function Hero() {
             <div key={s.tagline} className="relative w-full shrink-0">
               <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
-                <h1 className={`max-w-2xl md:max-w-none md:whitespace-nowrap font-display text-3xl italic leading-tight md:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
+                <h1 className={`max-w-2xl md:max-w-3xl lg:max-w-none lg:whitespace-nowrap font-display text-2xl italic leading-tight sm:text-3xl md:text-4xl lg:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
                 <Link
@@ -151,12 +151,12 @@ function Spotlight() {
             search={{ tab: it.tab }}
             className="group flex min-w-0 flex-col items-center"
           >
-            <div className="relative h-28 w-28 sm:h-48 sm:w-48 md:h-72 md:w-72">
+            <div className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-72 lg:w-72">
               <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
               <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-36 sm:w-36 md:h-56 md:w-56 object-contain drop-shadow-md" />
+              <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 lg:h-56 lg:w-56 object-contain drop-shadow-md" />
             </div>
-            <p className="mt-3 md:mt-4 text-center text-xs sm:text-base md:text-lg font-medium text-brand-ink">{it.label}</p>
+            <p className="mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium text-brand-ink">{it.label}</p>
           </Link>
         ))}
       </div>
@@ -297,9 +297,9 @@ function MakeSpecial() {
   ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <div className="grid md:grid-cols-[1fr_1.4fr] gap-10 items-center">
-        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center md:text-left md:ml-16 lg:ml-24">Make<br/>Celebrations<br/>Special With</h2>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10">
+      <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-center">
+        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center lg:text-left lg:ml-24">Make<br/>Celebrations<br/>Special With</h2>
+        <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-10 items-end">
           {cats.map((c) => (
             <ProductTile key={c.name} name={c.name} img={c.img} />
           ))}
