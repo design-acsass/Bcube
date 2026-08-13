@@ -58,7 +58,16 @@ const imgBySlug: Record<string, string> = {
   "fridge-magnet": pMagnet.url,
   "name-plate": pNamePlate.url,
   keychain: pKeychain.url,
-  "acrylic-desk-photo": gAcrylic.url,
+  "acrylic-cutouts-decor": pCutout.url,
+  "acrylic-desk-photo": pDesk.url,
+  "acrylic-monogram": pMonogram.url,
+  "luggage-tags": pLuggage.url,
+  hoodies: pHoodie.url,
+  "laptop-bag": pLaptop.url,
+  "water-bottle": pBottle.url,
+  cap: pCap.url,
+  "jute-bag": pJute.url,
+  container: pContainer.url,
 };
 
 const tabs: { id: Tab; label: string; img: string }[] = [
