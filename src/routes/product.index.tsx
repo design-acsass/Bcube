@@ -18,7 +18,7 @@ import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
 import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
 import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
-import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
+
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
 import pCutout from "@/assets/Acrylic_Cutout_Decor.png.asset.json";
 import pDesk from "@/assets/Acrylic_Desk_Photos.png.asset.json";
