@@ -36,7 +36,9 @@ Red background, newsletter strip overlapping the top, link row, socials, large c
 ### ProductTile
 Centered product image (80% width, `object-contain`) floating over a red "shelf"
 (`inset-x-[22%]`, rounded), label below in `text-xs sm:text-sm font-medium`.
-Hover: image lifts (`-translate-y-1`). Sizes `sm | md | lg`.
+Hover: image lifts (`-translate-y-1`). Sizes `sm | md | lg`. Use `compact` prop for
+products with unusually large artwork (e.g. Wall Clocks) to shrink the image to
+85% of the tile area while keeping the red shelf and label unchanged.
 
 ### Category tile (brush)
 Product image centered over a watercolour brush background that swaps pink → yellow on hover
