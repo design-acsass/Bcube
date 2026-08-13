@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Star, ImageIcon } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { ProductTile } from "@/components/product/ProductTile";
+import { Testimonials } from "@/components/sections/Testimonials";
 import banner1 from "@/assets/banner-1.png.asset.json";
 import banner2 from "@/assets/banner-2.png.asset.json";
 import banner3 from "@/assets/banner-3.png.asset.json";
@@ -24,30 +25,6 @@ import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
 
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
-import v3 from "@/assets/3.mp4.asset.json";
-import v4 from "@/assets/4.mp4.asset.json";
-import v10 from "@/assets/10.mp4.asset.json";
-import v15 from "@/assets/15.mp4.asset.json";
-import v16 from "@/assets/16.mp4.asset.json";
-import v20 from "@/assets/20.mp4.asset.json";
-import v24 from "@/assets/24.mp4.asset.json";
-import v14 from "@/assets/14.mp4.asset.json";
-import v23 from "@/assets/23.mp4.asset.json";
-import v32 from "@/assets/32.mp4.asset.json";
-import v34 from "@/assets/34.mp4.asset.json";
-import v5 from "@/assets/5.mp4.asset.json";
-import v29 from "@/assets/29.mp4.asset.json";
-import v30 from "@/assets/30.mp4.asset.json";
-import v7 from "@/assets/7.mp4.asset.json";
-import v9 from "@/assets/9.mp4.asset.json";
-import v28 from "@/assets/28.mp4.asset.json";
-import v6 from "@/assets/6.mp4.asset.json";
-import v8 from "@/assets/8.mp4.asset.json";
-import v12 from "@/assets/12.mp4.asset.json";
-import v33 from "@/assets/33.mp4.asset.json";
-import v35 from "@/assets/35.mp4.asset.json";
-import v31 from "@/assets/31.mp4.asset.json";
-import v22 from "@/assets/22.mp4.asset.json";
 
 
 export const Route = createFileRoute("/")({
@@ -98,9 +75,16 @@ function Hero() {
     <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
       <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
-          {slides.map((s) => (
+          {slides.map((s, k) => (
             <div key={s.tagline} className="relative w-full shrink-0">
-              <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
+              <img
+                src={s.img}
+                alt={s.alt}
+                className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]"
+                loading={k === 0 ? "eager" : "lazy"}
+                fetchPriority={k === 0 ? "high" : "low"}
+                decoding="async"
+              />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
                 <h1 className={`max-w-2xl md:max-w-3xl lg:max-w-none lg:whitespace-nowrap font-display text-2xl italic leading-tight sm:text-3xl md:text-4xl lg:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
@@ -153,8 +137,8 @@ function Spotlight() {
             className="group flex min-w-0 flex-col items-center"
           >
             <div className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-72 lg:w-72">
-              <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
-              <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <img src={catBg1.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
+              <img src={catBg2.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
               <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 lg:h-56 lg:w-56 object-contain drop-shadow-md" />
             </div>
             <p className="mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium text-brand-ink">{it.label}</p>
@@ -225,56 +209,6 @@ function RelationshipBanner() {
   return (
     <section className="my-12">
       <img src={ad1.url} alt="Enriching relationships through thoughtful gifts" className="w-full" loading="lazy" />
-    </section>
-  );
-}
-
-function Testimonials() {
-  const items = [
-    { title: "Acrylic Photos", body: "Capture every smile with our crystal-clear acrylic prints polished, vivid, and built to last for the moments you'll always want to revisit.", videos: [v3.url, v4.url, v10.url, v32.url, v34.url, v33.url] },
-    { title: "Acrylic Clear Photos", body: "Layered transparency, perfect colour fidelity, and a tactile finish that makes every photograph feel like an heirloom.", videos: [v15.url, v16.url, v20.url, v29.url, v30.url, v31.url] },
-    { title: "Creative Gifts", body: "Thoughtful, personalised gifts crafted to surprise — designed around the people and stories that matter most to you.", videos: [v24.url, v14.url, v23.url, v7.url, v9.url, v22.url] },
-    { title: "Name Decors", body: "Make any door, desk, or doorway truly yours with a custom nameplate finished in vibrant detail.", videos: [v28.url, v6.url, v8.url, v12.url, v5.url, v35.url] },
-  ];
-  return (
-    <section className="w-full py-12 px-4 sm:px-6 md:px-[40px]">
-      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-8">Testimonials</h2>
-      <div className="flex w-full flex-col gap-6">
-        {items.map((it) => (
-          <article key={it.title} className="w-full bg-brand-yellow p-5 sm:p-8 md:p-[40px] rounded-[25px]">
-            <div className="grid grid-cols-1 gap-6 items-center md:grid-cols-[3fr_1fr]">
-              <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
-                {Array.from({ length: 6 }).map((_, k) => {
-                  const src = it.videos[k];
-                  return src ? (
-                    <video
-                      key={k}
-                      src={src}
-                      className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg object-cover bg-black/5"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                    />
-                  ) : (
-                    <div key={k} className="h-[180px] sm:h-[240px] md:h-[300px] w-full rounded-lg bg-white/70 grid place-items-center">
-                      <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-display text-xl text-brand-ink">{it.title}</h3>
-                <p className="mt-2 text-sm text-brand-ink/80">{it.body}</p>
-                <button className="mt-4 inline-flex items-center gap-1 rounded-full border border-brand-red px-4 py-1.5 text-xs font-semibold text-brand-red hover:bg-white/50">
-                  Explore <ArrowRight className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }

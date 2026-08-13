@@ -51,7 +51,7 @@ export function Header() {
       </header>
 
       {/* Mobile bottom navigation */}
-      <nav className="fixed inset-x-2 bottom-2 z-50 flex items-center justify-around rounded-[25px] border border-white/40 bg-brand-yellow/90 px-2 py-2 backdrop-blur-2xl md:hidden">
+      <nav className="fixed inset-x-2 bottom-2 z-50 flex items-center justify-around rounded-[25px] border border-white/40 bg-brand-yellow/55 px-2 py-2 backdrop-blur-2xl backdrop-saturate-150 md:hidden">
         {navItems.map(({ to, label, Icon }) => (
           <Link
             key={to}
