@@ -1,5 +1,10 @@
 # Plan: Replace all homepage and product images/videos
 
+## Prerequisite: fix existing build errors
+The current build has TypeScript errors on every `<Link to="/product">` because the `/product` route now requires a `search` parameter (the active tab). Before the asset swap, I will either:
+- add a default `search={{ tab: "custom" }}` to each link, or
+- make the tab search param optional in the route definition.
+
 ## Goal
 Swap every image and video on the site (≈70 assets) with new files you supply, keeping the same file names and existing page layout.
 
