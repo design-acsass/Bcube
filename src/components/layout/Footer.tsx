@@ -14,7 +14,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center justify-between gap-6 border-b border-white/20 pb-6">
             <div className="flex flex-wrap gap-6 text-sm font-medium">
               <Link to="/" className="hover:underline">Bcube</Link>
-              <Link to="/product" className="hover:underline">Product</Link>
+              <Link to="/product" search={{ tab: 'custom' }} className="hover:underline">Product</Link>
               <Link to="/about" className="hover:underline">About us</Link>
               <Link to="/contact" className="hover:underline">Contact us</Link>
             </div>
