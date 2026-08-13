@@ -106,6 +106,7 @@ function Hero() {
                 </h1>
                 <Link
                   to="/product"
+                  search={{ tab: 'custom' }}
                   className="inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white shadow-md hover:bg-brand-red-dark"
                 >
                   Explore <ArrowRight className="h-4 w-4" />
