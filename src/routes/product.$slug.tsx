@@ -29,7 +29,7 @@ export const Route = createFileRoute("/product/$slug")({
   notFoundComponent: () => (
     <div className="container mx-auto px-4 py-20 text-center">
       <h1 className="font-display text-3xl text-brand-red">Product not found</h1>
-      <Link to="/product" className="mt-6 inline-block rounded-full bg-brand-red px-5 py-2 text-white">Back to products</Link>
+      <Link to="/product" search={{ tab: 'custom' }} className="mt-6 inline-block rounded-full bg-brand-red px-5 py-2 text-white">Back to products</Link>
     </div>
   ),
   component: ProductPage,
@@ -104,7 +104,7 @@ function ProductPage() {
           <nav className="mb-6 text-xs text-muted-foreground">
             <Link to="/" className="hover:text-brand-red">Home</Link>
             <span className="mx-1">/</span>
-            <Link to="/product" className="hover:text-brand-red">Products</Link>
+            <Link to="/product" search={{ tab: 'custom' }} className="hover:text-brand-red">Products</Link>
             <span className="mx-1">/</span>
             <span className="text-brand-red font-medium">{product.name}</span>
           </nav>
