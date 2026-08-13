@@ -77,6 +77,15 @@ const imgBySlug: Record<string, string> = {
   cap: pCap.url,
   "jute-bag": pJute.url,
   container: pContainer.url,
+  "pen-drive": pPenDrive.url,
+  "photo-albums": pAlbum.url,
+  candle: pCandle.url,
+  "sweet-box": pSweetBox.url,
+  tshirt: pTshirt.url,
+  "tote-bag": pTote.url,
+  "travel-duffle-bag": pTravel.url,
+  umbrella: pUmbrella.url,
+  "wall-clocks": pClock.url,
 };
 
 const tabs: { id: Tab; label: string; img: string }[] = [
