@@ -75,9 +75,16 @@ function Hero() {
     <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
       <div className="relative w-full overflow-hidden rounded-[25px]">
         <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
-          {slides.map((s) => (
+          {slides.map((s, k) => (
             <div key={s.tagline} className="relative w-full shrink-0">
-              <img src={s.img} alt={s.alt} className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]" loading="lazy" />
+              <img
+                src={s.img}
+                alt={s.alt}
+                className="h-[60vh] min-h-[360px] w-full object-cover md:h-[90vh]"
+                loading={k === 0 ? "eager" : "lazy"}
+                fetchPriority={k === 0 ? "high" : "low"}
+                decoding="async"
+              />
               <div className="absolute inset-x-0 top-0 flex flex-col items-center gap-5 px-6 pt-14 text-center md:pt-24">
                 <h1 className={`max-w-2xl md:max-w-3xl lg:max-w-none lg:whitespace-nowrap font-display text-2xl italic leading-tight sm:text-3xl md:text-4xl lg:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
@@ -130,8 +137,8 @@ function Spotlight() {
             className="group flex min-w-0 flex-col items-center"
           >
             <div className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-72 lg:w-72">
-              <img src={catBg1.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
-              <img src={catBg2.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <img src={catBg1.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
+              <img src={catBg2.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
               <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 lg:h-56 lg:w-56 object-contain drop-shadow-md" />
             </div>
             <p className="mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium text-brand-ink">{it.label}</p>
