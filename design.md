@@ -67,3 +67,43 @@ All media lives in `src/assets/*.asset.json` (Lovable CDN pointers); import the 
 - `/product` — same language: hero heading, brush category tabs, tile grids per tab,
   ad banners, enquire band.
 - `/product/$slug` — 5-step configurator.
+
+## Sections & reuse (as of final design)
+- `src/components/sections/Testimonials.tsx` is the single source for the testimonials block.
+  Content lives in `src/data/testimonials.ts` (`testimonialGroups`, 4 groups x 6 clips).
+  Accepts a `heading` prop; used on `/` ("Testimonials") and `/about`
+  ("What our customers love"). Videos load lazily via IntersectionObserver
+  (`preload="none"`, src attached ~300px before entering the viewport).
+
+## Pages (final)
+- `/` Home — hero carousel, product categories, enquire band, featured grid, ad banner,
+  testimonials, contact banner, "Make Celebrations Special With", gifts banner, customer stories.
+- `/product` — hero heading, brush category tabs, tile grids per tab, ad banners, enquire band.
+- `/product/$slug` — 5-step configurator (wizard slugs) / custom-enquiry / bulk modes.
+- `/about` — 4 sections: animated logo hero ("Your vision, our craftsmanship"),
+  "About us" copy card (white card, 25px radius), reused Testimonials, "Who we are"
+  copy card on `brand-yellow`.
+- `/contact` — 2-column section (logo + heading left, yellow enquiry form card right),
+  followed by the `Advertisement_card_2` banner.
+
+## Copy blocks
+- About us: Bcube as a retail company with a "wow factor" inventory.
+- Who we are: team of young entrepreneurs, customised accessories, guaranteed protection.
+
+## Navigation
+Desktop: sticky glass pill header (`bg-white/30 backdrop-blur-2xl`), logo then yellow nav pill.
+Mobile: fixed bottom nav, partially glassy — `bg-brand-yellow/55 backdrop-blur-2xl
+backdrop-saturate-150`, icons + labels, active item on `bg-white/70` in `brand-red`.
+
+## Performance rules (always apply)
+- Every image below the fold: `loading="lazy" decoding="async"`. First hero slide only:
+  `loading="eager" fetchPriority="high"`.
+- Videos: never autoload — mount through the lazy pattern in `Testimonials.tsx`.
+- Fonts are self-hosted `@font-face` in `src/styles.css`; no Google Fonts requests.
+- Assets are already compressed/web-optimised upstream — do not re-encode, just gate loading.
+
+## Code conventions (backend handover ready)
+- Content/data lives in `src/data/*` as typed exports so it can be swapped for API calls.
+- Form payloads are typed (e.g. `ContactEnquiry` in `src/routes/contact.tsx`) with a
+  `TODO(backend)` marker where the POST belongs.
+- Presentation components stay pure and prop-driven; no hardcoded colors outside tokens.
