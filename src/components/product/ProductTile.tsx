@@ -22,7 +22,7 @@ export function ProductTile({ name, slug, img, size = "md" }: Props) {
         {/* red shelf */}
         <div className="absolute inset-x-[22%] bottom-0 h-12 sm:h-16 md:h-20 rounded-xl md:rounded-2xl bg-brand-red shadow-md" />
         {/* product image */}
-        <div className={`relative mx-auto flex ${dims} w-[80%] items-center justify-center transition-transform duration-300 group-hover:-translate-y-1`}>
+        <div className={`relative mx-auto flex ${dims} w-[80%] items-center justify-center pb-5 sm:pb-6 md:pb-8 transition-transform duration-300 group-hover:-translate-y-1`}>
           {img ? (
             <img src={img} alt={name} loading="lazy" className="h-full w-full object-contain drop-shadow-md" />
           ) : (

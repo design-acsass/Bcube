@@ -39,6 +39,8 @@ import pTote from "@/assets/Tote_Bag.png.asset.json";
 import pTravel from "@/assets/Travel_Bag.png.asset.json";
 import pUmbrella from "@/assets/Umbrella.png.asset.json";
 import pClock from "@/assets/Wall_Clocks.png.asset.json";
+import pPerfume from "@/assets/Perfume.png.asset.json";
+import pPlant from "@/assets/Potted_Plant.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
@@ -86,6 +88,8 @@ const imgBySlug: Record<string, string> = {
   "travel-duffle-bag": pTravel.url,
   umbrella: pUmbrella.url,
   "wall-clocks": pClock.url,
+  perfume: pPerfume.url,
+  plant: pPlant.url,
 };
 
 const tabs: { id: Tab; label: string; img: string }[] = [
