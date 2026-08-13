@@ -48,7 +48,7 @@ import v33 from "@/assets/33.mp4.asset.json";
 import v35 from "@/assets/35.mp4.asset.json";
 import v31 from "@/assets/31.mp4.asset.json";
 import v22 from "@/assets/22.mp4.asset.json";
-import v2 from "@/assets/2.mp4.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
