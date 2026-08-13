@@ -108,7 +108,7 @@ function ProductListing() {
           Pick a collection — every piece is personalised and made to order.
         </p>
 
-        <div className="mt-8 md:mt-12 grid grid-cols-3 gap-6 md:gap-10 place-items-center">
+        <div className="mt-8 md:mt-10 lg:mt-12 grid grid-cols-3 gap-6 md:gap-8 lg:gap-10 place-items-center">
           {tabs.map((t) => {
             const active = t.id === tab;
             return (
@@ -119,7 +119,7 @@ function ProductListing() {
                 resetScroll={false}
                 className="group flex min-w-0 flex-col items-center"
               >
-                <div className="relative h-28 w-28 sm:h-48 sm:w-48 md:h-72 md:w-72">
+                <div className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-72 lg:w-72">
                   <img
                     src={catBg1.url}
                     alt=""
@@ -132,9 +132,9 @@ function ProductListing() {
                     aria-hidden
                     className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${active ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
                   />
-                  <img src={t.img} alt={t.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-36 sm:w-36 md:h-56 md:w-56 object-contain drop-shadow-md" />
+                  <img src={t.img} alt={t.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 lg:h-56 lg:w-56 object-contain drop-shadow-md" />
                 </div>
-                <p className={`mt-3 md:mt-4 text-center text-xs sm:text-base md:text-lg font-medium ${active ? "text-brand-red font-semibold" : "text-brand-ink"}`}>
+                <p className={`mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium ${active ? "text-brand-red font-semibold" : "text-brand-ink"}`}>
                   {t.label}
                 </p>
                 {active && <span className="mt-2 h-1 w-12 rounded-full bg-brand-red" />}
