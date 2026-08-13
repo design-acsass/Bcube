@@ -7,9 +7,10 @@ type Props = {
   slug?: string;
   img?: string;
   size?: "sm" | "md" | "lg";
+  compact?: boolean;
 };
 
-export function ProductTile({ name, slug, img, size = "md" }: Props) {
+export function ProductTile({ name, slug, img, size = "md", compact = false }: Props) {
   const dims =
     size === "lg"
       ? "h-44 sm:h-56 md:h-72"
@@ -24,7 +25,7 @@ export function ProductTile({ name, slug, img, size = "md" }: Props) {
         {/* product image */}
         <div className={`relative mx-auto flex ${dims} w-[80%] items-center justify-center pb-5 sm:pb-6 md:pb-8 transition-transform duration-300 group-hover:-translate-y-1`}>
           {img ? (
-            <img src={img} alt={name} loading="lazy" className="h-full w-full object-contain drop-shadow-md" />
+            <img src={img} alt={name} loading="lazy" className={`h-full w-full object-contain drop-shadow-md ${compact ? "scale-[0.85]" : ""}`} />
           ) : (
             <div className="flex h-full w-full items-center justify-center rounded-xl border border-border bg-white shadow-sm">
               <ImageIcon className="h-10 w-10 text-muted-foreground/40" />

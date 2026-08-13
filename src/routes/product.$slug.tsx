@@ -629,7 +629,7 @@ function ExploreMore({ currentSlug }: { currentSlug: string }) {
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center font-display text-2xl text-brand-ink mb-10">Explore More</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14">
-        {more.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} />)}
+        {more.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} compact={p.slug === "wall-clocks"} />)}
       </div>
     </section>
   );
