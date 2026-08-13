@@ -30,6 +30,15 @@ import pJute from "@/assets/Jute_Bag.png.asset.json";
 import pLaptop from "@/assets/Laptop_Bags.png.asset.json";
 import pLuggage from "@/assets/Luggage_tags.png.asset.json";
 import pContainer from "@/assets/Lunch_Container.png.asset.json";
+import pPenDrive from "@/assets/Pen_Drives.png.asset.json";
+import pAlbum from "@/assets/Photo_Albums.png.asset.json";
+import pCandle from "@/assets/Premium_Candle.png.asset.json";
+import pSweetBox from "@/assets/Sweet_Box.png.asset.json";
+import pTshirt from "@/assets/T_Shirt.png.asset.json";
+import pTote from "@/assets/Tote_Bag.png.asset.json";
+import pTravel from "@/assets/Travel_Bag.png.asset.json";
+import pUmbrella from "@/assets/Umbrella.png.asset.json";
+import pClock from "@/assets/Wall_Clocks.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
