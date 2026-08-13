@@ -40,7 +40,8 @@ Hover: image lifts (`-translate-y-1`). Sizes `sm | md | lg`.
 
 ### Category tile (brush)
 Product image centered over a watercolour brush background that swaps pink → yellow on hover
-(`Category_Bg1` → `Category_Bg2b`).
+(`Category_Bg1` → `Category_Bg2b`). Responsive tile sizes: mobile `h-28 w-28`, tablet
+(`sm/md`) `h-40/h-52`, desktop `lg:h-72 lg:w-72`. Product images scale proportionally inside.
 
 ### CTA button
 `rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white` + `ArrowRight` icon.
