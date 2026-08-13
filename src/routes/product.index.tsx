@@ -171,7 +171,7 @@ function Panel({ title, items, fallback }: { title: string; items: { slug: strin
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">{title}</h2>
       <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
         {items.map((p) => (
-          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={imgBySlug[p.slug] ?? fallback} />
+          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={imgBySlug[p.slug] ?? fallback} compact={p.slug === "wall-clocks"} />
         ))}
       </div>
     </>
