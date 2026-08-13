@@ -45,6 +45,7 @@ import v6 from "@/assets/6.mp4.asset.json";
 import v8 from "@/assets/8.mp4.asset.json";
 import v12 from "@/assets/12.mp4.asset.json";
 import v33 from "@/assets/33.mp4.asset.json";
+import v35 from "@/assets/35.mp4.asset.json";
 import v31 from "@/assets/31.mp4.asset.json";
 import v22 from "@/assets/22.mp4.asset.json";
 import v2 from "@/assets/2.mp4.asset.json";
