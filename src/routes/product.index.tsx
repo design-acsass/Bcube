@@ -20,6 +20,16 @@ import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
+import pCutout from "@/assets/Acrylic_Cutout_Decor.png.asset.json";
+import pDesk from "@/assets/Acrylic_Desk_Photos.png.asset.json";
+import pMonogram from "@/assets/Acrylic_Monogram.png.asset.json";
+import pCap from "@/assets/Cap.png.asset.json";
+import pBottle from "@/assets/Cup_Waterbottle.png.asset.json";
+import pHoodie from "@/assets/Hoodies.png.asset.json";
+import pJute from "@/assets/Jute_Bag.png.asset.json";
+import pLaptop from "@/assets/Laptop_Bags.png.asset.json";
+import pLuggage from "@/assets/Luggage_tags.png.asset.json";
+import pContainer from "@/assets/Lunch_Container.png.asset.json";
 
 type Tab = "custom" | "corporate" | "return";
 
