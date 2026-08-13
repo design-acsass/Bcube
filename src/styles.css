@@ -103,3 +103,42 @@
 .animate-marquee-x {
   animation: marquee-x 60s linear infinite;
 }
+
+/* About hero — logo emerges from the white page, text rises cinematically */
+@keyframes about-logo-emerge {
+  0%   { opacity: 0; transform: scale(0.72) translateY(28px); filter: blur(18px) saturate(0.2); }
+  55%  { opacity: 1; filter: blur(2px) saturate(1); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0) saturate(1); }
+}
+@keyframes about-rise {
+  from { opacity: 0; transform: translateY(26px); letter-spacing: 0.14em; filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); letter-spacing: normal; filter: blur(0); }
+}
+@keyframes about-rule-grow {
+  from { opacity: 0; transform: scaleX(0); }
+  to   { opacity: 1; transform: scaleX(1); }
+}
+.about-logo {
+  opacity: 0;
+  animation: about-logo-emerge 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+.about-line {
+  opacity: 0;
+  animation: about-rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.about-line-1 { animation-delay: 1.05s; }
+.about-line-2 { animation-delay: 1.4s; }
+.about-rule {
+  opacity: 0;
+  transform-origin: center;
+  animation: about-rule-grow 1s cubic-bezier(0.22, 1, 0.36, 1) 1.75s forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-logo, .about-line, .about-rule {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
