@@ -207,6 +207,7 @@ function FeaturedGrid() {
     { slug: "fridge-magnet", name: "Fridge Magnets", img: pMagnet.url },
     { slug: "name-plate", name: "Custom Name Plates", img: pNamePlate.url },
     { slug: "keychain", name: "Custom Keychains", img: pKeychain.url },
+    { slug: "wall-clocks", name: "Wall Clocks", img: pClock.url },
   ];
   return (
     <section className="container mx-auto px-4 py-12">
