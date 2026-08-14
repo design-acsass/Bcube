@@ -48,19 +48,19 @@ function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-muted/30 pb-24 pt-8 md:pb-16">
-      <div className="container mx-auto grid gap-10 px-4 md:grid-cols-2 md:items-center">
-        <div className="text-center md:text-left">
-          <img src={logo.url} alt="B Cube logo" className="mx-auto h-24 w-24 object-contain md:mx-0 md:h-32 md:w-32" />
-          <h1 className="mt-6 font-display text-3xl italic text-brand-ink md:text-4xl">
+    <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4 pb-24 pt-10 md:pb-16">
+      <div className="w-full max-w-lg">
+        <div className="text-center">
+          <img src={logo.url} alt="B Cube logo" className="mx-auto h-24 w-24 object-contain md:h-28 md:w-28" />
+          <h1 className="mt-5 font-display text-2xl italic text-brand-ink md:text-3xl">
             More Than Décor. It&apos;s Personal.
           </h1>
-          <p className="mt-3 text-sm text-muted-foreground md:max-w-md">
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
             Sign in to track your personalised orders, revisit saved designs and check out in a couple of taps.
           </p>
         </div>
 
-        <div className="rounded-[25px] bg-brand-yellow p-6 md:p-[40px]">
+        <div className="mt-8 rounded-[25px] bg-brand-yellow p-6 md:p-[40px]">
           <div className="flex rounded-full bg-white/60 p-1">
             {(["login", "signup"] as const).map((m) => (
               <button
