@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Reveal } from "@/components/motion/Reveal";
+import { Magnetic, MagneticButton } from "@/components/motion/MagneticButton";
+import { useParallax } from "@/hooks/use-parallax";
 import { ArrowRight } from "lucide-react";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -75,7 +78,10 @@ function Hero() {
   return (
     <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
       <div className="relative w-full overflow-hidden rounded-[25px]">
-        <div className="flex" style={{ transform: `translateX(-${i * 100}%)` }}>
+        <div
+          className="flex transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ transform: `translateX(-${i * 100}%)` }}
+        >
           {slides.map((s, k) => (
             <div key={s.tagline} className="relative w-full shrink-0">
               <img
@@ -90,13 +96,15 @@ function Hero() {
                 <h1 className={`max-w-2xl md:max-w-3xl lg:max-w-none lg:whitespace-nowrap font-display text-2xl italic leading-tight sm:text-3xl md:text-4xl lg:text-5xl ${s.light ? "text-white" : "text-brand-ink"}`}>
                   {s.tagline}
                 </h1>
-                <Link
-                  to="/product"
-                  search={{ tab: 'custom' }}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white shadow-md hover:bg-brand-red-dark"
-                >
-                  Explore <ArrowRight className="h-4 w-4" />
-                </Link>
+                <Magnetic>
+                  <Link
+                    to="/product"
+                    search={{ tab: 'custom' }}
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-brand-red-dark"
+                  >
+                    Explore <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Magnetic>
               </div>
             </div>
           ))}
@@ -128,9 +136,10 @@ function Spotlight() {
   ];
   return (
     <section className="container mx-auto px-4 py-14">
-      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</h2>
+      <Reveal as="h2" className="text-center font-display text-3xl md:text-4xl text-brand-ink">Product categories</Reveal>
       <div className="mt-8 md:mt-12 grid gap-6 md:gap-10 grid-cols-3 place-items-center">
-        {items.map((it) => (
+        {items.map((it, idx) => (
+          <Reveal key={it.label} delay={idx * 90}>
           <Link
             key={it.label}
             to="/product"
@@ -144,6 +153,7 @@ function Spotlight() {
             </div>
             <p className="mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium text-brand-ink">{it.label}</p>
           </Link>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -158,7 +168,7 @@ function EnquireBand() {
   return (
     <section className="bg-brand-yellow my-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 px-4 py-10 items-center">
-        <h2 className="font-display text-5xl text-brand-red leading-none rotate-[-2deg]">Enquire<br/>Now</h2>
+        <Reveal as="h2" className="font-display text-5xl text-brand-red leading-none rotate-[-2deg]">Enquire<br/>Now</Reveal>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -176,7 +186,7 @@ function EnquireBand() {
             <label className="inline-flex items-center gap-2 text-xs text-brand-ink">
               <input type="checkbox" defaultChecked /> I agree to be contacted
             </label>
-            <button className="rounded-md bg-brand-red px-6 py-2 text-sm font-semibold text-white hover:bg-brand-red-dark">Send</button>
+            <MagneticButton className="rounded-md bg-brand-red px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark">Send</MagneticButton>
           </div>
         </form>
       </div>
@@ -195,10 +205,12 @@ function FeaturedGrid() {
   ];
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks & sets</h2>
+      <Reveal as="h2" className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks &amp; sets</Reveal>
       <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
-        {featured.map((p) => (
-          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={p.img} />
+        {featured.map((p, idx) => (
+          <Reveal key={p.slug} delay={idx * 80}>
+            <ProductTile name={p.name} slug={p.slug} img={p.img} />
+          </Reveal>
         ))}
       </div>
     </section>
@@ -207,9 +219,16 @@ function FeaturedGrid() {
 
 
 function RelationshipBanner() {
+  const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
-    <section className="my-12">
-      <img src={ad1.url} alt="Enriching relationships through thoughtful gifts" className="w-full" loading="lazy" />
+    <section className="my-12 overflow-hidden">
+      <img
+        ref={layer}
+        src={ad1.url}
+        alt="Enriching relationships through thoughtful gifts"
+        className="w-full will-change-transform"
+        loading="lazy"
+      />
     </section>
   );
 }
@@ -234,10 +253,12 @@ function MakeSpecial() {
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-center">
-        <h2 className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center lg:text-left lg:ml-24">Make<br/>Celebrations<br/>Special With</h2>
+        <Reveal as="h2" className="font-display text-4xl md:text-5xl leading-tight text-brand-ink text-center lg:text-left lg:ml-24">Make<br/>Celebrations<br/>Special With</Reveal>
         <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-10 items-end">
-          {cats.map((c) => (
-            <ProductTile key={c.name} name={c.name} img={c.img} />
+          {cats.map((c, idx) => (
+            <Reveal key={c.name} delay={idx * 80}>
+              <ProductTile name={c.name} img={c.img} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -246,9 +267,16 @@ function MakeSpecial() {
 }
 
 function PerfectGifts() {
+  const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
-    <section className="my-12">
-      <img src={ad3.url} alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions" className="w-full" loading="lazy" />
+    <section className="my-12 overflow-hidden">
+      <img
+        ref={layer}
+        src={ad3.url}
+        alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions"
+        className="w-full will-change-transform"
+        loading="lazy"
+      />
     </section>
   );
 }

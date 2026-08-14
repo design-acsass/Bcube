@@ -11,6 +11,8 @@ import { imgBySlug, productImageFallback } from "@/data/product-images";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CustomerStories } from "@/components/sections/CustomerStories";
 import { useCart } from "@/hooks/use-cart";
+import { flyToCart } from "@/lib/cart-fly";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 import { computePrice, formatPrice } from "@/data/pricing";
 import roomImg from "@/assets/room-preview.jpg";
 
@@ -177,6 +179,11 @@ function ProductPage() {
   });
 
   const onBuy = (buyerInfo: Record<string, string>) => {
+    // Visual: fly the preview into the cart icon before the toast lands.
+    flyToCart(
+      document.querySelector<HTMLElement>("[data-fly-source]"),
+      mode === "wizard" ? (state.imageUrl ?? productImage) : productImage,
+    );
     addItem({ slug: product.slug, name: product.name, config: { ...state, mode, price, buyerInfo } });
     toast.success(
       mode === "wizard" ? `${product.name} added to cart!` : "Thanks! We'll get back to you shortly.",
@@ -293,7 +300,7 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
 /** Non-configurable products: large product shot on a premium white/grey backdrop. */
 function SimpleProductPane({ image, name }: { image: string; name: string }) {
   return (
-    <div className="relative grid h-[360px] place-items-center overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_50%_35%,#ffffff_0%,#f4f4f5_55%,#e4e4e7_100%)] p-8 lg:h-[var(--config-h)]">
+    <div data-fly-source className="relative grid h-[360px] place-items-center overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_50%_35%,#ffffff_0%,#f4f4f5_55%,#e4e4e7_100%)] p-8 lg:h-[var(--config-h)]">
       <img
         src={image}
         alt={name}
@@ -315,6 +322,7 @@ function PreviewPane({
     <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
+        data-fly-source
         className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
         style={{ ...dims, filter: thicknessShadow(state.thickness) }}
       >
@@ -434,7 +442,7 @@ function ContinueButton({ onClick, disabled, price }: { onClick: () => void; dis
   return (
     <div className="mt-auto flex flex-col items-center gap-3 pt-6">
       <PriceTag price={price} />
-      <button
+      <MagneticButton
         onClick={onClick}
         disabled={disabled}
         className={`w-full max-w-xs rounded-full px-6 py-3 text-sm font-semibold transition ${
@@ -444,7 +452,7 @@ function ContinueButton({ onClick, disabled, price }: { onClick: () => void; dis
         }`}
       >
         Continue
-      </button>
+      </MagneticButton>
     </div>
   );
 }
@@ -694,7 +702,7 @@ function StepPreviewForm({
         </label>
         <div className="mt-auto flex flex-col items-center gap-3 pt-4">
           <PriceTag price={price} />
-          <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
+          <MagneticButton type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</MagneticButton>
         </div>
       </form>
     </div>

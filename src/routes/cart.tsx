@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/use-cart";
+import { MagneticButton, Magnetic } from "@/components/motion/MagneticButton";
 import { formatPrice } from "@/data/pricing";
 import { imgBySlug, productImageFallback } from "@/data/product-images";
 
@@ -56,14 +57,15 @@ function CartPage() {
             <ShoppingBag className="h-10 w-10 text-brand-red/60" />
             <p className="mt-4 font-display text-xl text-brand-ink">Your cart is empty</p>
             <p className="mt-1 text-sm text-muted-foreground">Personalise a piece and it will show up here.</p>
-            <Link
-              to="/product"
-              search={{ tab: "custom" }}
-
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white"
-            >
-              Browse products <ArrowRight className="h-4 w-4" />
-            </Link>
+            <Magnetic className="mt-6">
+              <Link
+                to="/product"
+                search={{ tab: "custom" }}
+                className="inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white"
+              >
+                Browse products <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Magnetic>
           </div>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_340px]">
@@ -76,7 +78,7 @@ function CartPage() {
                 return (
                   <li
                     key={item.id}
-                    className="flex gap-4 rounded-[25px] border border-border bg-white p-4 md:p-5"
+                    className="flex animate-fade-in gap-4 rounded-[25px] border border-border bg-white p-4 transition-shadow duration-300 hover:shadow-md md:p-5"
                   >
                     <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-muted/50">
                       <img
@@ -152,18 +154,18 @@ function CartPage() {
                 <span className="text-sm text-muted-foreground">Total</span>
                 <span className="font-display text-2xl text-brand-red">{formatPrice(subtotal)}</span>
               </div>
-              <button
+              <MagneticButton
                 onClick={handleCheckout}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white hover:brightness-95"
               >
                 Checkout <ArrowRight className="h-4 w-4" />
-              </button>
-              <button
+              </MagneticButton>
+              <MagneticButton
                 onClick={clear}
                 className="mt-3 w-full rounded-full border border-brand-red px-7 py-3 text-sm font-semibold text-brand-red hover:bg-brand-red/5"
               >
                 Clear cart
-              </button>
+              </MagneticButton>
             </aside>
           </div>
         )}

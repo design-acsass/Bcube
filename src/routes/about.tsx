@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logo from "@/assets/LOGO.png.asset.json";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { Reveal } from "@/components/motion/Reveal";
 
 /** Static copy — swap for a CMS/API payload when a backend is wired up. */
 const sections = [
@@ -52,7 +53,14 @@ function AboutPage() {
 function AboutHero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(60%_50%_at_50%_20%,color-mix(in_oklab,var(--brand-yellow)_18%,transparent),transparent_70%)]" />
+      {/* Slow aurora mesh — keeps the white hero alive without distracting. */}
+      <div aria-hidden className="aurora">
+        <span className="blob-1" />
+        <span className="blob-2" />
+        <span className="blob-3" />
+      </div>
+      <div aria-hidden className="aurora-noise" />
+      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(60%_50%_at_50%_20%,color-mix(in_oklab,var(--brand-yellow)_10%,transparent),transparent_70%)]" />
       <div className="container relative mx-auto flex min-h-[70vh] flex-col items-center justify-center px-4 py-20 text-center md:min-h-[80vh]">
         <img
           src={logo.url}
@@ -93,8 +101,12 @@ function CopySection({
             : "rounded-[25px] border border-border bg-card p-6 sm:p-10 md:p-[40px]"
         }
       >
-        <h2 className="font-display text-3xl text-brand-ink md:text-4xl">{heading}</h2>
-        <p className="mt-4 max-w-4xl text-sm leading-relaxed text-brand-ink/80 md:text-base">{body}</p>
+        <div className="space-y-4">
+        <Reveal as="h2" className="font-display text-3xl text-brand-ink md:text-4xl">{heading}</Reveal>
+        <Reveal delay={110}>
+          <p className="max-w-4xl text-sm leading-relaxed text-brand-ink/80 md:text-base">{body}</p>
+        </Reveal>
+        </div>
       </div>
     </section>
   );

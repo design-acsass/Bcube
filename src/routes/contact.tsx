@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
@@ -102,13 +103,13 @@ function ContactSection() {
               />
             </div>
           </div>
-          <button
+          <MagneticButton
             type="submit"
             disabled={submitting}
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white hover:bg-brand-red-dark disabled:opacity-60"
           >
             Send enquiry <ArrowRight className="h-4 w-4" />
-          </button>
+          </MagneticButton>
         </form>
       </div>
     </section>
