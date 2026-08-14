@@ -8,7 +8,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   radius?: number;
 };
 
-function usePrefersStatic() {
+function isStatic() {
   if (typeof window === "undefined") return true;
   return (
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -25,7 +25,7 @@ export function MagneticButton({ children, strength = 14, radius = 120, style, .
   const [t, setT] = useState({ x: 0, y: 0, active: false });
 
   const handleMove = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (usePrefersStatic() || !ref.current) return;
+    if (isStatic() || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const dx = e.clientX - (r.left + r.width / 2);
     const dy = e.clientY - (r.top + r.height / 2);
