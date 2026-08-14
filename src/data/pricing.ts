@@ -55,8 +55,8 @@ export type PriceSelection = {
 };
 
 /** Live total for the current configurator selection. */
-export function computePrice(sel: PriceSelection): number {
-  const c = priceConfigFor(sel.slug);
+export function computePrice(sel: PriceSelection, override?: PriceConfig): number {
+  const c = override ?? priceConfigFor(sel.slug);
   return (
     c.base +
     (sel.frame === "with" ? c.framed : 0) +
