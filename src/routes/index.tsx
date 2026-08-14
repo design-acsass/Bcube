@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { CustomerStories } from "@/components/sections/CustomerStories";
 import banner1 from "@/assets/banner-1.png.asset.json";
 import banner2 from "@/assets/banner-2.png.asset.json";
 import banner3 from "@/assets/banner-3.png.asset.json";
