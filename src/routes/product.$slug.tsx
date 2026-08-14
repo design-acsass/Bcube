@@ -224,26 +224,29 @@ function testimonialGroupFor(slug: string): string {
 
 function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void }) {
   return (
-    <ol className="mx-auto flex max-w-4xl items-start">
+    <ol className="mx-auto flex w-full max-w-4xl items-start">
       {STEPS.map((s, i) => {
         const done = s.id < current;
         const active = s.id === current;
         return (
-          <li key={s.id} className="flex flex-1 items-start last:flex-none">
-            <button onClick={() => onGo(s.id)} className="flex w-24 flex-col items-center gap-2">
+          <li key={s.id} className="flex min-w-0 flex-1 items-start last:flex-none">
+            <button
+              onClick={() => onGo(s.id)}
+              className="flex w-12 shrink-0 flex-col items-center gap-1.5 sm:w-20 md:w-24 sm:gap-2"
+            >
               <span
-                className={`grid h-9 w-9 place-items-center rounded-full border-2 text-xs font-semibold transition ${
+                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-[10px] font-semibold transition sm:h-9 sm:w-9 sm:text-xs ${
                   active || done ? "border-brand-red text-brand-red" : "border-border text-muted-foreground bg-white"
                 }`}
               >
-                {active ? <span className="h-3 w-3 rounded-full bg-brand-red" /> : String(s.id).padStart(2, "0")}
+                {active ? <span className="h-2.5 w-2.5 rounded-full bg-brand-red sm:h-3 sm:w-3" /> : String(s.id).padStart(2, "0")}
               </span>
-              <span className={`text-center text-[11px] leading-tight ${active ? "text-brand-red font-semibold" : done ? "text-brand-red" : "text-muted-foreground"}`}>
+              <span className={`text-center text-[9px] leading-tight sm:text-[11px] ${active ? "text-brand-red font-semibold" : done ? "text-brand-red" : "text-muted-foreground"}`}>
                 {s.label}
               </span>
             </button>
             {i < STEPS.length - 1 && (
-              <span className={`mt-[18px] h-0 flex-1 border-t-2 border-dashed ${done ? "border-brand-red/60" : "border-border"}`} />
+              <span className={`mt-[14px] h-0 min-w-2 flex-1 border-t-2 border-dashed sm:mt-[18px] ${done ? "border-brand-red/60" : "border-border"}`} />
             )}
           </li>
         );
