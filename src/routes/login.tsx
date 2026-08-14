@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Mail, Lock, User } from "lucide-react";
 import logo from "@/assets/LOGO.png.asset.json";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
