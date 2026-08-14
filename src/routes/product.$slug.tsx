@@ -186,7 +186,7 @@ function ProductPage() {
           >
             <PreviewPane state={state} />
 
-            <div className="flex min-h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
+            <div className="flex min-h-[420px] flex-col rounded-2xl bg-white border border-border p-5 sm:p-6 md:p-7 shadow-sm lg:h-[var(--config-h)]">
 
               {mode !== "wizard" ? (
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
@@ -224,26 +224,29 @@ function testimonialGroupFor(slug: string): string {
 
 function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void }) {
   return (
-    <ol className="mx-auto flex max-w-4xl items-start">
+    <ol className="mx-auto flex w-full max-w-4xl items-start">
       {STEPS.map((s, i) => {
         const done = s.id < current;
         const active = s.id === current;
         return (
-          <li key={s.id} className="flex flex-1 items-start last:flex-none">
-            <button onClick={() => onGo(s.id)} className="flex w-24 flex-col items-center gap-2">
+          <li key={s.id} className="flex min-w-0 flex-1 items-start last:flex-none">
+            <button
+              onClick={() => onGo(s.id)}
+              className="flex w-12 shrink-0 flex-col items-center gap-1.5 sm:w-20 md:w-24 sm:gap-2"
+            >
               <span
-                className={`grid h-9 w-9 place-items-center rounded-full border-2 text-xs font-semibold transition ${
+                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-[10px] font-semibold transition sm:h-9 sm:w-9 sm:text-xs ${
                   active || done ? "border-brand-red text-brand-red" : "border-border text-muted-foreground bg-white"
                 }`}
               >
-                {active ? <span className="h-3 w-3 rounded-full bg-brand-red" /> : String(s.id).padStart(2, "0")}
+                {active ? <span className="h-2.5 w-2.5 rounded-full bg-brand-red sm:h-3 sm:w-3" /> : String(s.id).padStart(2, "0")}
               </span>
-              <span className={`text-center text-[11px] leading-tight ${active ? "text-brand-red font-semibold" : done ? "text-brand-red" : "text-muted-foreground"}`}>
+              <span className={`text-center text-[9px] leading-tight sm:text-[11px] ${active ? "text-brand-red font-semibold" : done ? "text-brand-red" : "text-muted-foreground"}`}>
                 {s.label}
               </span>
             </button>
             {i < STEPS.length - 1 && (
-              <span className={`mt-[18px] h-0 flex-1 border-t-2 border-dashed ${done ? "border-brand-red/60" : "border-border"}`} />
+              <span className={`mt-[14px] h-0 min-w-2 flex-1 border-t-2 border-dashed sm:mt-[18px] ${done ? "border-brand-red/60" : "border-border"}`} />
             )}
           </li>
         );
@@ -307,12 +310,12 @@ function StepHeader({
   Icon, title, subtitle, onReset,
 }: { Icon: typeof UploadCloud; title: string; subtitle?: string; onReset?: () => void }) {
   return (
-    <div className="flex items-start gap-4 pb-6">
+    <div className="flex items-start gap-3 pb-4 sm:gap-4 sm:pb-5">
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-brand-ink">
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0 flex-1">
-        <h2 className="font-display text-2xl text-brand-ink">{title}</h2>
+        <h2 className="font-display text-xl text-brand-ink sm:text-2xl">{title}</h2>
         {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
       </div>
       {onReset && (
@@ -366,7 +369,7 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); accept(e.dataTransfer.files?.[0]); }}
         onClick={() => inputRef.current?.click()}
-        className="cursor-pointer rounded-2xl border-2 border-dashed border-border bg-white p-10 text-center transition hover:border-brand-red"
+        className="cursor-pointer rounded-2xl border-2 border-dashed border-border bg-white p-6 sm:p-8 text-center transition hover:border-brand-red"
       >
         <p className="font-display text-lg text-brand-ink">Choose a file or drag &amp; drop it here</p>
         <p className="mt-1 text-sm text-muted-foreground">JPEG and PNG formats, up to 50MB</p>
@@ -396,7 +399,7 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-6 gap-2 sm:gap-3">
         {SHAPE_LIST.map((id) => (
           <button
             key={id}
@@ -405,7 +408,7 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
             className={`aspect-square rounded-xl border-2 grid place-items-center transition ${state.shape === id ? "border-brand-yellow bg-brand-yellow/10" : "border-border hover:border-brand-red/40"}`}
           >
             <span
-              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-9 w-9" : "h-7 w-10"}`}
+              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-7 w-7" : "h-5 w-8"}`}
               style={SHAPE_STYLE[id]}
             />
 
@@ -437,7 +440,7 @@ function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatc
           <button
             key={o}
             onClick={() => dispatch({ type: "patch", patch: { orientation: o } })}
-            className={`rounded-xl border-2 p-6 grid place-items-center gap-2 transition ${state.orientation === o ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}
+            className={`rounded-xl border-2 p-4 sm:p-5 grid place-items-center gap-2 transition ${state.orientation === o ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}
           >
             <div className={`bg-stone-200 ${o === "portrait" ? "w-12 h-16" : "w-16 h-12"} rounded`} />
             <span className={`text-xs ${state.orientation === o ? "text-brand-red font-medium" : "text-muted-foreground"}`}>{o === "portrait" ? "Portrait" : "Landscape"}</span>
@@ -505,8 +508,8 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
 }
 
 function BuyerFields({
-  form, setForm,
-}: { form: Record<string, string>; setForm: (f: Record<string, string>) => void }) {
+  form, setForm, compact = false,
+}: { form: Record<string, string>; setForm: (f: Record<string, string>) => void; compact?: boolean }) {
   return (
     <>
       {[
@@ -515,14 +518,14 @@ function BuyerFields({
         { k: "email", label: "Email", placeholder: "Enter here", type: "email" },
       ].map(({ k, label, placeholder, type }) => (
         <div key={k}>
-          <label className="text-sm text-brand-red">{label}</label>
+          <label className={`${compact ? "text-xs" : "text-sm"} text-brand-red`}>{label}</label>
           <input
             required
             type={type}
             value={form[k] ?? ""}
             onChange={(e) => setForm({ ...form, [k]: e.target.value })}
             placeholder={placeholder}
-            className="mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+            className={`mt-1 w-full rounded-full border border-border bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-brand-red ${compact ? "py-2" : "py-2.5"}`}
           />
         </div>
       ))}
@@ -544,48 +547,51 @@ function StepPreviewForm({
           if (!accepted) { toast.error("Please accept the terms"); return; }
           onBuy(form);
         }}
-        className="flex flex-1 flex-col space-y-4"
+        className="flex flex-1 flex-col"
       >
-        <BuyerFields form={form} setForm={setForm} />
-        <div>
-          <label className="text-sm text-brand-red">Your idea</label>
-          <textarea
-            rows={3}
-            value={form.idea}
-            onChange={(e) => setForm({ ...form, idea: e.target.value })}
-            placeholder="Tell us what you have in mind"
-            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-brand-red">Delivery address</label>
-          <textarea
-            required
-            rows={2}
-            value={form.address}
-            onChange={(e) => setForm({ ...form, address: e.target.value })}
-            placeholder="Door no, street, city, state"
-            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-brand-red">Check Estimated Delivery Date</label>
-          <div className="mt-1 flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-full border border-border bg-white px-3 py-2.5 text-sm">🇮🇳 Ind</div>
-            <input
+        {/* Two-column compact grid so the whole step fits without scrolling. */}
+        <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+          <BuyerFields form={form} setForm={setForm} compact />
+          <div>
+            <label className="text-xs text-brand-red">Pincode</label>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="shrink-0 rounded-full border border-border bg-white px-3 py-2 text-sm">🇮🇳 Ind</span>
+              <input
+                required
+                value={form.pincode}
+                onChange={(e) => setForm({ ...form, pincode: e.target.value })}
+                placeholder="Enter Pincode"
+                className="w-full min-w-0 rounded-full border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-brand-red">Your idea</label>
+            <textarea
+              rows={2}
+              value={form.idea}
+              onChange={(e) => setForm({ ...form, idea: e.target.value })}
+              placeholder="Tell us what you have in mind"
+              className="mt-1 w-full resize-none rounded-2xl border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-brand-red">Delivery address</label>
+            <textarea
               required
-              value={form.pincode}
-              onChange={(e) => setForm({ ...form, pincode: e.target.value })}
-              placeholder="Enter Pincode"
-              className="flex-1 rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+              rows={2}
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              placeholder="Door no, street, city, state"
+              className="mt-1 w-full resize-none rounded-2xl border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
             />
           </div>
         </div>
-        <label className="flex items-center gap-2 text-xs">
+        <label className="mt-3 flex items-center gap-2 text-xs">
           <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="accent-brand-red" />
           Accept to all terms and conditions
         </label>
-        <div className="mt-auto flex justify-center pt-2">
+        <div className="mt-auto flex justify-center pt-4">
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
         </div>
       </form>
