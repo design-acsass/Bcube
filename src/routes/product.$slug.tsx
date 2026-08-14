@@ -41,7 +41,7 @@ export const Route = createFileRoute("/product/$slug")({
 // --- Wizard state ---
 
 type Shape =
-  | "square" | "rounded" | "circle" | "oval" | "heart" | "triangle"
+  | "rectangle" | "square" | "rounded" | "circle" | "oval" | "heart" | "triangle"
   | "hexagon" | "pentagon" | "octagon" | "diamond" | "star" | "arch";
 type FrameMode = "without" | "with";
 type Orientation = "portrait" | "landscape";
