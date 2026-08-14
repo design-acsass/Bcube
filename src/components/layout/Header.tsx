@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { ShoppingCart, LogIn, Home, Package, Info, Phone } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
+import { CART_ARRIVE_EVENT } from "@/lib/cart-fly";
 import logo from "@/assets/LOGO.png.asset.json";
 
 const navItems = [
@@ -10,13 +12,34 @@ const navItems = [
   { to: "/contact", label: "Contact us", Icon: Phone },
 ];
 
+/** Shakes the icon / pops the counter whenever a flying product lands in the cart. */
+function useCartArrival() {
+  const [pulse, setPulse] = useState(0);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    const onArrive = () => {
+      setPulse((n) => n + 1);
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => setPulse(0), 700);
+    };
+    window.addEventListener(CART_ARRIVE_EVENT, onArrive);
+    return () => {
+      window.removeEventListener(CART_ARRIVE_EVENT, onArrive);
+      window.clearTimeout(timer.current);
+    };
+  }, []);
+  return pulse > 0;
+}
+
 export function Header() {
   const { count } = useCart();
+  const arrived = useCartArrival();
+
   return (
     <>
       <header className="sticky top-2 z-40 mx-2 rounded-[25px] border border-white/40 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 md:mx-4">
         <div className="container mx-auto flex items-center gap-4 px-4 py-1.5 md:gap-6">
-          <Link to="/" className="flex items-center shrink-0">
+          <Link to="/" className="flex items-center shrink-0 transition-transform duration-300 hover:scale-105">
             <img src={logo.url} alt="B Cube logo" className="h-11 w-11 md:h-14 md:w-14 object-contain" />
           </Link>
 
@@ -25,7 +48,7 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="rounded-full px-3 py-1.5 text-sm font-medium text-brand-ink transition-colors hover:bg-white/40"
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/40"
                 activeProps={{ className: "rounded-full px-3 py-1.5 text-sm font-semibold text-brand-red bg-white/70" }}
                 activeOptions={{ exact: item.to === "/" }}
               >
@@ -37,18 +60,23 @@ export function Header() {
           <div className="ml-auto flex items-center gap-2">
             <Link
               to="/cart"
-              className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-3 py-1.5 text-sm font-medium text-brand-red hover:bg-brand-red/5 md:px-4"
+              data-cart-target
+              className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-3 py-1.5 text-sm font-medium text-brand-red transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-red/5 md:px-4"
             >
-              <span className="hidden sm:inline">Cart</span> <ShoppingCart className="h-4 w-4" />
+              <span className="hidden sm:inline">Cart</span>{" "}
+              <ShoppingCart className={`h-4 w-4 ${arrived ? "cart-shake" : ""}`} />
               {count > 0 && (
-                <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-ink">
+                <span
+                  key={count}
+                  className={`absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-ink ${arrived ? "badge-pop" : ""}`}
+                >
                   {count}
                 </span>
               )}
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink hover:brightness-95 md:px-4"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 md:px-4"
             >
               <span className="hidden sm:inline">Login</span> <LogIn className="h-4 w-4" />
             </Link>
@@ -63,7 +91,7 @@ export function Header() {
           <Link
             key={to}
             to={to}
-            className="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1 text-[11px] font-medium text-brand-ink"
+            className="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1 text-[11px] font-medium text-brand-ink transition-transform duration-200 active:scale-90"
             activeProps={{ className: "flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl bg-white/70 px-2 py-1 text-[11px] font-semibold text-brand-red" }}
             activeOptions={{ exact: to === "/" }}
           >
@@ -71,6 +99,23 @@ export function Header() {
             <span className="truncate">{label}</span>
           </Link>
         ))}
+        {/* Mobile cart landing point for the add-to-cart flight */}
+        <Link
+          to="/cart"
+          data-cart-target
+          className="relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1 text-[11px] font-medium text-brand-ink transition-transform duration-200 active:scale-90"
+          activeProps={{ className: "relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl bg-white/70 px-2 py-1 text-[11px] font-semibold text-brand-red" }}
+        >
+          <ShoppingCart className={`h-5 w-5 shrink-0 ${arrived ? "cart-shake" : ""}`} />
+          <span className="truncate">Cart</span>
+          {count > 0 && (
+            <span
+              className={`absolute right-1 top-0 grid h-4 w-4 place-items-center rounded-full bg-brand-red text-[9px] font-bold text-white ${arrived ? "badge-pop" : ""}`}
+            >
+              {count}
+            </span>
+          )}
+        </Link>
       </nav>
     </>
   );
