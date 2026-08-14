@@ -64,7 +64,7 @@ type Action =
   | { type: "patch"; patch: Partial<State> } | { type: "reset" };
 
 const initial: State = {
-  step: 1, frame: "without", shape: "square", frameColor: "#dc2626",
+  step: 1, frame: "without", shape: "rectangle", frameColor: "#dc2626",
   orientation: "portrait", addText: false, text: "", textColor: "#dc2626",
   textSize: "M", size: "12 x 9", thickness: "3 mm",
 };
