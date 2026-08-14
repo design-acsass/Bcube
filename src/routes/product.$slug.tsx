@@ -208,12 +208,16 @@ function ProductPage() {
             className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch"
             style={{ ["--config-h" as string]: "600px" }}
           >
-            <PreviewPane
-              state={state}
-              productImage={productImage}
-              showProductImage={mode !== "wizard"}
-              clockFace={product.slug === "wall-clocks"}
-            />
+            {mode === "wizard" ? (
+              <PreviewPane
+                state={state}
+                productImage={productImage}
+                showProductImage={false}
+                clockFace={product.slug === "wall-clocks"}
+              />
+            ) : (
+              <SimpleProductPane image={productImage} name={product.name} />
+            )}
 
             <div className="flex min-h-[420px] flex-col rounded-2xl bg-white border border-border p-5 sm:p-6 md:p-7 shadow-sm lg:h-[var(--config-h)]">
 
