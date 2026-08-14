@@ -508,8 +508,8 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
 }
 
 function BuyerFields({
-  form, setForm,
-}: { form: Record<string, string>; setForm: (f: Record<string, string>) => void }) {
+  form, setForm, compact = false,
+}: { form: Record<string, string>; setForm: (f: Record<string, string>) => void; compact?: boolean }) {
   return (
     <>
       {[
@@ -518,14 +518,14 @@ function BuyerFields({
         { k: "email", label: "Email", placeholder: "Enter here", type: "email" },
       ].map(({ k, label, placeholder, type }) => (
         <div key={k}>
-          <label className="text-sm text-brand-red">{label}</label>
+          <label className={`${compact ? "text-xs" : "text-sm"} text-brand-red`}>{label}</label>
           <input
             required
             type={type}
             value={form[k] ?? ""}
             onChange={(e) => setForm({ ...form, [k]: e.target.value })}
             placeholder={placeholder}
-            className="mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+            className={`mt-1 w-full rounded-full border border-border bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-brand-red ${compact ? "py-2" : "py-2.5"}`}
           />
         </div>
       ))}
