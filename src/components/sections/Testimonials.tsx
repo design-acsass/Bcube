@@ -48,7 +48,8 @@ export function Testimonials({
   /** Optional filter — render only these testimonial groups. */
   groupIds?: string[];
 }) {
-  const groups = groupIds ? testimonialGroups.filter((g) => groupIds.includes(g.id)) : testimonialGroups;
+  const all = useTestimonialGroups();
+  const groups = groupIds ? all.filter((g) => groupIds.includes(g.id)) : all;
   return (
     <section className="w-full px-4 py-12 sm:px-6 md:px-[40px]">
       <h2 className="mb-8 text-center font-display text-3xl text-brand-ink md:text-4xl">{heading}</h2>
