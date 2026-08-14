@@ -186,7 +186,7 @@ function ProductPage() {
           >
             <PreviewPane state={state} />
 
-            <div className="flex min-h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
+            <div className="flex min-h-[420px] flex-col rounded-2xl bg-white border border-border p-5 sm:p-6 md:p-7 shadow-sm lg:h-[var(--config-h)]">
 
               {mode !== "wizard" ? (
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
