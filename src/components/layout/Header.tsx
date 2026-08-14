@@ -35,18 +35,25 @@ export function Header() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <button className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-3 py-1.5 text-sm font-medium text-brand-red hover:bg-brand-red/5 md:px-4">
+            <Link
+              to="/cart"
+              className="relative inline-flex items-center gap-2 rounded-full border border-brand-red px-3 py-1.5 text-sm font-medium text-brand-red hover:bg-brand-red/5 md:px-4"
+            >
               <span className="hidden sm:inline">Cart</span> <ShoppingCart className="h-4 w-4" />
               {count > 0 && (
                 <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-ink">
                   {count}
                 </span>
               )}
-            </button>
-            <button className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink hover:brightness-95 md:px-4">
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink hover:brightness-95 md:px-4"
+            >
               <span className="hidden sm:inline">Login</span> <LogIn className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
+
         </div>
       </header>
 
