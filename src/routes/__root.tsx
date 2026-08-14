@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 function NotFoundComponent() {
   return (
@@ -90,10 +92,13 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <SmoothScroll />
       <div className="flex min-h-screen flex-col pb-24 md:pb-0">
         <Header />
         <main className="flex-1">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </main>
         <Footer />
       </div>
