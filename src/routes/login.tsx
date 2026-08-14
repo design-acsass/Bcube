@@ -117,6 +117,17 @@ function LoginPage() {
             </button>
           </form>
 
+          <div className="my-5 flex items-center gap-3">
+            <span className="h-px flex-1 bg-brand-ink/15" />
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-brand-ink/60">or continue with</span>
+            <span className="h-px flex-1 bg-brand-ink/15" />
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SocialButton provider="google" onClick={() => handleSocial("google")} />
+            <SocialButton provider="facebook" onClick={() => handleSocial("facebook")} />
+          </div>
+
           <p className="mt-4 text-center text-xs text-brand-ink/70">
             Need help with an order?{" "}
             <Link to="/contact" className="font-semibold underline">
