@@ -41,7 +41,7 @@ export const Route = createFileRoute("/product/$slug")({
 // --- Wizard state ---
 
 type Shape =
-  | "square" | "rounded" | "circle" | "oval" | "heart" | "triangle"
+  | "rectangle" | "square" | "rounded" | "circle" | "oval" | "heart" | "triangle"
   | "hexagon" | "pentagon" | "octagon" | "diamond" | "star" | "arch";
 type FrameMode = "without" | "with";
 type Orientation = "portrait" | "landscape";
@@ -64,7 +64,7 @@ type Action =
   | { type: "patch"; patch: Partial<State> } | { type: "reset" };
 
 const initial: State = {
-  step: 1, frame: "without", shape: "square", frameColor: "#dc2626",
+  step: 1, frame: "without", shape: "rectangle", frameColor: "#dc2626",
   orientation: "portrait", addText: false, text: "", textColor: "#dc2626",
   textSize: "M", size: "12 x 9", thickness: "3 mm",
 };
@@ -89,6 +89,7 @@ const STEPS = [
 
 /** Geometry per shape — applied identically to the swatch and the live preview. */
 const SHAPE_STYLE: Record<Shape, CSSProperties> = {
+  rectangle: {},
   square: {},
   rounded: { borderRadius: "1.25rem" },
   circle: { borderRadius: "50%" },
@@ -103,34 +104,47 @@ const SHAPE_STYLE: Record<Shape, CSSProperties> = {
   star: { clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)" },
 };
 
+/** Shapes that only read correctly on a 1:1 canvas. */
+const SQUARE_SHAPES: Shape[] = [
+  "square", "circle", "heart", "triangle", "hexagon", "pentagon", "octagon", "diamond", "star",
+];
+
 const SHAPE_LIST: Shape[] = [
-  "square", "rounded", "circle", "oval", "arch", "heart",
-  "triangle", "hexagon", "pentagon", "octagon", "diamond", "star",
+  "rectangle", "rounded", "square", "circle", "oval", "arch",
+  "heart", "triangle", "hexagon", "pentagon", "octagon", "diamond",
 ];
 
 const SIZES = ["12 x 9", "16 x 12", "18 x 12", "21 x 15", "30 x 20"];
 const THICKNESSES = ["3 mm", "5 mm", "8 mm"];
 
-/** Maps the selected size + orientation to preview dimensions (% of the room photo). */
+/**
+ * Maps the selected size + orientation to preview dimensions.
+ * The piece keeps the true aspect ratio of the chosen size — it is never
+ * stretched to the panel — and squares/circles stay perfectly 1:1.
+ */
 function previewDimensions(state: State) {
   const [a, b] = state.size.split(" x ").map((n) => Number(n));
   const long = Math.max(a, b);
   const short = Math.min(a, b);
   const t = (long - 12) / (30 - 12); // 0 → 1 across the size range
-  const longPct = 30 + t * 26; // 30% → 56%
-  const shortPct = longPct * (short / long);
-  return state.orientation === "portrait"
-    ? { height: `${longPct}%`, width: `${shortPct}%` }
-    : { height: `${shortPct}%`, width: `${longPct}%` };
+  const longPct = 26 + t * 20; // 26% → 46% of the panel width
+  const ratio = SQUARE_SHAPES.includes(state.shape) ? 1 : short / long;
+  const isPortrait = state.orientation === "portrait";
+  const widthPct = isPortrait ? longPct * ratio : longPct;
+  return {
+    width: `${widthPct}%`,
+    aspectRatio: isPortrait ? `${ratio} / 1` : `1 / ${ratio}`,
+  } satisfies CSSProperties;
 }
 
-/** Thicker acrylic casts a deeper shadow. */
+/** Thicker acrylic casts a deeper shadow (drop-shadow so clipped shapes keep it). */
 function thicknessShadow(thickness: string) {
   const mm = Number(thickness.split(" ")[0]);
-  const y = Math.round(mm * 2.2);
-  const blur = Math.round(mm * 4.5);
-  return `0 ${y}px ${blur}px rgba(15,23,42,${0.18 + mm * 0.035})`;
+  const y = Math.round(mm * 1.6);
+  const blur = Math.round(mm * 2.2);
+  return `drop-shadow(0 ${y}px ${blur}px rgba(15,23,42,${(0.2 + mm * 0.04).toFixed(2)}))`;
 }
+
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
@@ -164,10 +178,16 @@ function ProductPage() {
             </div>
           )}
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch">
+          {/* Fixed configurator height (matches the tallest step) so both columns
+              stay the same size across every step. */}
+          <div
+            className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch"
+            style={{ ["--config-h" as string]: "600px" }}
+          >
             <PreviewPane state={state} />
 
-            <div className="flex h-full flex-col rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm min-h-[420px]">
+            <div className="flex min-h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
+
               {mode !== "wizard" ? (
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
@@ -238,21 +258,21 @@ function PreviewPane({ state }: { state: State }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
   return (
-    <div className="relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-stone-100">
+    <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
         className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
-        style={dims}
+        style={{ ...dims, filter: thicknessShadow(state.thickness) }}
       >
         <div
           className={`relative h-full w-full ${state.frame === "with" ? "p-1.5" : ""}`}
           style={{
             ...shapeStyle,
-            boxShadow: thicknessShadow(state.thickness),
             ...(state.frame === "with" ? { backgroundColor: state.frameColor } : {}),
           }}
         >
           <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
+
             {state.imageUrl ? (
               <img src={state.imageUrl} alt="Your uploaded artwork" className="h-full w-full object-cover" />
             ) : (
@@ -384,7 +404,11 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
             aria-label={id}
             className={`aspect-square rounded-xl border-2 grid place-items-center transition ${state.shape === id ? "border-brand-yellow bg-brand-yellow/10" : "border-border hover:border-brand-red/40"}`}
           >
-            <span className="h-9 w-9 bg-brand-red/70" style={SHAPE_STYLE[id]} />
+            <span
+              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-9 w-9" : "h-7 w-10"}`}
+              style={SHAPE_STYLE[id]}
+            />
+
           </button>
         ))}
       </div>
