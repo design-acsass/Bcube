@@ -178,10 +178,16 @@ function ProductPage() {
             </div>
           )}
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch">
+          {/* Fixed configurator height (matches the tallest step) so both columns
+              stay the same size across every step. */}
+          <div
+            className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch"
+            style={{ ["--config-h" as string]: "600px" }}
+          >
             <PreviewPane state={state} />
 
-            <div className="flex h-full flex-col rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm min-h-[420px]">
+            <div className="flex h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
+
               {mode !== "wizard" ? (
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
