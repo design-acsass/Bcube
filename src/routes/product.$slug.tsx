@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useReducer, useState, useRef, type ChangeEvent, type CSSProperties } from "react";
+import { useReducer, useState, useRef, useMemo, type ChangeEvent, type CSSProperties } from "react";
 import { toast } from "sonner";
 import {
   UploadCloud, Shapes, LayoutPanelTop, Ruler, MousePointerClick,
