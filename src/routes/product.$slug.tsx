@@ -790,6 +790,7 @@ function ProductInfo({ name }: { name: string }) {
 }
 
 function ExploreMore({ currentSlug }: { currentSlug: string }) {
+  const { image: catalogImage } = useProducts();
   const category = corporateGifting.some((p) => p.slug === currentSlug)
     ? corporateGifting
     : returnGifts.some((p) => p.slug === currentSlug)
