@@ -158,11 +158,25 @@ function thicknessShadow(thickness: string) {
 function ProductPage() {
   const { product } = Route.useLoaderData();
   const mode = getProductMode(product.slug);
-  const [state, dispatch] = useReducer(reducer, initial);
+  const base = useMemo(() => initialFor(product.slug), [product.slug]);
+  const reducer = useMemo(() => makeReducer(base), [base]);
+  const [state, dispatch] = useReducer(reducer, base);
   const { addItem } = useCart();
 
+  /** Card artwork doubles as the preview image for non-configurable products.
+      TODO(backend): let admins upload/replace both the card and preview image. */
+  const productImage = imgBySlug[product.slug] ?? productImageFallback;
+  const price = computePrice({
+    slug: product.slug,
+    frame: state.frame,
+    shape: state.shape,
+    size: state.size,
+    thickness: state.thickness,
+    addText: state.addText,
+  });
+
   const onBuy = (buyerInfo: Record<string, string>) => {
-    addItem({ slug: product.slug, name: product.name, config: { ...state, mode, buyerInfo } });
+    addItem({ slug: product.slug, name: product.name, config: { ...state, mode, price, buyerInfo } });
     toast.success(
       mode === "wizard" ? `${product.name} added to cart!` : "Thanks! We'll get back to you shortly.",
     );
@@ -193,7 +207,12 @@ function ProductPage() {
             className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch"
             style={{ ["--config-h" as string]: "600px" }}
           >
-            <PreviewPane state={state} />
+            <PreviewPane
+              state={state}
+              productImage={productImage}
+              showProductImage={mode !== "wizard"}
+              clockFace={product.slug === "wall-clocks"}
+            />
 
             <div className="flex min-h-[420px] flex-col rounded-2xl bg-white border border-border p-5 sm:p-6 md:p-7 shadow-sm lg:h-[var(--config-h)]">
 
@@ -201,11 +220,14 @@ function ProductPage() {
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
                 <>
-                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} />}
-                  {state.step === 2 && <StepFrame state={state} dispatch={dispatch} />}
-                  {state.step === 3 && <StepLayout state={state} dispatch={dispatch} />}
-                  {state.step === 4 && <StepSize state={state} dispatch={dispatch} />}
-                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} />}
+                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 2 && <StepFrame state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 3 && <StepLayout state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 4 && <StepSize state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} price={price} />}
+                </>
+              )}
+
                 </>
               )}
             </div>
