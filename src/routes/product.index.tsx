@@ -14,6 +14,7 @@ import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
 import { imgBySlug } from "@/data/product-images";
+import { useProducts } from "@/lib/store";
 
 type Tab = "custom" | "corporate" | "return";
 
@@ -109,12 +110,13 @@ function ProductListing() {
 }
 
 function Panel({ title, items, fallback }: { title: string; items: { slug: string; name: string }[]; fallback?: string }) {
+  const { image: productImage } = useProducts();
   return (
     <>
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">{title}</h2>
       <div className="mt-8 md:mt-10 grid grid-cols-2 md:grid-cols-3 gap-x-3 sm:gap-x-6 gap-y-8 md:gap-y-12">
         {items.map((p) => (
-          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={imgBySlug[p.slug] ?? fallback} compact={p.slug === "wall-clocks"} />
+          <ProductTile key={p.slug} name={p.name} slug={p.slug} img={productImage(p.slug) || imgBySlug[p.slug] || fallback} compact={p.slug === "wall-clocks"} />
         ))}
       </div>
     </>

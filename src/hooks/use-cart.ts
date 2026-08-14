@@ -1,11 +1,14 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const KEY = "bcube-cart";
 
 /**
  * A line in the cart. `config` carries the full configurator state (shape, size,
- * thickness, price, buyer info…) so the backend can re-price and render the order.
- * TODO(backend): replace localStorage with a cart API keyed by the signed-in user.
+ * thickness, price, buyer info…) so the order can be re-priced and rendered.
+ *
+ * Storage: guests keep their cart in the browser. Once the visitor signs in the
+ * cart is mirrored into the `carts` table so it follows them across devices.
  */
 export type CartItem = {
   id: string;
@@ -42,8 +45,14 @@ function write(items: CartItem[]) {
   window.dispatchEvent(new Event("bcube-cart-update"));
 }
 
+async function persist(userId: string | null, items: CartItem[]) {
+  if (!userId) return;
+  await supabase.from("carts").upsert({ user_id: userId, items: items as never });
+}
+
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const userId = useRef<string | null>(null);
 
   useEffect(() => {
     setItems(read());
@@ -56,31 +65,51 @@ export function useCart() {
     };
   }, []);
 
-  const addItem = useCallback((item: Omit<CartItem, "id" | "qty"> & Partial<Pick<CartItem, "qty">>) => {
-    const next = [
-      ...read(),
-      { ...item, qty: item.qty ?? 1, id: `${item.slug}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}` },
-    ];
-    write(next);
-    setItems(next);
+  // Merge the saved cart in once the visitor is known.
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(async ({ data }) => {
+      const uid = data.session?.user.id ?? null;
+      userId.current = uid;
+      if (!uid || !active) return;
+      const { data: row } = await supabase.from("carts").select("items").eq("user_id", uid).maybeSingle();
+      const remote = normalise(row?.items);
+      const local = read();
+      const merged = local.length > 0 ? [...remote.filter((r) => !local.some((l) => l.id === r.id)), ...local] : remote;
+      if (!active) return;
+      write(merged);
+      setItems(merged);
+      await persist(uid, merged);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const removeItem = useCallback((id: string) => {
-    const next = read().filter((i) => i.id !== id);
+  const commit = useCallback((next: CartItem[]) => {
     write(next);
     setItems(next);
+    void persist(userId.current, next);
   }, []);
 
-  const setQty = useCallback((id: string, qty: number) => {
-    const next = read().map((i) => (i.id === id ? { ...i, qty: Math.max(1, Math.min(99, qty)) } : i));
-    write(next);
-    setItems(next);
-  }, []);
+  const addItem = useCallback(
+    (item: Omit<CartItem, "id" | "qty"> & Partial<Pick<CartItem, "qty">>) => {
+      commit([
+        ...read(),
+        { ...item, qty: item.qty ?? 1, id: `${item.slug}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}` },
+      ]);
+    },
+    [commit],
+  );
 
-  const clear = useCallback(() => {
-    write([]);
-    setItems([]);
-  }, []);
+  const removeItem = useCallback((id: string) => commit(read().filter((i) => i.id !== id)), [commit]);
+
+  const setQty = useCallback(
+    (id: string, qty: number) => commit(read().map((i) => (i.id === id ? { ...i, qty: Math.max(1, Math.min(99, qty)) } : i))),
+    [commit],
+  );
+
+  const clear = useCallback(() => commit([]), [commit]);
 
   const count = items.reduce((n, i) => n + i.qty, 0);
   const subtotal = items.reduce((sum, i) => {

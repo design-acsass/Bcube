@@ -8,6 +8,8 @@ import { ArrowRight } from "lucide-react";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CustomerStories } from "@/components/sections/CustomerStories";
+import { useMedia, useProducts, useHeroSlides } from "@/lib/store";
+import { submitEnquiry } from "@/lib/enquiries";
 import banner1 from "@/assets/banner-1.png.asset.json";
 import banner2 from "@/assets/banner-2.png.asset.json";
 import banner3 from "@/assets/banner-3.png.asset.json";
@@ -60,20 +62,27 @@ function HomePage() {
   );
 }
 
-const slides = [
-  { img: banner1.url, tagline: "More than Decor. It's Personal", alt: "Wall of framed family photographs", light: false },
-  { img: banner2.url, tagline: "Show Appreciation in the right way!", alt: "Row of golden trophies and awards", light: false },
-  { img: banner3.url, tagline: "Find the right gift for every story", alt: "Gift boxes tied with ribbons on a red backdrop", light: true },
-];
+const bannerFallback: Record<string, string> = {
+  "hero-1": banner1.url,
+  "hero-2": banner2.url,
+  "hero-3": banner3.url,
+};
 
 function Hero() {
+  const { media } = useMedia();
+  const heroSlides = useHeroSlides();
+  const slides = heroSlides.map((s) => ({
+    ...s,
+    img: media(s.image_slot, bannerFallback[s.image_slot] ?? banner1.url),
+  }));
   const [i, setI] = useState(0);
   const go = (n: number) => setI((n + slides.length) % slides.length);
 
   useEffect(() => {
+    if (slides.length < 2) return;
     const t = setInterval(() => setI((p) => (p + 1) % slides.length), 6000);
     return () => clearInterval(t);
-  }, []);
+  }, [slides.length]);
 
   return (
     <section className="w-full px-4 pb-8 pt-3 sm:px-6 md:px-[56px] md:pb-[40px] md:pt-[16px]">
@@ -129,10 +138,13 @@ function Hero() {
 
 
 function Spotlight() {
+  const { media } = useMedia();
+  const bgIdle = media("category-bg", catBg1.url);
+  const bgHover = media("category-bg-hover", catBg2.url);
   const items = [
-    { label: "Custom Acrylic Pictures", img: cat1.url, tab: "custom" as const },
-    { label: "Corporate Gifting", img: cat2.url, tab: "corporate" as const },
-    { label: "Return Gifts", img: cat3.url, tab: "return" as const },
+    { label: "Custom Acrylic Pictures", img: media("category-1", cat1.url), tab: "custom" as const },
+    { label: "Corporate Gifting", img: media("category-2", cat2.url), tab: "corporate" as const },
+    { label: "Return Gifts", img: media("category-3", cat3.url), tab: "return" as const },
   ];
   return (
     <section className="container mx-auto px-4 py-14">
@@ -147,8 +159,8 @@ function Spotlight() {
             className="group flex min-w-0 flex-col items-center"
           >
             <div className="relative h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-72 lg:w-72">
-              <img src={catBg1.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
-              <img src={catBg2.url} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <img src={bgIdle} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain transition-opacity duration-200 group-hover:opacity-0" />
+              <img src={bgHover} alt="" aria-hidden loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
               <img src={it.img} alt={it.label} loading="lazy" className="absolute inset-0 m-auto h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 lg:h-56 lg:w-56 object-contain drop-shadow-md" />
             </div>
             <p className="mt-3 md:mt-4 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium text-brand-ink">{it.label}</p>
@@ -170,9 +182,10 @@ function EnquireBand() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 px-4 py-10 items-center">
         <Reveal as="h2" className="font-display text-5xl text-brand-red leading-none rotate-[-2deg]">Enquire<br/>Now</Reveal>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            console.log("enquire", form);
+            const ok = await submitEnquiry({ source: "home", ...form });
+            if (!ok) return toast.error("Could not send your enquiry. Please try again.");
             toast.success("Enquiry sent — we'll be in touch!");
             setForm({ name: "", email: "", phone: "", message: "" });
           }}
@@ -195,14 +208,23 @@ function EnquireBand() {
 }
 
 function FeaturedGrid() {
+  const { image } = useProducts();
+  const fallback: Record<string, string> = {
+    "premium-acrylic-photo": pPremium.url,
+    "framed-acrylic-photo": pFramed.url,
+    pillows: pPillow.url,
+    "fridge-magnet": pMagnet.url,
+    "name-plate": pNamePlate.url,
+    keychain: pKeychain.url,
+  };
   const featured = [
-    { slug: "premium-acrylic-photo", name: "Premium Acrylic Photo", img: pPremium.url },
-    { slug: "framed-acrylic-photo", name: "Framed Acrylic Photos", img: pFramed.url },
-    { slug: "pillows", name: "Custom Pillows", img: pPillow.url },
-    { slug: "fridge-magnet", name: "Fridge Magnets", img: pMagnet.url },
-    { slug: "name-plate", name: "Custom Name Plates", img: pNamePlate.url },
-    { slug: "keychain", name: "Custom Keychains", img: pKeychain.url },
-  ];
+    { slug: "premium-acrylic-photo", name: "Premium Acrylic Photo" },
+    { slug: "framed-acrylic-photo", name: "Framed Acrylic Photos" },
+    { slug: "pillows", name: "Custom Pillows" },
+    { slug: "fridge-magnet", name: "Fridge Magnets" },
+    { slug: "name-plate", name: "Custom Name Plates" },
+    { slug: "keychain", name: "Custom Keychains" },
+  ].map((p) => ({ ...p, img: image(p.slug) || fallback[p.slug]! }));
   return (
     <section className="container mx-auto px-4 py-12">
       <Reveal as="h2" className="text-center font-display text-3xl md:text-4xl text-brand-ink">Acrylic photos, framed pieces, clocks &amp; sets</Reveal>
@@ -219,12 +241,13 @@ function FeaturedGrid() {
 
 
 function RelationshipBanner() {
+  const { media } = useMedia();
   const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
     <section className="my-12 overflow-hidden">
       <img
         ref={layer}
-        src={ad1.url}
+        src={media("ad-1", ad1.url)}
         alt="Enriching relationships through thoughtful gifts"
         className="w-full will-change-transform"
         loading="lazy"
@@ -234,21 +257,23 @@ function RelationshipBanner() {
 }
 
 function ContactStrip() {
+  const { media } = useMedia();
   return (
     <section className="my-12">
       <Link to="/contact" className="block">
-        <img src={ad2.url} alt="To know more about our products — call +91 93632 96919 or email bcube@gmail.com" className="w-full" loading="lazy" />
+        <img src={media("ad-2", ad2.url)} alt="To know more about our products — call +91 93632 96919 or email bcube@gmail.com" className="w-full" loading="lazy" />
       </Link>
     </section>
   );
 }
 
 function MakeSpecial() {
+  const { media } = useMedia();
   const cats = [
-    { name: "Corporate Gifting", img: gCorporate.url },
-    { name: "Customised Pictures", img: gAcrylic.url },
-    { name: "Premium Gifting", img: cat2.url },
-    { name: "Return Gifts", img: gReturn.url },
+    { name: "Corporate Gifting", img: media("special-1", gCorporate.url) },
+    { name: "Customised Pictures", img: media("special-2", gAcrylic.url) },
+    { name: "Premium Gifting", img: media("special-3", gCorporate.url) },
+    { name: "Return Gifts", img: media("special-4", gReturn.url) },
   ];
   return (
     <section className="container mx-auto px-4 py-12">
@@ -267,12 +292,13 @@ function MakeSpecial() {
 }
 
 function PerfectGifts() {
+  const { media } = useMedia();
   const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
     <section className="my-12 overflow-hidden">
       <img
         ref={layer}
-        src={ad3.url}
+        src={media("ad-3", ad3.url)}
         alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions"
         className="w-full will-change-transform"
         loading="lazy"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ImageIcon } from "lucide-react";
-import { testimonialGroups } from "@/data/testimonials";
+import { useTestimonialGroups } from "@/lib/store";
 
 /**
  * Loads/plays a clip only once it is close to the viewport, so the page never
@@ -48,7 +48,8 @@ export function Testimonials({
   /** Optional filter — render only these testimonial groups. */
   groupIds?: string[];
 }) {
-  const groups = groupIds ? testimonialGroups.filter((g) => groupIds.includes(g.id)) : testimonialGroups;
+  const all = useTestimonialGroups();
+  const groups = groupIds ? all.filter((g) => groupIds.includes(g.id)) : all;
   return (
     <section className="w-full px-4 py-12 sm:px-6 md:px-[40px]">
       <h2 className="mb-8 text-center font-display text-3xl text-brand-ink md:text-4xl">{heading}</h2>

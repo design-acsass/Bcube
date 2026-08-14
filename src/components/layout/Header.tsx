@@ -1,9 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ShoppingCart, LogIn, Home, Package, Info, Phone } from "lucide-react";
+import { ShoppingCart, LogIn, Home, Package, Info, Phone, LogOut, Shield } from "lucide-react";
+import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { CART_ARRIVE_EVENT } from "@/lib/cart-fly";
 import logo from "@/assets/LOGO.png.asset.json";
+import { useMedia } from "@/lib/store";
 
 const navItems = [
   { to: "/", label: "B Cube", Icon: Home },
@@ -34,13 +40,25 @@ function useCartArrival() {
 export function Header() {
   const { count } = useCart();
   const arrived = useCartArrival();
+  const { user, isAdmin } = useAuth();
+  const { media } = useMedia();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  async function signOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    toast.success("Signed out");
+    void navigate({ to: "/login", replace: true });
+  }
 
   return (
     <>
       <header className="sticky top-2 z-40 mx-2 rounded-[25px] border border-white/40 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 md:mx-4">
         <div className="container mx-auto flex items-center gap-4 px-4 py-1.5 md:gap-6">
           <Link to="/" className="flex items-center shrink-0 transition-transform duration-300 hover:scale-105">
-            <img src={logo.url} alt="B Cube logo" className="h-11 w-11 md:h-14 md:w-14 object-contain" />
+            <img src={media("logo", logo.url)} alt="B Cube logo" className="h-11 w-11 md:h-14 md:w-14 object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 rounded-full bg-brand-yellow px-2 py-1.5 shadow-sm">
@@ -74,12 +92,29 @@ export function Header() {
                 </span>
               )}
             </Link>
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 md:px-4"
-            >
-              <span className="hidden sm:inline">Login</span> <LogIn className="h-4 w-4" />
-            </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-2 rounded-full border border-brand-ink/20 px-3 py-1.5 text-sm font-semibold text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/50 md:px-4"
+              >
+                <span className="hidden sm:inline">Admin</span> <Shield className="h-4 w-4" />
+              </Link>
+            )}
+            {user ? (
+              <button
+                onClick={() => void signOut()}
+                className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 md:px-4"
+              >
+                <span className="hidden sm:inline">Sign out</span> <LogOut className="h-4 w-4" />
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1.5 text-sm font-semibold text-brand-ink transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95 md:px-4"
+              >
+                <span className="hidden sm:inline">Login</span> <LogIn className="h-4 w-4" />
+              </Link>
+            )}
           </div>
 
         </div>

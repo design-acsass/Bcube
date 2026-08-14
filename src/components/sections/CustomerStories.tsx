@@ -1,8 +1,9 @@
 import { Star } from "lucide-react";
-import { reviews } from "@/data/reviews";
+import { useReviews } from "@/lib/store";
 
 /** Infinite marquee of red review cards. Shared by the homepage and product pages. */
 export function CustomerStories() {
+  const reviews = useReviews();
   return (
     <section className="py-12 overflow-hidden">
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">Customer's Stories</h2>
