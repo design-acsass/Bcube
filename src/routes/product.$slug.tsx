@@ -252,21 +252,21 @@ function PreviewPane({ state }: { state: State }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
   return (
-    <div className="relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-stone-100">
+    <div className="relative h-[420px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
         className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
-        style={dims}
+        style={{ ...dims, filter: thicknessShadow(state.thickness) }}
       >
         <div
           className={`relative h-full w-full ${state.frame === "with" ? "p-1.5" : ""}`}
           style={{
             ...shapeStyle,
-            boxShadow: thicknessShadow(state.thickness),
             ...(state.frame === "with" ? { backgroundColor: state.frameColor } : {}),
           }}
         >
           <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
+
             {state.imageUrl ? (
               <img src={state.imageUrl} alt="Your uploaded artwork" className="h-full w-full object-cover" />
             ) : (
