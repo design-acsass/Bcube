@@ -14,6 +14,7 @@ import { useCart } from "@/hooks/use-cart";
 import { flyToCart } from "@/lib/cart-fly";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { computePrice, formatPrice } from "@/data/pricing";
+import { useProducts, usePricing } from "@/lib/store";
 import roomImg from "@/assets/room-preview.jpg";
 
 export const Route = createFileRoute("/product/$slug")({
@@ -168,7 +169,9 @@ function ProductPage() {
 
   /** Card artwork doubles as the preview image for non-configurable products.
       TODO(backend): let admins upload/replace both the card and preview image. */
-  const productImage = imgBySlug[product.slug] ?? productImageFallback;
+  const { image: catalogImage } = useProducts();
+  const pricing = usePricing(product.slug);
+  const productImage = catalogImage(product.slug) || imgBySlug[product.slug] || productImageFallback;
   const price = computePrice({
     slug: product.slug,
     frame: state.frame,
@@ -176,7 +179,7 @@ function ProductPage() {
     size: state.size,
     thickness: state.thickness,
     addText: state.addText,
-  });
+  }, pricing);
 
   const onBuy = (buyerInfo: Record<string, string>) => {
     // Visual: fly the preview into the cart icon before the toast lands.
@@ -802,7 +805,7 @@ function ExploreMore({ currentSlug }: { currentSlug: string }) {
             key={p.slug}
             name={p.name}
             slug={p.slug}
-            img={imgBySlug[p.slug] ?? productImageFallback}
+            img={catalogImage(p.slug) || imgBySlug[p.slug] || productImageFallback}
             compact={p.slug === "wall-clocks"}
           />
         ))}
