@@ -11,6 +11,7 @@ import { imgBySlug, productImageFallback } from "@/data/product-images";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CustomerStories } from "@/components/sections/CustomerStories";
 import { useCart } from "@/hooks/use-cart";
+import { computePrice, formatPrice } from "@/data/pricing";
 import roomImg from "@/assets/room-preview.jpg";
 
 export const Route = createFileRoute("/product/$slug")({
