@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useReducer, useState, useRef, type ChangeEvent, type CSSProperties } from "react";
+import { useReducer, useState, useRef, useMemo, type ChangeEvent, type CSSProperties } from "react";
 import { toast } from "sonner";
 import {
   UploadCloud, Shapes, LayoutPanelTop, Ruler, MousePointerClick,
@@ -11,6 +11,7 @@ import { imgBySlug, productImageFallback } from "@/data/product-images";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CustomerStories } from "@/components/sections/CustomerStories";
 import { useCart } from "@/hooks/use-cart";
+import { computePrice, formatPrice } from "@/data/pricing";
 import roomImg from "@/assets/room-preview.jpg";
 
 export const Route = createFileRoute("/product/$slug")({
@@ -69,15 +70,24 @@ const initial: State = {
   textSize: "M", size: "12 x 9", thickness: "3 mm",
 };
 
-function reducer(s: State, a: Action): State {
-  switch (a.type) {
-    case "next": return { ...s, step: Math.min(5, s.step + 1) };
-    case "prev": return { ...s, step: Math.max(1, s.step - 1) };
-    case "go": return { ...s, step: a.step };
-    case "patch": return { ...s, ...a.patch };
-    case "reset": return { ...initial };
-  }
+/** Per-product defaults — framed pieces start with the frame on. */
+function initialFor(slug: string): State {
+  if (slug === "framed-acrylic-photo") return { ...initial, frame: "with" };
+  return initial;
 }
+
+function makeReducer(base: State) {
+  return function reducer(s: State, a: Action): State {
+    switch (a.type) {
+      case "next": return { ...s, step: Math.min(5, s.step + 1) };
+      case "prev": return { ...s, step: Math.max(1, s.step - 1) };
+      case "go": return { ...s, step: a.step };
+      case "patch": return { ...s, ...a.patch };
+      case "reset": return { ...base };
+    }
+  };
+}
+
 
 const STEPS = [
   { id: 1, label: "Upload Image" },
@@ -149,11 +159,25 @@ function thicknessShadow(thickness: string) {
 function ProductPage() {
   const { product } = Route.useLoaderData();
   const mode = getProductMode(product.slug);
-  const [state, dispatch] = useReducer(reducer, initial);
+  const base = useMemo(() => initialFor(product.slug), [product.slug]);
+  const reducer = useMemo(() => makeReducer(base), [base]);
+  const [state, dispatch] = useReducer(reducer, base);
   const { addItem } = useCart();
 
+  /** Card artwork doubles as the preview image for non-configurable products.
+      TODO(backend): let admins upload/replace both the card and preview image. */
+  const productImage = imgBySlug[product.slug] ?? productImageFallback;
+  const price = computePrice({
+    slug: product.slug,
+    frame: state.frame,
+    shape: state.shape,
+    size: state.size,
+    thickness: state.thickness,
+    addText: state.addText,
+  });
+
   const onBuy = (buyerInfo: Record<string, string>) => {
-    addItem({ slug: product.slug, name: product.name, config: { ...state, mode, buyerInfo } });
+    addItem({ slug: product.slug, name: product.name, config: { ...state, mode, price, buyerInfo } });
     toast.success(
       mode === "wizard" ? `${product.name} added to cart!` : "Thanks! We'll get back to you shortly.",
     );
@@ -184,7 +208,12 @@ function ProductPage() {
             className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch"
             style={{ ["--config-h" as string]: "600px" }}
           >
-            <PreviewPane state={state} />
+            <PreviewPane
+              state={state}
+              productImage={productImage}
+              showProductImage={mode !== "wizard"}
+              clockFace={product.slug === "wall-clocks"}
+            />
 
             <div className="flex min-h-[420px] flex-col rounded-2xl bg-white border border-border p-5 sm:p-6 md:p-7 shadow-sm lg:h-[var(--config-h)]">
 
@@ -192,11 +221,11 @@ function ProductPage() {
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
                 <>
-                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} />}
-                  {state.step === 2 && <StepFrame state={state} dispatch={dispatch} />}
-                  {state.step === 3 && <StepLayout state={state} dispatch={dispatch} />}
-                  {state.step === 4 && <StepSize state={state} dispatch={dispatch} />}
-                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} />}
+                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 2 && <StepFrame state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 3 && <StepLayout state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 4 && <StepSize state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} price={price} />}
                 </>
               )}
             </div>
@@ -257,9 +286,12 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
 
 // --- Preview ---
 
-function PreviewPane({ state }: { state: State }) {
+function PreviewPane({
+  state, productImage, showProductImage = false, clockFace = false,
+}: { state: State; productImage?: string; showProductImage?: boolean; clockFace?: boolean }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
+  const artwork = state.imageUrl ?? (showProductImage ? productImage : undefined);
   return (
     <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
@@ -276,14 +308,15 @@ function PreviewPane({ state }: { state: State }) {
         >
           <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
 
-            {state.imageUrl ? (
-              <img src={state.imageUrl} alt="Your uploaded artwork" className="h-full w-full object-cover" />
+            {artwork ? (
+              <img src={artwork} alt="Your artwork" className="h-full w-full object-cover" />
             ) : (
               <div className="flex flex-col items-center gap-1 text-muted-foreground/60">
                 <ImageIcon className="h-6 w-6" />
                 <span className="text-[10px]">Your photo here</span>
               </div>
             )}
+            {clockFace && <ClockOverlay />}
             {state.addText && state.text && (
               <p
                 className={`absolute bottom-2 left-0 right-0 text-center font-display ${state.textSize === "S" ? "text-[10px]" : state.textSize === "L" ? "text-base" : "text-xs"}`}
@@ -303,6 +336,44 @@ function PreviewPane({ state }: { state: State }) {
     </div>
   );
 }
+
+/** Hour markers + hands drawn over the artwork for clock products. */
+function ClockOverlay() {
+  const r = 40;
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid meet"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      aria-hidden
+    >
+      <g fill="currentColor" className="text-brand-ink">
+        {Array.from({ length: 12 }).map((_, i) => {
+          const rad = (i * 30 - 90) * (Math.PI / 180);
+          return (
+            <text
+              key={i}
+              x={50 + r * Math.cos(rad)}
+              y={50 + r * Math.sin(rad)}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={i % 3 === 0 ? 7 : 5.5}
+              fontWeight={i % 3 === 0 ? 700 : 500}
+            >
+              {i === 0 ? 12 : i}
+            </text>
+          );
+        })}
+        <line x1="50" y1="50" x2={50 + 20 * Math.cos((40 - 90) * Math.PI / 180)} y2={50 + 20 * Math.sin((40 - 90) * Math.PI / 180)} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        <line x1="50" y1="50" x2={50 + 30 * Math.cos((-68 - 90) * Math.PI / 180)} y2={50 + 30 * Math.sin((-68 - 90) * Math.PI / 180)} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+      </g>
+      <circle cx="50" cy="50" r="2" className="fill-brand-red" />
+    </svg>
+  );
+}
+
+
+
 
 // --- Step card chrome ---
 
@@ -330,9 +401,20 @@ function StepHeader({
   );
 }
 
-function ContinueButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+function PriceTag({ price }: { price: number }) {
   return (
-    <div className="mt-auto pt-8 flex justify-center">
+    <div className="flex items-baseline justify-center gap-2">
+      <span className="text-xs text-muted-foreground">Total</span>
+      {/* TODO(backend): pricing comes from src/data/pricing.ts — swap for API values. */}
+      <span className="font-display text-2xl text-brand-red">{formatPrice(price)}</span>
+    </div>
+  );
+}
+
+function ContinueButton({ onClick, disabled, price }: { onClick: () => void; disabled?: boolean; price: number }) {
+  return (
+    <div className="mt-auto flex flex-col items-center gap-3 pt-6">
+      <PriceTag price={price} />
       <button
         onClick={onClick}
         disabled={disabled}
@@ -350,7 +432,7 @@ function ContinueButton({ onClick, disabled }: { onClick: () => void; disabled?:
 
 // --- Steps ---
 
-function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepUpload({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const accept = (f?: File) => {
     if (!f) return;
@@ -378,12 +460,12 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
         <input ref={inputRef} type="file" accept="image/png,image/jpeg" onChange={(e: ChangeEvent<HTMLInputElement>) => accept(e.target.files?.[0])} className="hidden" />
       </div>
       {state.imageUrl && <p className="mt-3 text-center text-xs text-emerald-600">Image uploaded ✓</p>}
-      <ContinueButton disabled={!state.imageUrl} onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} disabled={!state.imageUrl} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepFrame({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const colors = ["#dc2626", "#0f172a", "#ffffff", "#d4af37"];
   return (
     <div className="flex h-full flex-col">
@@ -425,12 +507,12 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
           </div>
         </div>
       )}
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepLayout({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const colors = ["#dc2626", "#0f172a", "#d4af37", "#1d4ed8"];
   return (
     <div className="flex h-full flex-col">
@@ -481,12 +563,12 @@ function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatc
           </div>
         </div>
       )}
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepSize({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   return (
     <div className="flex h-full flex-col">
       <StepHeader Icon={Ruler} title="Size and thickness" subtitle="Every piece is cut to order" onReset={() => dispatch({ type: "reset" })} />
@@ -502,7 +584,7 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
           <button key={t} onClick={() => dispatch({ type: "patch", patch: { thickness: t } })} className={`rounded-xl border-2 px-4 py-2 text-sm transition ${state.thickness === t ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}>{t}</button>
         ))}
       </div>
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
@@ -534,8 +616,8 @@ function BuyerFields({
 }
 
 function StepPreviewForm({
-  onBuy, dispatch,
-}: { onBuy: (info: Record<string, string>) => void; dispatch: React.Dispatch<Action> }) {
+  onBuy, dispatch, price,
+}: { onBuy: (info: Record<string, string>) => void; dispatch: React.Dispatch<Action>; price: number }) {
   const [form, setForm] = useState<Record<string, string>>({ name: "", phone: "", email: "", idea: "", address: "", pincode: "" });
   const [accepted, setAccepted] = useState(true);
   return (
@@ -591,7 +673,8 @@ function StepPreviewForm({
           <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="accent-brand-red" />
           Accept to all terms and conditions
         </label>
-        <div className="mt-auto flex justify-center pt-4">
+        <div className="mt-auto flex flex-col items-center gap-3 pt-4">
+          <PriceTag price={price} />
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
         </div>
       </form>
