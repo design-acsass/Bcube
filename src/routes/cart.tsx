@@ -58,6 +58,8 @@ function CartPage() {
             <p className="mt-1 text-sm text-muted-foreground">Personalise a piece and it will show up here.</p>
             <Link
               to="/product"
+              search={{ tab: "custom" }}
+
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white"
             >
               Browse products <ArrowRight className="h-4 w-4" />
