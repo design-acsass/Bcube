@@ -547,48 +547,51 @@ function StepPreviewForm({
           if (!accepted) { toast.error("Please accept the terms"); return; }
           onBuy(form);
         }}
-        className="flex flex-1 flex-col space-y-4"
+        className="flex flex-1 flex-col"
       >
-        <BuyerFields form={form} setForm={setForm} />
-        <div>
-          <label className="text-sm text-brand-red">Your idea</label>
-          <textarea
-            rows={3}
-            value={form.idea}
-            onChange={(e) => setForm({ ...form, idea: e.target.value })}
-            placeholder="Tell us what you have in mind"
-            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-brand-red">Delivery address</label>
-          <textarea
-            required
-            rows={2}
-            value={form.address}
-            onChange={(e) => setForm({ ...form, address: e.target.value })}
-            placeholder="Door no, street, city, state"
-            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
-          />
-        </div>
-        <div>
-          <label className="text-sm text-brand-red">Check Estimated Delivery Date</label>
-          <div className="mt-1 flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-full border border-border bg-white px-3 py-2.5 text-sm">🇮🇳 Ind</div>
-            <input
+        {/* Two-column compact grid so the whole step fits without scrolling. */}
+        <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+          <BuyerFields form={form} setForm={setForm} compact />
+          <div>
+            <label className="text-xs text-brand-red">Pincode</label>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="shrink-0 rounded-full border border-border bg-white px-3 py-2 text-sm">🇮🇳 Ind</span>
+              <input
+                required
+                value={form.pincode}
+                onChange={(e) => setForm({ ...form, pincode: e.target.value })}
+                placeholder="Enter Pincode"
+                className="w-full min-w-0 rounded-full border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-brand-red">Your idea</label>
+            <textarea
+              rows={2}
+              value={form.idea}
+              onChange={(e) => setForm({ ...form, idea: e.target.value })}
+              placeholder="Tell us what you have in mind"
+              className="mt-1 w-full resize-none rounded-2xl border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-brand-red">Delivery address</label>
+            <textarea
               required
-              value={form.pincode}
-              onChange={(e) => setForm({ ...form, pincode: e.target.value })}
-              placeholder="Enter Pincode"
-              className="flex-1 rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+              rows={2}
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              placeholder="Door no, street, city, state"
+              className="mt-1 w-full resize-none rounded-2xl border border-border bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-red"
             />
           </div>
         </div>
-        <label className="flex items-center gap-2 text-xs">
+        <label className="mt-3 flex items-center gap-2 text-xs">
           <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="accent-brand-red" />
           Accept to all terms and conditions
         </label>
-        <div className="mt-auto flex justify-center pt-2">
+        <div className="mt-auto flex justify-center pt-4">
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
         </div>
       </form>
