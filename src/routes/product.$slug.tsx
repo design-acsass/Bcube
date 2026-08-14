@@ -404,7 +404,11 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
             aria-label={id}
             className={`aspect-square rounded-xl border-2 grid place-items-center transition ${state.shape === id ? "border-brand-yellow bg-brand-yellow/10" : "border-border hover:border-brand-red/40"}`}
           >
-            <span className="h-9 w-9 bg-brand-red/70" style={SHAPE_STYLE[id]} />
+            <span
+              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-9 w-9" : "h-7 w-10"}`}
+              style={SHAPE_STYLE[id]}
+            />
+
           </button>
         ))}
       </div>
