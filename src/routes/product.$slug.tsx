@@ -290,6 +290,21 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
 
 // --- Preview ---
 
+/** Non-configurable products: large product shot on a premium white/grey backdrop. */
+function SimpleProductPane({ image, name }: { image: string; name: string }) {
+  return (
+    <div className="relative grid h-[360px] place-items-center overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_50%_35%,#ffffff_0%,#f4f4f5_55%,#e4e4e7_100%)] p-8 lg:h-[var(--config-h)]">
+      <img
+        src={image}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+        className="max-h-full w-auto max-w-[85%] object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.18)]"
+      />
+    </div>
+  );
+}
+
 function PreviewPane({
   state, productImage, showProductImage = false, clockFace = false,
 }: { state: State; productImage?: string; showProductImage?: boolean; clockFace?: boolean }) {
