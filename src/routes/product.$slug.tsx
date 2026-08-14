@@ -322,6 +322,7 @@ function PreviewPane({
     <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
+        data-fly-source
         className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
         style={{ ...dims, filter: thicknessShadow(state.thickness) }}
       >
