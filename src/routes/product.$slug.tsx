@@ -310,12 +310,12 @@ function StepHeader({
   Icon, title, subtitle, onReset,
 }: { Icon: typeof UploadCloud; title: string; subtitle?: string; onReset?: () => void }) {
   return (
-    <div className="flex items-start gap-4 pb-6">
+    <div className="flex items-start gap-3 pb-4 sm:gap-4 sm:pb-5">
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-brand-ink">
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0 flex-1">
-        <h2 className="font-display text-2xl text-brand-ink">{title}</h2>
+        <h2 className="font-display text-xl text-brand-ink sm:text-2xl">{title}</h2>
         {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
       </div>
       {onReset && (
@@ -369,7 +369,7 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); accept(e.dataTransfer.files?.[0]); }}
         onClick={() => inputRef.current?.click()}
-        className="cursor-pointer rounded-2xl border-2 border-dashed border-border bg-white p-10 text-center transition hover:border-brand-red"
+        className="cursor-pointer rounded-2xl border-2 border-dashed border-border bg-white p-6 sm:p-8 text-center transition hover:border-brand-red"
       >
         <p className="font-display text-lg text-brand-ink">Choose a file or drag &amp; drop it here</p>
         <p className="mt-1 text-sm text-muted-foreground">JPEG and PNG formats, up to 50MB</p>
@@ -399,7 +399,7 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-6 gap-2 sm:gap-3">
         {SHAPE_LIST.map((id) => (
           <button
             key={id}
@@ -408,7 +408,7 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
             className={`aspect-square rounded-xl border-2 grid place-items-center transition ${state.shape === id ? "border-brand-yellow bg-brand-yellow/10" : "border-border hover:border-brand-red/40"}`}
           >
             <span
-              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-9 w-9" : "h-7 w-10"}`}
+              className={`bg-brand-red/70 ${SQUARE_SHAPES.includes(id) ? "h-7 w-7" : "h-5 w-8"}`}
               style={SHAPE_STYLE[id]}
             />
 
@@ -440,7 +440,7 @@ function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatc
           <button
             key={o}
             onClick={() => dispatch({ type: "patch", patch: { orientation: o } })}
-            className={`rounded-xl border-2 p-6 grid place-items-center gap-2 transition ${state.orientation === o ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}
+            className={`rounded-xl border-2 p-4 sm:p-5 grid place-items-center gap-2 transition ${state.orientation === o ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}
           >
             <div className={`bg-stone-200 ${o === "portrait" ? "w-12 h-16" : "w-16 h-12"} rounded`} />
             <span className={`text-xs ${state.orientation === o ? "text-brand-red font-medium" : "text-muted-foreground"}`}>{o === "portrait" ? "Portrait" : "Landscape"}</span>
