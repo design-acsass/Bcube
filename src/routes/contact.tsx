@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 import logo from "@/assets/LOGO.png.asset.json";
 import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
+import { submitEnquiry } from "@/lib/enquiries";
+import { useMedia } from "@/lib/store";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -35,12 +37,13 @@ export type ContactEnquiry = {
 const emptyEnquiry: ContactEnquiry = { name: "", email: "", phone: "", message: "" };
 
 function ContactPage() {
+  const { media } = useMedia();
   return (
     <>
       <ContactSection />
       <section className="my-12">
         <img
-          src={ad2.url}
+          src={media("ad-2", ad2.url)}
           alt="To know more about our products — call or email B Cube"
           className="w-full"
           loading="lazy"
@@ -58,12 +61,16 @@ function ContactSection() {
   const set = (key: keyof ContactEnquiry) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  // TODO(backend): POST `form` to the enquiries endpoint instead of the local toast.
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    toast.success("Thanks! We'll get back to you shortly.");
-    setForm(emptyEnquiry);
+    const ok = await submitEnquiry({ source: "contact", ...form });
+    if (ok) {
+      toast.success("Thanks! We'll get back to you shortly.");
+      setForm(emptyEnquiry);
+    } else {
+      toast.error("Could not send your enquiry. Please try again.");
+    }
     setSubmitting(false);
   };
 
@@ -85,7 +92,7 @@ function ContactSection() {
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="rounded-[25px] bg-brand-yellow p-6 sm:p-8 md:p-[40px]">
+        <form onSubmit={(e) => void onSubmit(e)} className="rounded-[25px] bg-brand-yellow p-6 sm:p-8 md:p-[40px]">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" value={form.name} onChange={set("name")} required />
             <Field label="Phone" type="tel" value={form.phone} onChange={set("phone")} required />
