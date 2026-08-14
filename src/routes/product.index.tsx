@@ -35,36 +35,6 @@ export const Route = createFileRoute("/product/")({
   component: ProductListing,
 });
 
-const imgBySlug: Record<string, string> = {
-  "premium-acrylic-photo": pPremium.url,
-  "framed-acrylic-photo": pFramed.url,
-  pillows: pPillow.url,
-  "fridge-magnet": pMagnet.url,
-  "name-plate": pNamePlate.url,
-  keychain: pKeychain.url,
-  "acrylic-cutouts-decor": pCutout.url,
-  "acrylic-desk-photo": pDesk.url,
-  "acrylic-monogram": pMonogram.url,
-  "luggage-tags": pLuggage.url,
-  hoodies: pHoodie.url,
-  "laptop-bag": pLaptop.url,
-  "water-bottle": pBottle.url,
-  cap: pCap.url,
-  "jute-bag": pJute.url,
-  container: pContainer.url,
-  "pen-drive": pPenDrive.url,
-  "photo-albums": pAlbum.url,
-  candle: pCandle.url,
-  "sweet-box": pSweetBox.url,
-  tshirt: pTshirt.url,
-  "tote-bag": pTote.url,
-  "travel-duffle-bag": pTravel.url,
-  umbrella: pUmbrella.url,
-  "wall-clocks": pClock.url,
-  perfume: pPerfume.url,
-  plant: pPlant.url,
-};
-
 const tabs: { id: Tab; label: string; img: string }[] = [
   { id: "custom", label: "Custom Acrylic Pictures", img: cat1.url },
   { id: "corporate", label: "Corporate Gifting", img: cat2.url },
