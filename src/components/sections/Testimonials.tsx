@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ImageIcon } from "lucide-react";
-import { testimonialGroups } from "@/data/testimonials";
+import { useTestimonialGroups } from "@/lib/store";
 
 /**
  * Loads/plays a clip only once it is close to the viewport, so the page never
