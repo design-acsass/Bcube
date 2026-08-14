@@ -1,12 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useReducer, useState, useRef, type ChangeEvent } from "react";
+import { useReducer, useState, useRef, type ChangeEvent, type CSSProperties } from "react";
 import { toast } from "sonner";
 import {
   UploadCloud, Shapes, LayoutPanelTop, Ruler, MousePointerClick,
-  Square, Circle, Triangle, Hexagon, Heart, ImageIcon, Star, X, MessageCircle, Boxes,
+  ImageIcon, ArrowLeft, RotateCcw, MessageCircle, Boxes,
 } from "lucide-react";
-import { findProduct, customAcrylic, testimonials, getProductMode } from "@/data/products";
+import { findProduct, customAcrylic, corporateGifting, returnGifts, getProductMode } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
+import { imgBySlug, productImageFallback } from "@/data/product-images";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { CustomerStories } from "@/components/sections/CustomerStories";
 import { useCart } from "@/hooks/use-cart";
 import roomImg from "@/assets/room-preview.jpg";
 
@@ -37,7 +40,9 @@ export const Route = createFileRoute("/product/$slug")({
 
 // --- Wizard state ---
 
-type Shape = "square" | "rounded" | "circle" | "heart" | "triangle" | "hexagon";
+type Shape =
+  | "square" | "rounded" | "circle" | "oval" | "heart" | "triangle"
+  | "hexagon" | "pentagon" | "octagon" | "diamond" | "star" | "arch";
 type FrameMode = "without" | "with";
 type Orientation = "portrait" | "landscape";
 type State = {
@@ -82,11 +87,55 @@ const STEPS = [
   { id: 5, label: "Preview" },
 ];
 
+/** Geometry per shape — applied identically to the swatch and the live preview. */
+const SHAPE_STYLE: Record<Shape, CSSProperties> = {
+  square: {},
+  rounded: { borderRadius: "1.25rem" },
+  circle: { borderRadius: "50%" },
+  oval: { borderRadius: "50% / 40%" },
+  arch: { borderRadius: "50% 50% 6px 6px / 45% 45% 6px 6px" },
+  heart: { clipPath: "polygon(50% 100%, 15% 68%, 2% 45%, 2% 28%, 12% 14%, 30% 10%, 43% 17%, 50% 27%, 57% 17%, 70% 10%, 88% 14%, 98% 28%, 98% 45%, 85% 68%)" },
+  triangle: { clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" },
+  hexagon: { clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)" },
+  pentagon: { clipPath: "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)" },
+  octagon: { clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" },
+  diamond: { clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)" },
+  star: { clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)" },
+};
+
+const SHAPE_LIST: Shape[] = [
+  "square", "rounded", "circle", "oval", "arch", "heart",
+  "triangle", "hexagon", "pentagon", "octagon", "diamond", "star",
+];
+
+const SIZES = ["12 x 9", "16 x 12", "18 x 12", "21 x 15", "30 x 20"];
+const THICKNESSES = ["3 mm", "5 mm", "8 mm"];
+
+/** Maps the selected size + orientation to preview dimensions (% of the room photo). */
+function previewDimensions(state: State) {
+  const [a, b] = state.size.split(" x ").map((n) => Number(n));
+  const long = Math.max(a, b);
+  const short = Math.min(a, b);
+  const t = (long - 12) / (30 - 12); // 0 → 1 across the size range
+  const longPct = 30 + t * 26; // 30% → 56%
+  const shortPct = longPct * (short / long);
+  return state.orientation === "portrait"
+    ? { height: `${longPct}%`, width: `${shortPct}%` }
+    : { height: `${shortPct}%`, width: `${longPct}%` };
+}
+
+/** Thicker acrylic casts a deeper shadow. */
+function thicknessShadow(thickness: string) {
+  const mm = Number(thickness.split(" ")[0]);
+  const y = Math.round(mm * 2.2);
+  const blur = Math.round(mm * 4.5);
+  return `0 ${y}px ${blur}px rgba(15,23,42,${0.18 + mm * 0.035})`;
+}
+
 function ProductPage() {
   const { product } = Route.useLoaderData();
   const mode = getProductMode(product.slug);
   const [state, dispatch] = useReducer(reducer, initial);
-  const [tab, setTab] = useState<"details" | "reviews" | "about">("details");
   const { addItem } = useCart();
 
   const onBuy = (buyerInfo: Record<string, string>) => {
@@ -99,54 +148,35 @@ function ProductPage() {
 
   return (
     <>
-      <section className="bg-muted/40 pt-8 pb-14">
+      <section className="bg-muted/40 pt-6 pb-14">
         <div className="container mx-auto px-4">
-          <nav className="mb-6 text-xs text-muted-foreground">
-            <Link to="/" className="hover:text-brand-red">Home</Link>
-            <span className="mx-1">/</span>
-            <Link to="/product" search={{ tab: 'custom' }} className="hover:text-brand-red">Products</Link>
-            <span className="mx-1">/</span>
-            <span className="text-brand-red font-medium">{product.name}</span>
-          </nav>
+          <Link
+            to="/product"
+            search={{ tab: 'custom' }}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm text-brand-ink transition hover:border-brand-red hover:text-brand-red"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Link>
 
           {mode === "wizard" && (
-            <Stepper current={state.step} onGo={(s) => dispatch({ type: "go", step: s })} />
+            <div className="mt-6">
+              <Stepper current={state.step} onGo={(s) => dispatch({ type: "go", step: s })} />
+            </div>
           )}
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-2 items-start">
-            <div>
-              <PreviewPane state={state} />
-              <div className="mt-5 flex flex-wrap gap-3">
-                {([
-                  ["details", "Product Details"],
-                  ["reviews", "Reviews"],
-                  ["about", "About BCUBE"],
-                ] as const).map(([id, label]) => (
-                  <button
-                    key={id}
-                    onClick={() => setTab(id)}
-                    className={`rounded-lg px-5 py-2.5 text-sm font-medium border transition ${tab === id ? "bg-brand-red text-white border-brand-red" : "bg-white border-border text-brand-ink hover:border-brand-red/50"}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch">
+            <PreviewPane state={state} />
 
-            <div className="rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm min-h-[420px]">
+            <div className="flex h-full flex-col rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm min-h-[420px]">
               {mode !== "wizard" ? (
-                <EnquiryCard
-                  mode={mode}
-                  name={product.name}
-                  onBuy={onBuy}
-                />
+                <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
                 <>
                   {state.step === 1 && <StepUpload state={state} dispatch={dispatch} />}
                   {state.step === 2 && <StepFrame state={state} dispatch={dispatch} />}
                   {state.step === 3 && <StepLayout state={state} dispatch={dispatch} />}
                   {state.step === 4 && <StepSize state={state} dispatch={dispatch} />}
-                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} />}
+                  {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} />}
                 </>
               )}
             </div>
@@ -154,11 +184,20 @@ function ProductPage() {
         </div>
       </section>
 
-      <ProductInfo tab={tab} name={product.name} />
+      <ProductInfo name={product.name} />
+      <Testimonials heading="Why customers love it" groupIds={[testimonialGroupFor(product.slug)]} />
       <CustomerStories />
       <ExploreMore currentSlug={product.slug} />
     </>
   );
+}
+
+/** Picks the testimonial group that matches this product. */
+function testimonialGroupFor(slug: string): string {
+  if (["premium-acrylic-photo", "acrylic-desk-photo", "photo-albums", "fridge-magnet"].includes(slug)) return "acrylic-photos";
+  if (["framed-acrylic-photo", "wall-clocks", "acrylic-cutouts-decor"].includes(slug)) return "acrylic-clear-photos";
+  if (["name-plate", "acrylic-monogram", "keychain", "luggage-tags"].includes(slug)) return "name-decors";
+  return "creative-gifts";
 }
 
 // --- Stepper ---
@@ -174,11 +213,7 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
             <button onClick={() => onGo(s.id)} className="flex w-24 flex-col items-center gap-2">
               <span
                 className={`grid h-9 w-9 place-items-center rounded-full border-2 text-xs font-semibold transition ${
-                  active
-                    ? "border-brand-red text-brand-red"
-                    : done
-                      ? "border-brand-red text-brand-red"
-                      : "border-border text-muted-foreground bg-white"
+                  active || done ? "border-brand-red text-brand-red" : "border-border text-muted-foreground bg-white"
                 }`}
               >
                 {active ? <span className="h-3 w-3 rounded-full bg-brand-red" /> : String(s.id).padStart(2, "0")}
@@ -200,26 +235,24 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
 // --- Preview ---
 
 function PreviewPane({ state }: { state: State }) {
-  const shapeMask = (() => {
-    switch (state.shape) {
-      case "circle": return "rounded-full";
-      case "rounded": return "rounded-2xl";
-      default: return "rounded-sm";
-    }
-  })();
+  const shapeStyle = SHAPE_STYLE[state.shape];
+  const dims = previewDimensions(state);
   return (
-    <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-stone-100">
+    <div className="relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-stone-100">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
-        className={`absolute left-1/2 top-[34%] -translate-x-1/2 -translate-y-1/2 ${
-          state.orientation === "portrait" ? "h-[38%] w-[26%]" : "h-[26%] w-[38%]"
-        }`}
+        className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
+        style={dims}
       >
         <div
-          className={`relative h-full w-full ${state.frame === "with" ? "p-1.5" : ""} ${shapeMask} shadow-xl`}
-          style={state.frame === "with" ? { backgroundColor: state.frameColor } : {}}
+          className={`relative h-full w-full ${state.frame === "with" ? "p-1.5" : ""}`}
+          style={{
+            ...shapeStyle,
+            boxShadow: thicknessShadow(state.thickness),
+            ...(state.frame === "with" ? { backgroundColor: state.frameColor } : {}),
+          }}
         >
-          <div className={`relative h-full w-full ${shapeMask} overflow-hidden bg-white grid place-items-center`}>
+          <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
             {state.imageUrl ? (
               <img src={state.imageUrl} alt="Your uploaded artwork" className="h-full w-full object-cover" />
             ) : (
@@ -239,11 +272,10 @@ function PreviewPane({ state }: { state: State }) {
           </div>
         </div>
       </div>
-      {state.step === 5 && (
-        <>
-          <div className="absolute right-4 top-1/4 text-xs text-brand-ink/70 -rotate-90 origin-right">{state.size.split(" x ")[0]} inches</div>
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-xs text-brand-ink/70">{state.size.split(" x ")[1]} inches</div>
-        </>
+      {(state.step === 4 || state.step === 5) && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/85 px-4 py-1.5 text-xs text-brand-ink">
+          {state.size} inches · {state.thickness} thick
+        </div>
       )}
     </div>
   );
@@ -252,8 +284,8 @@ function PreviewPane({ state }: { state: State }) {
 // --- Step card chrome ---
 
 function StepHeader({
-  Icon, title, subtitle, onClose,
-}: { Icon: typeof UploadCloud; title: string; subtitle?: string; onClose?: () => void }) {
+  Icon, title, subtitle, onReset,
+}: { Icon: typeof UploadCloud; title: string; subtitle?: string; onReset?: () => void }) {
   return (
     <div className="flex items-start gap-4 pb-6">
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-brand-ink">
@@ -263,9 +295,12 @@ function StepHeader({
         <h2 className="font-display text-2xl text-brand-ink">{title}</h2>
         {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
       </div>
-      {onClose && (
-        <button onClick={onClose} aria-label="Reset" className="text-muted-foreground hover:text-brand-red">
-          <X className="h-5 w-5" />
+      {onReset && (
+        <button
+          onClick={onReset}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-brand-red hover:text-brand-red"
+        >
+          <RotateCcw className="h-3.5 w-3.5" /> Reset
         </button>
       )}
     </div>
@@ -274,7 +309,7 @@ function StepHeader({
 
 function ContinueButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
   return (
-    <div className="mt-8 flex justify-center">
+    <div className="mt-auto pt-8 flex justify-center">
       <button
         onClick={onClick}
         disabled={disabled}
@@ -300,12 +335,12 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
     dispatch({ type: "patch", patch: { imageUrl: URL.createObjectURL(f) } });
   };
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <StepHeader
         Icon={UploadCloud}
         title="Upload image"
         subtitle="Select and upload the files of your choice"
-        onClose={() => dispatch({ type: "reset" })}
+        onReset={() => dispatch({ type: "reset" })}
       />
       <div
         onDragOver={(e) => e.preventDefault()}
@@ -325,20 +360,11 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
   );
 }
 
-const SHAPES: { id: Shape; Icon: typeof Square }[] = [
-  { id: "square", Icon: Square },
-  { id: "rounded", Icon: Square },
-  { id: "circle", Icon: Circle },
-  { id: "heart", Icon: Heart },
-  { id: "triangle", Icon: Triangle },
-  { id: "hexagon", Icon: Hexagon },
-];
-
 function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
   const colors = ["#dc2626", "#0f172a", "#ffffff", "#d4af37"];
   return (
-    <div>
-      <StepHeader Icon={Shapes} title="Shapes" subtitle="Pick a silhouette and frame finish" onClose={() => dispatch({ type: "reset" })} />
+    <div className="flex h-full flex-col">
+      <StepHeader Icon={Shapes} title="Shapes" subtitle="Pick a silhouette and frame finish" onReset={() => dispatch({ type: "reset" })} />
       <div className="mb-6 flex gap-2">
         {(["without", "with"] as const).map((m) => (
           <button
@@ -350,14 +376,15 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-3">
-        {SHAPES.map(({ id, Icon }) => (
+      <div className="grid grid-cols-4 gap-3">
+        {SHAPE_LIST.map((id) => (
           <button
             key={id}
             onClick={() => dispatch({ type: "patch", patch: { shape: id } })}
+            aria-label={id}
             className={`aspect-square rounded-xl border-2 grid place-items-center transition ${state.shape === id ? "border-brand-yellow bg-brand-yellow/10" : "border-border hover:border-brand-red/40"}`}
           >
-            <Icon className={`h-8 w-8 ${id === "rounded" ? "rounded-sm" : ""}`} strokeWidth={1.5} />
+            <span className="h-9 w-9 bg-brand-red/70" style={SHAPE_STYLE[id]} />
           </button>
         ))}
       </div>
@@ -379,8 +406,8 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
 function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
   const colors = ["#dc2626", "#0f172a", "#d4af37", "#1d4ed8"];
   return (
-    <div>
-      <StepHeader Icon={LayoutPanelTop} title="Layout and Text" subtitle="Choose an orientation and add a message" onClose={() => dispatch({ type: "reset" })} />
+    <div className="flex h-full flex-col">
+      <StepHeader Icon={LayoutPanelTop} title="Layout and Text" subtitle="Choose an orientation and add a message" onReset={() => dispatch({ type: "reset" })} />
       <div className="grid grid-cols-2 gap-3">
         {(["portrait", "landscape"] as const).map((o) => (
           <button
@@ -433,20 +460,18 @@ function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatc
 }
 
 function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
-  const sizes = ["12 x 9", "16 x 12", "18 x 12", "21 x 15", "30 x 20"];
-  const thicknesses = ["3 mm", "5 mm", "8 mm"];
   return (
-    <div>
-      <StepHeader Icon={Ruler} title="Size and thickness" subtitle="Every piece is cut to order" onClose={() => dispatch({ type: "reset" })} />
+    <div className="flex h-full flex-col">
+      <StepHeader Icon={Ruler} title="Size and thickness" subtitle="Every piece is cut to order" onReset={() => dispatch({ type: "reset" })} />
       <p className="mb-2 text-sm text-brand-red">Select Size :</p>
       <div className="flex flex-wrap gap-2">
-        {sizes.map((s) => (
+        {SIZES.map((s) => (
           <button key={s} onClick={() => dispatch({ type: "patch", patch: { size: s } })} className={`rounded-xl border-2 px-4 py-2 text-sm transition ${state.size === s ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}>{s}</button>
         ))}
       </div>
       <p className="mt-6 mb-2 text-sm text-brand-red">Select Thickness :</p>
       <div className="flex flex-wrap gap-2">
-        {thicknesses.map((t) => (
+        {THICKNESSES.map((t) => (
           <button key={t} onClick={() => dispatch({ type: "patch", patch: { thickness: t } })} className={`rounded-xl border-2 px-4 py-2 text-sm transition ${state.thickness === t ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}>{t}</button>
         ))}
       </div>
@@ -457,7 +482,7 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
 
 function BuyerFields({
   form, setForm,
-}: { form: Record<string, string>; setForm: (f: any) => void }) {
+}: { form: Record<string, string>; setForm: (f: Record<string, string>) => void }) {
   return (
     <>
       {[
@@ -481,21 +506,44 @@ function BuyerFields({
   );
 }
 
-function StepPreviewForm({ onBuy }: { onBuy: (info: Record<string, string>) => void }) {
-  const [form, setForm] = useState<Record<string, string>>({ name: "", phone: "", email: "", pincode: "" });
+function StepPreviewForm({
+  onBuy, dispatch,
+}: { onBuy: (info: Record<string, string>) => void; dispatch: React.Dispatch<Action> }) {
+  const [form, setForm] = useState<Record<string, string>>({ name: "", phone: "", email: "", idea: "", address: "", pincode: "" });
   const [accepted, setAccepted] = useState(true);
   return (
-    <div>
-      <StepHeader Icon={MousePointerClick} title="Preview" subtitle="Confirm your details and place the order" />
+    <div className="flex h-full flex-col">
+      <StepHeader Icon={MousePointerClick} title="Preview" subtitle="Confirm your details and place the order" onReset={() => dispatch({ type: "reset" })} />
       <form
         onSubmit={(e) => {
           e.preventDefault();
           if (!accepted) { toast.error("Please accept the terms"); return; }
           onBuy(form);
         }}
-        className="space-y-4"
+        className="flex flex-1 flex-col space-y-4"
       >
         <BuyerFields form={form} setForm={setForm} />
+        <div>
+          <label className="text-sm text-brand-red">Your idea</label>
+          <textarea
+            rows={3}
+            value={form.idea}
+            onChange={(e) => setForm({ ...form, idea: e.target.value })}
+            placeholder="Tell us what you have in mind"
+            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+          />
+        </div>
+        <div>
+          <label className="text-sm text-brand-red">Delivery address</label>
+          <textarea
+            required
+            rows={2}
+            value={form.address}
+            onChange={(e) => setForm({ ...form, address: e.target.value })}
+            placeholder="Door no, street, city, state"
+            className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
+          />
+        </div>
         <div>
           <label className="text-sm text-brand-red">Check Estimated Delivery Date</label>
           <div className="mt-1 flex items-center gap-2">
@@ -513,7 +561,7 @@ function StepPreviewForm({ onBuy }: { onBuy: (info: Record<string, string>) => v
           <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="accent-brand-red" />
           Accept to all terms and conditions
         </label>
-        <div className="flex justify-center pt-2">
+        <div className="mt-auto flex justify-center pt-2">
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
         </div>
       </form>
@@ -527,7 +575,7 @@ function EnquiryCard({
   const [form, setForm] = useState<Record<string, string>>({ name: "", phone: "", email: "", quantity: "", message: "" });
   const bulk = mode === "bulk";
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <StepHeader
         Icon={bulk ? Boxes : MessageCircle}
         title={bulk ? "Order in bulk" : "Contact us for your own custom gifts and ideas"}
@@ -537,7 +585,7 @@ function EnquiryCard({
       />
       <form
         onSubmit={(e) => { e.preventDefault(); onBuy({ ...form, mode }); }}
-        className="space-y-4"
+        className="flex flex-1 flex-col space-y-4"
       >
         <BuyerFields form={form} setForm={setForm} />
         {bulk && (
@@ -564,7 +612,7 @@ function EnquiryCard({
             className="mt-1 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-red"
           />
         </div>
-        <div className="flex justify-center pt-2">
+        <div className="mt-auto flex justify-center pt-2">
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">
             {bulk ? "Get Bulk Quote" : "Send Enquiry"}
           </button>
@@ -576,60 +624,48 @@ function EnquiryCard({
 
 // --- Content below ---
 
-function ProductInfo({ tab, name }: { tab: "details" | "reviews" | "about"; name: string }) {
+function ProductInfo({ name }: { name: string }) {
   return (
     <section className="container mx-auto px-4 py-10">
       <h1 className="font-display text-3xl text-brand-ink">{name}</h1>
       <div className="mt-4 text-sm text-brand-ink/90">
-        {tab === "details" && (
-          <>
-            <p>Commemorate your special moments with this beautifully personalised piece, designed specifically for celebrations. A meaningful and lasting reminder of the love you share, it adds elegance to any home.</p>
-            <ul className="mt-3 list-disc pl-6 space-y-1">
-              <li>Material: Made with high-quality faux leather, glass, and MDF for durability and an elegant finish.</li>
-              <li>Quick dispatch from Chennai</li>
-              <li>Unidirectional pixel-perfect direct printing on Acrylic</li>
-              <li>Ultra HD print with the highest DPI (Resolution)</li>
-              <li>Acrylic undergoes chemical treatment before printing</li>
-              <li>Never peel off, even in a moisture environment</li>
-              <li>Unidirectional mode ensures each picture receives 2x printing time</li>
-              <li>Same day processing of orders</li>
-              <li>Advanced utilization of Artificial Intelligence (AI)</li>
-            </ul>
-          </>
-        )}
-        {tab === "reviews" && <p>★★★★★ 4.8 average from 240+ reviews. Real photos and notes from customers coming soon.</p>}
-        {tab === "about" && <p>B Cube crafts personalised acrylic photos, frames, clocks, and gifts — bringing your memories to life with precision and care.</p>}
-      </div>
-    </section>
-  );
-}
-
-function CustomerStories() {
-  return (
-    <section className="container mx-auto px-4 py-12 border-t border-border">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-8">Customer's Stories</h2>
-      <div className="grid gap-6 md:grid-cols-3">
-        {testimonials.map((t) => (
-          <article key={t.name} className="rounded-2xl bg-brand-red p-6 text-white text-center">
-            <div className="flex justify-center gap-1 text-brand-yellow">
-              {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" />)}
-            </div>
-            <p className="mt-3 font-display text-lg italic">"{t.quote}"</p>
-            <p className="mt-2 text-xs text-white/80">~ {t.name}</p>
-          </article>
-        ))}
+        <p>Commemorate your special moments with this beautifully personalised piece, designed specifically for celebrations. A meaningful and lasting reminder of the love you share, it adds elegance to any home.</p>
+        <ul className="mt-3 list-disc pl-6 space-y-1">
+          <li>Material: Made with high-quality faux leather, glass, and MDF for durability and an elegant finish.</li>
+          <li>Quick dispatch from Chennai</li>
+          <li>Unidirectional pixel-perfect direct printing on Acrylic</li>
+          <li>Ultra HD print with the highest DPI (Resolution)</li>
+          <li>Acrylic undergoes chemical treatment before printing</li>
+          <li>Never peel off, even in a moisture environment</li>
+          <li>Unidirectional mode ensures each picture receives 2x printing time</li>
+          <li>Same day processing of orders</li>
+          <li>Advanced utilization of Artificial Intelligence (AI)</li>
+        </ul>
       </div>
     </section>
   );
 }
 
 function ExploreMore({ currentSlug }: { currentSlug: string }) {
-  const more = customAcrylic.filter((p) => p.slug !== currentSlug).slice(0, 6);
+  const category = corporateGifting.some((p) => p.slug === currentSlug)
+    ? corporateGifting
+    : returnGifts.some((p) => p.slug === currentSlug)
+      ? returnGifts
+      : customAcrylic;
+  const more = category.filter((p) => p.slug !== currentSlug).slice(0, 6);
   return (
     <section className="container mx-auto px-4 py-12">
-      <h2 className="text-center font-display text-2xl text-brand-ink mb-10">Explore More</h2>
+      <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink mb-10">Explore More</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14">
-        {more.map((p) => <ProductTile key={p.slug} name={p.name} slug={p.slug} compact={p.slug === "wall-clocks"} />)}
+        {more.map((p) => (
+          <ProductTile
+            key={p.slug}
+            name={p.name}
+            slug={p.slug}
+            img={imgBySlug[p.slug] ?? productImageFallback}
+            compact={p.slug === "wall-clocks"}
+          />
+        ))}
       </div>
     </section>
   );
