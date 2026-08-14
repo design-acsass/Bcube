@@ -69,15 +69,24 @@ const initial: State = {
   textSize: "M", size: "12 x 9", thickness: "3 mm",
 };
 
-function reducer(s: State, a: Action): State {
-  switch (a.type) {
-    case "next": return { ...s, step: Math.min(5, s.step + 1) };
-    case "prev": return { ...s, step: Math.max(1, s.step - 1) };
-    case "go": return { ...s, step: a.step };
-    case "patch": return { ...s, ...a.patch };
-    case "reset": return { ...initial };
-  }
+/** Per-product defaults — framed pieces start with the frame on. */
+function initialFor(slug: string): State {
+  if (slug === "framed-acrylic-photo") return { ...initial, frame: "with" };
+  return initial;
 }
+
+function makeReducer(base: State) {
+  return function reducer(s: State, a: Action): State {
+    switch (a.type) {
+      case "next": return { ...s, step: Math.min(5, s.step + 1) };
+      case "prev": return { ...s, step: Math.max(1, s.step - 1) };
+      case "go": return { ...s, step: a.step };
+      case "patch": return { ...s, ...a.patch };
+      case "reset": return { ...base };
+    }
+  };
+}
+
 
 const STEPS = [
   { id: 1, label: "Upload Image" },
