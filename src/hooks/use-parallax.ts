@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
  * Very subtle vertical parallax. Returns a ref to attach to the moving layer.
  * `speed` is the fraction of the scrolled distance the layer drifts (keep <= 0.12).
  */
-export function useParallax<T extends HTMLElement>(speed = 0.06) {
+export function useParallax<T extends HTMLElement>(speed = 0.06, scale = 1) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function useParallax<T extends HTMLElement>(speed = 0.06) {
       frame = 0;
       const rect = el.getBoundingClientRect();
       const centre = rect.top + rect.height / 2 - window.innerHeight / 2;
-      el.style.transform = `translate3d(0, ${(-centre * speed).toFixed(2)}px, 0)`;
+      el.style.transform = `translate3d(0, ${(-centre * speed).toFixed(2)}px, 0) scale(${scale})`;
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -31,7 +31,7 @@ export function useParallax<T extends HTMLElement>(speed = 0.06) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [speed]);
+  }, [speed, scale]);
 
   return ref;
 }

@@ -219,14 +219,14 @@ function FeaturedGrid() {
 
 
 function RelationshipBanner() {
-  const layer = useParallax<HTMLImageElement>(0.045);
+  const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
     <section className="my-12 overflow-hidden">
       <img
         ref={layer}
         src={ad1.url}
         alt="Enriching relationships through thoughtful gifts"
-        className="w-full scale-110 will-change-transform"
+        className="w-full will-change-transform"
         loading="lazy"
       />
     </section>
@@ -267,14 +267,14 @@ function MakeSpecial() {
 }
 
 function PerfectGifts() {
-  const layer = useParallax<HTMLImageElement>(0.045);
+  const layer = useParallax<HTMLImageElement>(0.045, 1.1);
   return (
     <section className="my-12 overflow-hidden">
       <img
         ref={layer}
         src={ad3.url}
         alt="Find the perfect gifts — discover gifts by recipient, relationships and occasions"
-        className="w-full scale-110 will-change-transform"
+        className="w-full will-change-transform"
         loading="lazy"
       />
     </section>
