@@ -227,9 +227,6 @@ function ProductPage() {
                   {state.step === 5 && <StepPreviewForm onBuy={onBuy} dispatch={dispatch} price={price} />}
                 </>
               )}
-
-                </>
-              )}
             </div>
           </div>
         </div>
