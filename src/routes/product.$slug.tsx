@@ -341,33 +341,50 @@ function PreviewPane({
 function ClockOverlay() {
   return (
     <div className="pointer-events-none absolute inset-0 grid place-items-center">
-      <div className="relative aspect-square h-[86%] max-h-full">
+      <div className="relative aspect-square h-[88%] max-h-full max-w-full">
         {Array.from({ length: 12 }).map((_, i) => {
-          const angle = i * 30;
+          const n = i === 0 ? 12 : i;
+          const rad = (i * 30 - 90) * (Math.PI / 180);
+          const r = 42; // % from centre
           const isQuarter = i % 3 === 0;
           return (
             <span
               key={i}
-              className="absolute left-1/2 top-1/2 origin-[0_0]"
-              style={{ transform: `rotate(${angle}deg) translate(-50%, -46%)` }}
+              className="absolute -translate-x-1/2 -translate-y-1/2 text-brand-ink drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+              style={{
+                left: `${50 + r * Math.cos(rad)}%`,
+                top: `${50 + r * Math.sin(rad)}%`,
+                fontSize: isQuarter ? "10px" : "8px",
+                fontWeight: isQuarter ? 700 : 500,
+                lineHeight: 1,
+              }}
             >
-              <span
-                className="block text-brand-ink drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                style={{ transform: `rotate(${-angle}deg)`, fontSize: isQuarter ? "9px" : "7px", fontWeight: isQuarter ? 700 : 500 }}
-              >
-                {i === 0 ? 12 : i}
-              </span>
+              {n}
             </span>
           );
         })}
-        {/* hour + minute hands */}
-        <span className="absolute left-1/2 top-1/2 h-[26%] w-[2.5px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-brand-ink" style={{ transform: "translate(-50%, -100%) rotate(38deg)", transformOrigin: "50% 100%" }} />
-        <span className="absolute left-1/2 top-1/2 h-[36%] w-[2px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-brand-ink/80" style={{ transform: "translate(-50%, -100%) rotate(-72deg)", transformOrigin: "50% 100%" }} />
-        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red" />
+        {/* hour + minute hands, rotated about the dial centre */}
+        {[
+          { len: "24%", w: "3px", deg: 40, cls: "bg-brand-ink" },
+          { len: "34%", w: "2px", deg: -68, cls: "bg-brand-ink/80" },
+        ].map((h) => (
+          <span
+            key={h.deg}
+            className="absolute left-1/2 top-1/2 block h-0 w-0"
+            style={{ transform: `rotate(${h.deg}deg)` }}
+          >
+            <span
+              className={`absolute bottom-0 left-0 block rounded-full ${h.cls}`}
+              style={{ width: h.w, height: h.len, transform: "translateX(-50%)" }}
+            />
+          </span>
+        ))}
+        <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red" />
       </div>
     </div>
   );
 }
+
 
 
 // --- Step card chrome ---
