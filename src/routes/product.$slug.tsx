@@ -89,6 +89,7 @@ const STEPS = [
 
 /** Geometry per shape — applied identically to the swatch and the live preview. */
 const SHAPE_STYLE: Record<Shape, CSSProperties> = {
+  rectangle: {},
   square: {},
   rounded: { borderRadius: "1.25rem" },
   circle: { borderRadius: "50%" },
@@ -103,34 +104,47 @@ const SHAPE_STYLE: Record<Shape, CSSProperties> = {
   star: { clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)" },
 };
 
+/** Shapes that only read correctly on a 1:1 canvas. */
+const SQUARE_SHAPES: Shape[] = [
+  "square", "circle", "heart", "triangle", "hexagon", "pentagon", "octagon", "diamond", "star",
+];
+
 const SHAPE_LIST: Shape[] = [
-  "square", "rounded", "circle", "oval", "arch", "heart",
-  "triangle", "hexagon", "pentagon", "octagon", "diamond", "star",
+  "rectangle", "rounded", "square", "circle", "oval", "arch",
+  "heart", "triangle", "hexagon", "pentagon", "octagon", "diamond",
 ];
 
 const SIZES = ["12 x 9", "16 x 12", "18 x 12", "21 x 15", "30 x 20"];
 const THICKNESSES = ["3 mm", "5 mm", "8 mm"];
 
-/** Maps the selected size + orientation to preview dimensions (% of the room photo). */
+/**
+ * Maps the selected size + orientation to preview dimensions.
+ * The piece keeps the true aspect ratio of the chosen size — it is never
+ * stretched to the panel — and squares/circles stay perfectly 1:1.
+ */
 function previewDimensions(state: State) {
   const [a, b] = state.size.split(" x ").map((n) => Number(n));
   const long = Math.max(a, b);
   const short = Math.min(a, b);
   const t = (long - 12) / (30 - 12); // 0 → 1 across the size range
-  const longPct = 30 + t * 26; // 30% → 56%
-  const shortPct = longPct * (short / long);
-  return state.orientation === "portrait"
-    ? { height: `${longPct}%`, width: `${shortPct}%` }
-    : { height: `${shortPct}%`, width: `${longPct}%` };
+  const longPct = 26 + t * 20; // 26% → 46% of the panel width
+  const ratio = SQUARE_SHAPES.includes(state.shape) ? 1 : short / long;
+  const isPortrait = state.orientation === "portrait";
+  const widthPct = isPortrait ? longPct * ratio : longPct;
+  return {
+    width: `${widthPct}%`,
+    aspectRatio: isPortrait ? `${ratio} / 1` : `1 / ${ratio}`,
+  } satisfies CSSProperties;
 }
 
-/** Thicker acrylic casts a deeper shadow. */
+/** Thicker acrylic casts a deeper shadow (drop-shadow so clipped shapes keep it). */
 function thicknessShadow(thickness: string) {
   const mm = Number(thickness.split(" ")[0]);
-  const y = Math.round(mm * 2.2);
-  const blur = Math.round(mm * 4.5);
-  return `0 ${y}px ${blur}px rgba(15,23,42,${0.18 + mm * 0.035})`;
+  const y = Math.round(mm * 1.6);
+  const blur = Math.round(mm * 2.2);
+  return `drop-shadow(0 ${y}px ${blur}px rgba(15,23,42,${(0.2 + mm * 0.04).toFixed(2)}))`;
 }
+
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
