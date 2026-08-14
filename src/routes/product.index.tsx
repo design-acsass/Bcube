@@ -11,36 +11,9 @@ import catBg1 from "@/assets/Category_Bg1.png.asset.json";
 import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
 import ad1 from "@/assets/Advertisment_Card.png.asset.json";
 import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
-import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
-import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
-import pPillow from "@/assets/Custom_Pillows.png.asset.json";
-import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
-import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
-import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
 import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
-
 import gReturn from "@/assets/Return_Gifts.png.asset.json";
-import pCutout from "@/assets/Acrylic_Cutout_Decor.png.asset.json";
-import pDesk from "@/assets/Acrylic_Desk_Photos.png.asset.json";
-import pMonogram from "@/assets/Acrylic_Monogram.png.asset.json";
-import pCap from "@/assets/Cap.png.asset.json";
-import pBottle from "@/assets/Cup_Waterbottle.png.asset.json";
-import pHoodie from "@/assets/Hoodies.png.asset.json";
-import pJute from "@/assets/Jute_Bag.png.asset.json";
-import pLaptop from "@/assets/Laptop_Bags.png.asset.json";
-import pLuggage from "@/assets/Luggage_tags.png.asset.json";
-import pContainer from "@/assets/Lunch_Container.png.asset.json";
-import pPenDrive from "@/assets/Pen_Drives.png.asset.json";
-import pAlbum from "@/assets/Photo_Albums.png.asset.json";
-import pCandle from "@/assets/Premium_Candle.png.asset.json";
-import pSweetBox from "@/assets/Sweet_Box.png.asset.json";
-import pTshirt from "@/assets/T_Shirt.png.asset.json";
-import pTote from "@/assets/Tote_Bag.png.asset.json";
-import pTravel from "@/assets/Travel_Bag.png.asset.json";
-import pUmbrella from "@/assets/Umbrella.png.asset.json";
-import pClock from "@/assets/Wall_Clocks.png.asset.json";
-import pPerfume from "@/assets/Perfume.png.asset.json";
-import pPlant from "@/assets/Potted_Plant.png.asset.json";
+import { imgBySlug } from "@/data/product-images";
 
 type Tab = "custom" | "corporate" | "return";
 
