@@ -40,12 +40,20 @@ function LazyVideo({ src }: { src: string }) {
   );
 }
 
-export function Testimonials({ heading = "Testimonials" }: { heading?: string }) {
+export function Testimonials({
+  heading = "Testimonials",
+  groupIds,
+}: {
+  heading?: string;
+  /** Optional filter — render only these testimonial groups. */
+  groupIds?: string[];
+}) {
+  const groups = groupIds ? testimonialGroups.filter((g) => groupIds.includes(g.id)) : testimonialGroups;
   return (
     <section className="w-full px-4 py-12 sm:px-6 md:px-[40px]">
       <h2 className="mb-8 text-center font-display text-3xl text-brand-ink md:text-4xl">{heading}</h2>
       <div className="flex w-full flex-col gap-6">
-        {testimonialGroups.map((group) => (
+        {groups.map((group) => (
           <article key={group.id} className="w-full rounded-[25px] bg-brand-yellow p-5 sm:p-8 md:p-[40px]">
             <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[3fr_1fr]">
               <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
