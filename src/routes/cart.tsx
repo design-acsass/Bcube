@@ -1,10 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/use-cart";
 import { MagneticButton, Magnetic } from "@/components/motion/MagneticButton";
 import { formatPrice } from "@/data/pricing";
-import { imgBySlug, productImageFallback } from "@/data/product-images";
+import { useProducts } from "@/lib/store";
+import { placeOrder, type CheckoutDetails } from "@/lib/orders";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -24,23 +27,42 @@ export const Route = createFileRoute("/cart")({
   component: CartPage,
 });
 
-/** Shape the backend checkout endpoint should accept. */
-export type CheckoutPayload = {
-  lines: { slug: string; qty: number; config?: Record<string, unknown> }[];
-  subtotal: number;
-};
+const emptyDetails: CheckoutDetails = { customer_name: "", email: "", phone: "", address: "", notes: "" };
 
 function CartPage() {
   const { items, count, subtotal, removeItem, setQty, clear } = useCart();
+  const { image } = useProducts();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
+  const [placing, setPlacing] = useState(false);
 
-  function handleCheckout() {
-    const payload: CheckoutPayload = {
-      lines: items.map((i) => ({ slug: i.slug, qty: i.qty, config: i.config })),
+  const setField = (k: keyof CheckoutDetails) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setDetails((d) => ({ ...d, [k]: e.target.value }));
+
+  async function handleCheckout() {
+    if (!user) {
+      toast.info("Please sign in to place your order.");
+      void navigate({ to: "/login" });
+      return;
+    }
+    if (!details.customer_name || !details.phone || !details.address) {
+      toast.error("Please add your name, phone and delivery address.");
+      return;
+    }
+    setPlacing(true);
+    const result = await placeOrder({
+      details: { ...details, email: details.email || (user.email ?? "") },
+      items,
       subtotal,
-    };
-    // TODO(backend): POST payload to /api/checkout and redirect to the payment page.
-    console.info("checkout payload", payload);
+    });
+    setPlacing(false);
+    if (!result.ok) {
+      toast.error("We could not place your order. Please try again.");
+      return;
+    }
     toast.success("Order placed — our team will confirm your details shortly.");
+    setDetails(emptyDetails);
     clear();
   }
 
@@ -82,7 +104,7 @@ function CartPage() {
                   >
                     <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-muted/50">
                       <img
-                        src={imgBySlug[item.slug] ?? productImageFallback}
+                        src={image(item.slug)}
                         alt={item.name}
                         loading="lazy"
                         decoding="async"
@@ -154,11 +176,25 @@ function CartPage() {
                 <span className="text-sm text-muted-foreground">Total</span>
                 <span className="font-display text-2xl text-brand-red">{formatPrice(subtotal)}</span>
               </div>
+              <div className="mt-5 space-y-2">
+                <CheckoutField placeholder="Full name" value={details.customer_name} onChange={setField("customer_name")} />
+                <CheckoutField placeholder="Phone" value={details.phone} onChange={setField("phone")} />
+                <CheckoutField placeholder="Email (optional)" value={details.email} onChange={setField("email")} />
+                <textarea
+                  placeholder="Delivery address"
+                  rows={3}
+                  value={details.address}
+                  onChange={setField("address")}
+                  className="w-full rounded-2xl border border-border px-4 py-2 text-sm text-brand-ink outline-none focus:border-brand-red"
+                />
+                <CheckoutField placeholder="Notes for our team (optional)" value={details.notes} onChange={setField("notes")} />
+              </div>
               <MagneticButton
-                onClick={handleCheckout}
+                disabled={placing}
+                onClick={() => void handleCheckout()}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white hover:brightness-95"
               >
-                Checkout <ArrowRight className="h-4 w-4" />
+                {placing ? "Placing order…" : user ? "Place order" : "Sign in to check out"} <ArrowRight className="h-4 w-4" />
               </MagneticButton>
               <MagneticButton
                 onClick={clear}
@@ -171,5 +207,24 @@ function CartPage() {
         )}
       </div>
     </main>
+  );
+}
+
+function CheckoutField({
+  placeholder,
+  value,
+  onChange,
+}: {
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <input
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full rounded-full border border-border px-4 py-2 text-sm text-brand-ink outline-none focus:border-brand-red"
+    />
   );
 }
