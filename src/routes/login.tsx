@@ -159,3 +159,28 @@ function Field({ icon, label, children }: { icon: React.ReactNode; label: string
     </label>
   );
 }
+
+function SocialButton({ provider, onClick }: { provider: SocialProvider; onClick: () => void }) {
+  const google = provider === "google";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-brand-ink transition hover:brightness-95"
+    >
+      {google ? (
+        <svg viewBox="0 0 48 48" className="h-4 w-4" aria-hidden="true">
+          <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.2 17.7 9.5 24 9.5z" />
+          <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.1 5.3-4.5 6.9l7 5.4c4.1-3.8 7.2-9.4 7.2-16.8z" />
+          <path fill="#FBBC05" d="M10.4 28.7a14.6 14.6 0 0 1 0-9.4l-7.8-6.1a24 24 0 0 0 0 21.6l7.8-6.1z" />
+          <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7-5.4c-2 1.3-4.6 2.1-8.9 2.1-6.3 0-11.7-3.7-13.6-9.2l-7.8 6.1C6.5 42.6 14.6 48 24 48z" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="#1877F2" aria-hidden="true">
+          <path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.5V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z" />
+        </svg>
+      )}
+      {google ? "Google" : "Facebook"}
+    </button>
+  );
+}
