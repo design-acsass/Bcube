@@ -339,51 +339,39 @@ function PreviewPane({
 
 /** Hour markers + hands drawn over the artwork for clock products. */
 function ClockOverlay() {
+  const r = 40;
   return (
-    <div className="pointer-events-none absolute inset-0 grid place-items-center">
-      <div className="relative aspect-square h-[88%] max-h-full max-w-full">
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid meet"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      aria-hidden
+    >
+      <g fill="currentColor" className="text-brand-ink">
         {Array.from({ length: 12 }).map((_, i) => {
-          const n = i === 0 ? 12 : i;
           const rad = (i * 30 - 90) * (Math.PI / 180);
-          const r = 42; // % from centre
-          const isQuarter = i % 3 === 0;
           return (
-            <span
+            <text
               key={i}
-              className="absolute -translate-x-1/2 -translate-y-1/2 text-brand-ink drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
-              style={{
-                left: `${50 + r * Math.cos(rad)}%`,
-                top: `${50 + r * Math.sin(rad)}%`,
-                fontSize: isQuarter ? "10px" : "8px",
-                fontWeight: isQuarter ? 700 : 500,
-                lineHeight: 1,
-              }}
+              x={50 + r * Math.cos(rad)}
+              y={50 + r * Math.sin(rad)}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={i % 3 === 0 ? 7 : 5.5}
+              fontWeight={i % 3 === 0 ? 700 : 500}
             >
-              {n}
-            </span>
+              {i === 0 ? 12 : i}
+            </text>
           );
         })}
-        {/* hour + minute hands, rotated about the dial centre */}
-        {[
-          { len: "24%", w: "3px", deg: 40, cls: "bg-brand-ink" },
-          { len: "34%", w: "2px", deg: -68, cls: "bg-brand-ink/80" },
-        ].map((h) => (
-          <span
-            key={h.deg}
-            className="absolute left-1/2 top-1/2 block h-0 w-0"
-            style={{ transform: `rotate(${h.deg}deg)` }}
-          >
-            <span
-              className={`absolute bottom-0 left-0 block rounded-full ${h.cls}`}
-              style={{ width: h.w, height: h.len, transform: "translateX(-50%)" }}
-            />
-          </span>
-        ))}
-        <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red" />
-      </div>
-    </div>
+        <line x1="50" y1="50" x2={50 + 20 * Math.cos((40 - 90) * Math.PI / 180)} y2={50 + 20 * Math.sin((40 - 90) * Math.PI / 180)} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        <line x1="50" y1="50" x2={50 + 30 * Math.cos((-68 - 90) * Math.PI / 180)} y2={50 + 30 * Math.sin((-68 - 90) * Math.PI / 180)} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+      </g>
+      <circle cx="50" cy="50" r="2" className="fill-brand-red" />
+    </svg>
   );
 }
+
 
 
 
