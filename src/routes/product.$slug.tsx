@@ -396,9 +396,20 @@ function StepHeader({
   );
 }
 
-function ContinueButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+function PriceTag({ price }: { price: number }) {
   return (
-    <div className="mt-auto pt-8 flex justify-center">
+    <div className="flex items-baseline justify-center gap-2">
+      <span className="text-xs text-muted-foreground">Total</span>
+      {/* TODO(backend): pricing comes from src/data/pricing.ts — swap for API values. */}
+      <span className="font-display text-2xl text-brand-red">{formatPrice(price)}</span>
+    </div>
+  );
+}
+
+function ContinueButton({ onClick, disabled, price }: { onClick: () => void; disabled?: boolean; price: number }) {
+  return (
+    <div className="mt-auto flex flex-col items-center gap-3 pt-6">
+      <PriceTag price={price} />
       <button
         onClick={onClick}
         disabled={disabled}
@@ -416,7 +427,7 @@ function ContinueButton({ onClick, disabled }: { onClick: () => void; disabled?:
 
 // --- Steps ---
 
-function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepUpload({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const accept = (f?: File) => {
     if (!f) return;
@@ -444,12 +455,12 @@ function StepUpload({ state, dispatch }: { state: State; dispatch: React.Dispatc
         <input ref={inputRef} type="file" accept="image/png,image/jpeg" onChange={(e: ChangeEvent<HTMLInputElement>) => accept(e.target.files?.[0])} className="hidden" />
       </div>
       {state.imageUrl && <p className="mt-3 text-center text-xs text-emerald-600">Image uploaded ✓</p>}
-      <ContinueButton disabled={!state.imageUrl} onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} disabled={!state.imageUrl} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepFrame({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const colors = ["#dc2626", "#0f172a", "#ffffff", "#d4af37"];
   return (
     <div className="flex h-full flex-col">
@@ -491,12 +502,12 @@ function StepFrame({ state, dispatch }: { state: State; dispatch: React.Dispatch
           </div>
         </div>
       )}
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepLayout({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   const colors = ["#dc2626", "#0f172a", "#d4af37", "#1d4ed8"];
   return (
     <div className="flex h-full flex-col">
@@ -547,12 +558,12 @@ function StepLayout({ state, dispatch }: { state: State; dispatch: React.Dispatc
           </div>
         </div>
       )}
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
 
-function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<Action> }) {
+function StepSize({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
   return (
     <div className="flex h-full flex-col">
       <StepHeader Icon={Ruler} title="Size and thickness" subtitle="Every piece is cut to order" onReset={() => dispatch({ type: "reset" })} />
@@ -568,7 +579,7 @@ function StepSize({ state, dispatch }: { state: State; dispatch: React.Dispatch<
           <button key={t} onClick={() => dispatch({ type: "patch", patch: { thickness: t } })} className={`rounded-xl border-2 px-4 py-2 text-sm transition ${state.thickness === t ? "border-brand-yellow bg-brand-yellow/10" : "border-border"}`}>{t}</button>
         ))}
       </div>
-      <ContinueButton onClick={() => dispatch({ type: "next" })} />
+      <ContinueButton price={price} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
@@ -600,8 +611,8 @@ function BuyerFields({
 }
 
 function StepPreviewForm({
-  onBuy, dispatch,
-}: { onBuy: (info: Record<string, string>) => void; dispatch: React.Dispatch<Action> }) {
+  onBuy, dispatch, price,
+}: { onBuy: (info: Record<string, string>) => void; dispatch: React.Dispatch<Action>; price: number }) {
   const [form, setForm] = useState<Record<string, string>>({ name: "", phone: "", email: "", idea: "", address: "", pincode: "" });
   const [accepted, setAccepted] = useState(true);
   return (
@@ -657,7 +668,8 @@ function StepPreviewForm({
           <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="accent-brand-red" />
           Accept to all terms and conditions
         </label>
-        <div className="mt-auto flex justify-center pt-4">
+        <div className="mt-auto flex flex-col items-center gap-3 pt-4">
+          <PriceTag price={price} />
           <button type="submit" className="w-full max-w-xs rounded-full bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-ink hover:brightness-95">Buy Now</button>
         </div>
       </form>
