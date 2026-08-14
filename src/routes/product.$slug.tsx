@@ -186,7 +186,7 @@ function ProductPage() {
           >
             <PreviewPane state={state} />
 
-            <div className="flex h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
+            <div className="flex min-h-[420px] flex-col overflow-y-auto rounded-2xl bg-white border border-border p-6 md:p-8 shadow-sm lg:h-[var(--config-h)]">
 
               {mode !== "wizard" ? (
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
@@ -258,7 +258,7 @@ function PreviewPane({ state }: { state: State }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
   return (
-    <div className="relative h-[420px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
+    <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
       <div
         className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
