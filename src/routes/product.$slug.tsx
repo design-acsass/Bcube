@@ -286,9 +286,12 @@ function Stepper({ current, onGo }: { current: number; onGo: (s: number) => void
 
 // --- Preview ---
 
-function PreviewPane({ state }: { state: State }) {
+function PreviewPane({
+  state, productImage, showProductImage = false, clockFace = false,
+}: { state: State; productImage?: string; showProductImage?: boolean; clockFace?: boolean }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
+  const artwork = state.imageUrl ?? (showProductImage ? productImage : undefined);
   return (
     <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
@@ -305,14 +308,15 @@ function PreviewPane({ state }: { state: State }) {
         >
           <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
 
-            {state.imageUrl ? (
-              <img src={state.imageUrl} alt="Your uploaded artwork" className="h-full w-full object-cover" />
+            {artwork ? (
+              <img src={artwork} alt="Your artwork" className="h-full w-full object-cover" />
             ) : (
               <div className="flex flex-col items-center gap-1 text-muted-foreground/60">
                 <ImageIcon className="h-6 w-6" />
                 <span className="text-[10px]">Your photo here</span>
               </div>
             )}
+            {clockFace && <ClockOverlay />}
             {state.addText && state.text && (
               <p
                 className={`absolute bottom-2 left-0 right-0 text-center font-display ${state.textSize === "S" ? "text-[10px]" : state.textSize === "L" ? "text-base" : "text-xs"}`}
@@ -332,6 +336,39 @@ function PreviewPane({ state }: { state: State }) {
     </div>
   );
 }
+
+/** Hour markers + hands drawn over the artwork for clock products. */
+function ClockOverlay() {
+  return (
+    <div className="pointer-events-none absolute inset-0 grid place-items-center">
+      <div className="relative aspect-square h-[86%] max-h-full">
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angle = i * 30;
+          const isQuarter = i % 3 === 0;
+          return (
+            <span
+              key={i}
+              className="absolute left-1/2 top-1/2 origin-[0_0]"
+              style={{ transform: `rotate(${angle}deg) translate(-50%, -46%)` }}
+            >
+              <span
+                className="block text-brand-ink drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                style={{ transform: `rotate(${-angle}deg)`, fontSize: isQuarter ? "9px" : "7px", fontWeight: isQuarter ? 700 : 500 }}
+              >
+                {i === 0 ? 12 : i}
+              </span>
+            </span>
+          );
+        })}
+        {/* hour + minute hands */}
+        <span className="absolute left-1/2 top-1/2 h-[26%] w-[2.5px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-brand-ink" style={{ transform: "translate(-50%, -100%) rotate(38deg)", transformOrigin: "50% 100%" }} />
+        <span className="absolute left-1/2 top-1/2 h-[36%] w-[2px] origin-bottom -translate-x-1/2 -translate-y-full rounded-full bg-brand-ink/80" style={{ transform: "translate(-50%, -100%) rotate(-72deg)", transformOrigin: "50% 100%" }} />
+        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-red" />
+      </div>
+    </div>
+  );
+}
+
 
 // --- Step card chrome ---
 
