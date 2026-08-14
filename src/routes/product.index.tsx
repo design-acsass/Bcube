@@ -110,6 +110,7 @@ function ProductListing() {
 }
 
 function Panel({ title, items, fallback }: { title: string; items: { slug: string; name: string }[]; fallback?: string }) {
+  const { image: productImage } = useProducts();
   return (
     <>
       <h2 className="text-center font-display text-3xl md:text-4xl text-brand-ink">{title}</h2>
