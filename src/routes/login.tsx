@@ -30,6 +30,9 @@ export type AuthPayload = {
   password: string;
 };
 
+/** OAuth providers offered on the login screen. */
+export type SocialProvider = "google" | "facebook";
+
 function LoginPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
