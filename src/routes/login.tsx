@@ -38,6 +38,12 @@ function LoginPage() {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
+  function handleSocial(provider: SocialProvider) {
+    // TODO(backend): start the OAuth flow for this provider and persist the session.
+    console.info("oauth provider", provider);
+    toast.info(`${provider === "google" ? "Google" : "Facebook"} sign-in coming soon.`);
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const payload: AuthPayload = { mode, email: form.email, password: form.password, ...(mode === "signup" ? { name: form.name } : {}) };
