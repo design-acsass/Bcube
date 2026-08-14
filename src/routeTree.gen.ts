@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProductRouteImport } from './routes/product'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
@@ -20,6 +21,11 @@ import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 const ProductRoute = ProductRouteImport.update({
   id: '/product',
   path: '/product',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/product': typeof ProductRouteWithChildren
   '/product/$slug': typeof ProductSlugRoute
   '/product/': typeof ProductIndexRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/product/$slug': typeof ProductSlugRoute
   '/product': typeof ProductIndexRoute
 }
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/product': typeof ProductRouteWithChildren
   '/product/$slug': typeof ProductSlugRoute
   '/product/': typeof ProductIndexRoute
@@ -87,17 +96,26 @@ export interface FileRouteTypes {
     | '/about'
     | '/cart'
     | '/contact'
+    | '/login'
     | '/product'
     | '/product/$slug'
     | '/product/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/cart' | '/contact' | '/product/$slug' | '/product'
+  to:
+    | '/'
+    | '/about'
+    | '/cart'
+    | '/contact'
+    | '/login'
+    | '/product/$slug'
+    | '/product'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/cart'
     | '/contact'
+    | '/login'
     | '/product'
     | '/product/$slug'
     | '/product/'
@@ -108,6 +126,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
+  LoginRoute: typeof LoginRoute
   ProductRoute: typeof ProductRouteWithChildren
 }
 
@@ -118,6 +137,13 @@ declare module '@tanstack/react-router' {
       path: '/product'
       fullPath: '/product'
       preLoaderRoute: typeof ProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -183,6 +209,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
   ProductRoute: ProductRouteWithChildren,
 }
 export const routeTree = rootRouteImport
