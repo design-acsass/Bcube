@@ -118,12 +118,12 @@ function LoginPage() {
               />
             </Field>
 
-            <button
+            <MagneticButton
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-sm font-semibold text-white hover:brightness-95"
             >
               {mode === "login" ? "Login" : "Create account"} <ArrowRight className="h-4 w-4" />
-            </button>
+            </MagneticButton>
           </form>
 
           <div className="my-5 flex items-center gap-3">
