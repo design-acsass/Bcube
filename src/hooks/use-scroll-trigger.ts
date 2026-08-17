@@ -15,8 +15,12 @@ export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
   }, [onOpen]);
 
   useEffect(() => {
+    console.log("useScrollTrigger effect running", threshold);
     // SSR-safe: only run in the browser.
-    if (typeof window === "undefined" || typeof sessionStorage === "undefined") return;
+    if (typeof window === "undefined" || typeof sessionStorage === "undefined") {
+      console.log("window or sessionStorage undefined");
+      return;
+    }
 
     // Already shown this session — do nothing.
     if (sessionStorage.getItem(STORAGE_KEY) === "1") return;
