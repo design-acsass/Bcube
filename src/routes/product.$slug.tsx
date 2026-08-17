@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useReducer, useState, useRef, useMemo, type ChangeEvent, type CSSProperties } from "react";
+import { useReducer, useState, useRef, useEffect, useMemo, type ChangeEvent, type CSSProperties } from "react";
 import { toast } from "sonner";
 import {
   UploadCloud, Shapes, LayoutPanelTop, Ruler, MousePointerClick,
@@ -227,6 +227,7 @@ function ProductPage() {
             {mode === "wizard" ? (
               <PreviewPane
                 state={state}
+                dispatch={dispatch}
                 productImage={productImage}
                 showProductImage={false}
                 clockFace={product.slug === "wall-clocks"}
@@ -320,6 +321,8 @@ function SimpleProductPane({ image, name }: { image: string; name: string }) {
     </div>
   );
 }
+
+const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 function PreviewPane({
   state, dispatch, productImage, showProductImage = false, clockFace = false,
@@ -548,7 +551,7 @@ function StepUpload({ state, dispatch, price }: { state: State; dispatch: React.
   const accept = (f?: File) => {
     if (!f) return;
     if (f.size > 50 * 1024 * 1024) { toast.error("Max 50MB"); return; }
-    dispatch({ type: "patch", patch: { imageUrl: URL.createObjectURL(f) } });
+    dispatch({ type: "patch", patch: { imageUrl: URL.createObjectURL(f), imgScale: 1, imgX: 0, imgY: 0 } });
   };
   return (
     <div className="flex h-full flex-col">
