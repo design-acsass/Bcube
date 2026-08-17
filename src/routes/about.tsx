@@ -2,20 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import logo from "@/assets/LOGO.png.asset.json";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Reveal } from "@/components/motion/Reveal";
+import { useAboutContent } from "@/lib/store";
 
-/** Static copy — swap for a CMS/API payload when a backend is wired up. */
-const sections = [
-  {
-    id: "about-us",
-    heading: "About us",
-    body: "Bcube is a retail company that specializes in offering a diverse range of unique and captivating products with a “wow factor.” These items are designed to pique customers’ interest, stand out from the crowd, and create an unforgettable impression. By providing a constantly evolving inventory of innovative and eye-catching merchandise, Bcube aims to spark joy and excitement in every shopping experience.",
-  },
-  {
-    id: "who-we-are",
-    heading: "Who we are",
-    body: "We are a team of young entrepreneurs having years of expertise in creating and selling the best customized smartphone accessories that suit your expectations, needs, and style. We have the motive to provide your devices a guaranteed protection without compromise.",
-  },
-];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
