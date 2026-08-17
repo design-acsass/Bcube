@@ -59,6 +59,7 @@ function HomePage() {
       <MakeSpecial />
       <PerfectGifts />
       <CustomerStories />
+      <EnquireModal />
     </>
   );
 }
