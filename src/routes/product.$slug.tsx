@@ -729,7 +729,7 @@ function EnquiryCard({
           : "We'll make it come to real-life."}
       />
       <form
-        onSubmit={(e) => { e.preventDefault(); onBuy({ ...form, mode }); }}
+        onSubmit={(e) => { e.preventDefault(); onBuy({ ...form, mode }); setForm({ name: "", phone: "", email: "", quantity: "", message: "" }); }}
         className="flex flex-1 flex-col space-y-4"
       >
         <BuyerFields form={form} setForm={setForm} />
