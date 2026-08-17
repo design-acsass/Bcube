@@ -322,11 +322,46 @@ function SimpleProductPane({ image, name }: { image: string; name: string }) {
 }
 
 function PreviewPane({
-  state, productImage, showProductImage = false, clockFace = false,
-}: { state: State; productImage?: string; showProductImage?: boolean; clockFace?: boolean }) {
+  state, dispatch, productImage, showProductImage = false, clockFace = false,
+}: { state: State; dispatch?: React.Dispatch<Action>; productImage?: string; showProductImage?: boolean; clockFace?: boolean }) {
   const shapeStyle = SHAPE_STYLE[state.shape];
   const dims = previewDimensions(state);
   const artwork = state.imageUrl ?? (showProductImage ? productImage : undefined);
+  const editable = Boolean(state.imageUrl && dispatch);
+
+  const frameRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ id: number; x: number; y: number; ox: number; oy: number } | null>(null);
+  // Kept in a ref so the native (non-passive) wheel listener never reads stale state.
+  const viewRef = useRef({ scale: state.imgScale, x: state.imgX, y: state.imgY });
+  viewRef.current = { scale: state.imgScale, x: state.imgX, y: state.imgY };
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || !editable) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
+      const next = clamp(viewRef.current.scale * Math.exp(-dy * 0.0015), 1, 4);
+      dispatch?.({ type: "patch", patch: { imgScale: next } });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [editable, dispatch]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (!editable) return;
+    dragRef.current = { id: e.pointerId, x: e.clientX, y: e.clientY, ox: state.imgX, oy: state.imgY };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    dispatch?.({ type: "patch", patch: { imgX: d.ox + (e.clientX - d.x), imgY: d.oy + (e.clientY - d.y) } });
+  };
+  const endDrag = (e: React.PointerEvent) => {
+    if (dragRef.current?.id === e.pointerId) dragRef.current = null;
+  };
+
   return (
     <div className="relative h-[360px] overflow-hidden rounded-2xl border border-border bg-stone-100 lg:h-[var(--config-h)]">
       <img src={roomImg} alt="Room preview" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
@@ -342,10 +377,27 @@ function PreviewPane({
             ...(state.frame === "with" ? { backgroundColor: state.frameColor } : {}),
           }}
         >
-          <div className="relative h-full w-full overflow-hidden bg-white grid place-items-center" style={shapeStyle}>
+          <div
+            ref={frameRef}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            className={`relative h-full w-full overflow-hidden bg-white grid place-items-center ${editable ? "cursor-grab active:cursor-grabbing touch-none" : ""}`}
+            style={shapeStyle}
+          >
 
             {artwork ? (
-              <img src={artwork} alt="Your artwork" className="h-full w-full object-cover" />
+              <img
+                src={artwork}
+                alt="Your artwork"
+                draggable={false}
+                className="h-full w-full select-none object-cover"
+                style={{
+                  transform: `translate(${state.imgX}px, ${state.imgY}px) scale(${state.imgScale})`,
+                  transformOrigin: "center",
+                }}
+              />
             ) : (
               <div className="flex flex-col items-center gap-1 text-muted-foreground/60">
                 <ImageIcon className="h-6 w-6" />
@@ -364,12 +416,35 @@ function PreviewPane({
           </div>
         </div>
       </div>
-      {(state.step === 4 || state.step === 5) && (
+      {editable && (
+        <div className="absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-full bg-white/85 px-4 py-2 text-xs text-brand-ink backdrop-blur">
+          <span className="hidden sm:inline whitespace-nowrap">Drag to move</span>
+          <input
+            type="range"
+            min={1}
+            max={4}
+            step={0.01}
+            aria-label="Zoom photo"
+            value={state.imgScale}
+            onChange={(e) => dispatch?.({ type: "patch", patch: { imgScale: Number(e.target.value) } })}
+            className="h-1 flex-1 cursor-pointer accent-brand-red"
+          />
+          <button
+            type="button"
+            onClick={() => dispatch?.({ type: "patch", patch: { imgScale: 1, imgX: 0, imgY: 0 } })}
+            className="whitespace-nowrap rounded-full border border-border px-2 py-0.5 hover:border-brand-red"
+          >
+            Fit
+          </button>
+        </div>
+      )}
+      {!editable && (state.step === 4 || state.step === 5) && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/85 px-4 py-1.5 text-xs text-brand-ink">
           {state.size} inches · {state.thickness} thick
         </div>
       )}
     </div>
+
   );
 }
 
