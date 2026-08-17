@@ -61,11 +61,12 @@ function AboutHero({ heading, subheading }: { heading: string; subheading: strin
           className="about-logo h-32 w-32 object-contain md:h-52 md:w-52"
         />
         <h1 className="about-line about-line-1 mt-8 font-display text-3xl italic text-brand-ink md:text-6xl">
-          Your vision, our craftsmanship
+          {heading}
         </h1>
         <p className="about-line about-line-2 mt-4 text-base text-brand-red md:text-2xl">
-          personalized gifting made perfect.
+          {subheading}
         </p>
+
         <span className="about-rule mt-8 block h-px w-40 bg-brand-red/40 md:w-64" />
       </div>
     </section>
