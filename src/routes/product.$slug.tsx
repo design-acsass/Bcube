@@ -62,6 +62,10 @@ type State = {
   textSize: "S" | "M" | "L";
   size: string;
   thickness: string;
+  /** Artwork framing inside the container (backend: persist with the order). */
+  imgScale: number;
+  imgX: number;
+  imgY: number;
 };
 type Action =
   | { type: "next" } | { type: "prev" } | { type: "go"; step: number }
@@ -71,7 +75,9 @@ const initial: State = {
   step: 1, frame: "without", shape: "rectangle", frameColor: "#dc2626",
   orientation: "portrait", addText: false, text: "", textColor: "#dc2626",
   textSize: "M", size: "12 x 9", thickness: "3 mm",
+  imgScale: 1, imgX: 0, imgY: 0,
 };
+
 
 /** Per-product defaults — framed pieces start with the frame on. */
 function initialFor(slug: string): State {
