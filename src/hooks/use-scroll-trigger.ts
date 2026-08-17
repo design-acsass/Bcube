@@ -56,7 +56,7 @@ export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
       const now = Date.now();
       if (now - lastKey < 400) return;
       lastKey = now;
-      e.preventDefault(); // we don't actually prevent default; just ignore rapid repeats
+      // Allow the native scroll to happen; we only count the scroll intent.
       increment();
     };
 
