@@ -658,6 +658,8 @@ function StepPreviewForm({
           e.preventDefault();
           if (!accepted) { toast.error("Please accept the terms"); return; }
           onBuy(form);
+          setForm({ name: "", phone: "", email: "", idea: "", address: "", pincode: "" });
+          setAccepted(true);
         }}
         className="flex flex-1 flex-col"
       >
