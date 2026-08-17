@@ -853,27 +853,52 @@ function EnquiryCard({
 
 // --- Content below ---
 
-function ProductInfo({ name }: { name: string }) {
+const DEFAULT_DESCRIPTION = `Commemorate your special moments with this beautifully personalised piece, designed specifically for celebrations. A meaningful and lasting reminder of the love you share, it adds elegance to any home.
+
+- Material: Made with high-quality faux leather, glass, and MDF for durability and an elegant finish.
+- Quick dispatch from Chennai
+- Unidirectional pixel-perfect direct printing on Acrylic
+- Ultra HD print with the highest DPI (Resolution)
+- Acrylic undergoes chemical treatment before printing
+- Never peel off, even in a moisture environment
+- Unidirectional mode ensures each picture receives 2x printing time
+- Same day processing of orders
+- Advanced utilization of Artificial Intelligence (AI)`;
+
+/** Renders admin-editable copy: plain paragraphs, plus "-" prefixed bullet lines. */
+function ProductInfo({ name, description }: { name: string; description?: string }) {
+  const text = (description ?? "").trim() || DEFAULT_DESCRIPTION;
+  const blocks: Array<{ type: "p" | "ul"; lines: string[] }> = [];
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line) continue;
+    const isBullet = line.startsWith("-") || line.startsWith("•") || line.startsWith("*");
+    const content = isBullet ? line.slice(1).trim() : line;
+    const last = blocks[blocks.length - 1];
+    if (isBullet && last?.type === "ul") last.lines.push(content);
+    else blocks.push({ type: isBullet ? "ul" : "p", lines: [content] });
+  }
+
   return (
     <section className="container mx-auto px-4 py-10">
       <h1 className="font-display text-3xl text-brand-ink">{name}</h1>
-      <div className="mt-4 text-sm text-brand-ink/90">
-        <p>Commemorate your special moments with this beautifully personalised piece, designed specifically for celebrations. A meaningful and lasting reminder of the love you share, it adds elegance to any home.</p>
-        <ul className="mt-3 list-disc pl-6 space-y-1">
-          <li>Material: Made with high-quality faux leather, glass, and MDF for durability and an elegant finish.</li>
-          <li>Quick dispatch from Chennai</li>
-          <li>Unidirectional pixel-perfect direct printing on Acrylic</li>
-          <li>Ultra HD print with the highest DPI (Resolution)</li>
-          <li>Acrylic undergoes chemical treatment before printing</li>
-          <li>Never peel off, even in a moisture environment</li>
-          <li>Unidirectional mode ensures each picture receives 2x printing time</li>
-          <li>Same day processing of orders</li>
-          <li>Advanced utilization of Artificial Intelligence (AI)</li>
-        </ul>
+      <div className="mt-4 space-y-3 text-sm text-brand-ink/90">
+        {blocks.map((b, i) =>
+          b.type === "p" ? (
+            <p key={i}>{b.lines[0]}</p>
+          ) : (
+            <ul key={i} className="list-disc space-y-1 pl-6">
+              {b.lines.map((l, k) => (
+                <li key={k}>{l}</li>
+              ))}
+            </ul>
+          ),
+        )}
       </div>
     </section>
   );
 }
+
 
 function ExploreMore({ currentSlug }: { currentSlug: string }) {
   const { image: catalogImage } = useProducts();
