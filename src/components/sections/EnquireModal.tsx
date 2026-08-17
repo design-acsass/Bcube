@@ -16,7 +16,18 @@ export function EnquireModal() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  useScrollTrigger(3, () => setOpen(true));
+  useEffect(() => {
+    console.log("EnquireModal mounted", { open });
+  }, []);
+
+  useEffect(() => {
+    console.log("EnquireModal open changed", open);
+  }, [open]);
+
+  useScrollTrigger(3, () => {
+    console.log("scroll trigger fired, opening modal");
+    setOpen(true);
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
