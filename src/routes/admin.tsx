@@ -2,10 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Save, Image as ImageIcon, Package, IndianRupee, FileText, ShoppingBag, Mail } from "lucide-react";
+import { Save, Image as ImageIcon, Package, IndianRupee, FileText, ShoppingBag, Mail, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatPrice } from "@/data/pricing";
+import { staticAbout, type AboutContent } from "@/lib/store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -27,6 +28,7 @@ const TABS = [
   { id: "products", label: "Products", Icon: Package },
   { id: "pricing", label: "Prices", Icon: IndianRupee },
   { id: "content", label: "Site text", Icon: FileText },
+  { id: "about", label: "About page", Icon: Info },
   { id: "orders", label: "Orders", Icon: ShoppingBag },
   { id: "enquiries", label: "Enquiries", Icon: Mail },
 ] as const;
@@ -80,6 +82,7 @@ function AdminPage() {
       {tab === "products" && <ProductsTab />}
       {tab === "pricing" && <PricingTab />}
       {tab === "content" && <ContentTab />}
+      {tab === "about" && <AboutTab />}
       {tab === "orders" && <OrdersTab />}
       {tab === "enquiries" && <EnquiriesTab />}
     </Shell>
@@ -190,13 +193,15 @@ function ProductsTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("slug, name, category, mode, image_url, published, sort_order")
+        .select("slug, name, category, mode, image_url, published, sort_order, description")
         .order("sort_order");
       if (error) throw error;
       return data;
     },
   });
-  const [draft, setDraft] = useState<Record<string, { name?: string; image_url?: string; published?: boolean }>>({});
+  const [draft, setDraft] = useState<
+    Record<string, { name?: string; image_url?: string; published?: boolean; description?: string }>
+  >({});
   const [busy, setBusy] = useState(false);
 
   async function save() {
@@ -218,13 +223,13 @@ function ProductsTab() {
   return (
     <Card>
       <p className="mb-4 text-sm text-muted-foreground">
-        Rename products, swap their picture, or hide them from the shop.
+        Rename products, swap their picture, edit the description shown on the product page, or hide them from the shop.
       </p>
       <div className="space-y-4">
         {(data ?? []).map((p) => {
           const d = draft[p.slug] ?? {};
           return (
-            <div key={p.slug} className="grid gap-3 border-b border-border pb-4 last:border-0 sm:grid-cols-[90px_1fr_auto] sm:items-center">
+            <div key={p.slug} className="grid gap-3 border-b border-border pb-4 last:border-0 sm:grid-cols-[90px_1fr_auto] sm:items-start">
               <img src={d.image_url ?? p.image_url} alt="" className="h-16 w-20 rounded-lg bg-muted object-contain" />
               <div className="space-y-2">
                 <input
@@ -236,6 +241,13 @@ function ProductsTab() {
                   value={d.image_url ?? p.image_url}
                   onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], image_url: e.target.value } }))}
                   className="w-full rounded-full border border-border px-4 py-2 text-xs outline-none focus:border-brand-red"
+                />
+                <textarea
+                  rows={5}
+                  placeholder="Description shown on the product page. Start a line with “-” to make a bullet point."
+                  value={d.description ?? p.description ?? ""}
+                  onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], description: e.target.value } }))}
+                  className="w-full rounded-2xl border border-border p-3 text-xs outline-none focus:border-brand-red"
                 />
                 <p className="text-[11px] text-muted-foreground">
                   {p.category} · {p.mode === "wizard" ? "step-by-step designer" : p.mode === "bulk" ? "bulk quote" : "custom enquiry"}
@@ -253,6 +265,7 @@ function ProductsTab() {
           );
         })}
       </div>
+
       <div className="mt-5">
         <SaveButton onClick={() => void save()} busy={busy} />
       </div>
@@ -427,6 +440,76 @@ function ContentTab() {
         spellCheck={false}
         className="mt-4 w-full rounded-2xl border border-border p-4 font-mono text-xs outline-none focus:border-brand-red"
       />
+    </Card>
+  );
+}
+
+/* ------------------------------------------------------------ about page */
+
+const ABOUT_FIELDS = [
+  { key: "hero_heading", label: "Banner heading", long: false },
+  { key: "hero_subheading", label: "Banner sub-heading", long: false },
+  { key: "about_heading", label: "“About us” heading", long: false },
+  { key: "about_body", label: "“About us” text", long: true },
+  { key: "testimonials_heading", label: "Testimonials heading", long: false },
+  { key: "who_heading", label: "“Who we are” heading", long: false },
+  { key: "who_body", label: "“Who we are” text", long: true },
+] as const;
+
+function AboutTab() {
+  const qc = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["admin", "about"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("site_content").select("value").eq("key", "about_page").maybeSingle();
+      if (error) throw error;
+      return { ...staticAbout, ...((data?.value ?? {}) as Partial<AboutContent>) } as AboutContent;
+    },
+  });
+  const [draft, setDraft] = useState<Partial<AboutContent>>({});
+  const [busy, setBusy] = useState(false);
+
+  async function save() {
+    if (!data) return;
+    setBusy(true);
+    const value = { ...data, ...draft };
+    const { error } = await supabase
+      .from("site_content")
+      .upsert({ key: "about_page", value: value as never }, { onConflict: "key" });
+    setBusy(false);
+    if (error) return toast.error("Could not save the About page");
+    setDraft({});
+    await qc.invalidateQueries();
+    toast.success("About page updated");
+  }
+
+  return (
+    <Card>
+      <p className="mb-4 text-sm text-muted-foreground">Edit every piece of text on the About us page.</p>
+      <div className="space-y-4">
+        {ABOUT_FIELDS.map((f) => (
+          <label key={f.key} className="block">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{f.label}</span>
+            {f.long ? (
+              <textarea
+                rows={6}
+                value={draft[f.key] ?? data?.[f.key] ?? ""}
+                onChange={(e) => setDraft((d) => ({ ...d, [f.key]: e.target.value }))}
+                className="mt-1 w-full rounded-2xl border border-border p-3 text-sm outline-none focus:border-brand-red"
+              />
+            ) : (
+              <input
+                value={draft[f.key] ?? data?.[f.key] ?? ""}
+                onChange={(e) => setDraft((d) => ({ ...d, [f.key]: e.target.value }))}
+                className="mt-1 w-full rounded-full border border-border px-4 py-2 text-sm outline-none focus:border-brand-red"
+              />
+            )}
+          </label>
+        ))}
+      </div>
+      <div className="mt-5">
+        <SaveButton onClick={() => void save()} busy={busy} />
+      </div>
     </Card>
   );
 }

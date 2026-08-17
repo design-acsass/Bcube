@@ -154,3 +154,33 @@ export const useHeroSlides = () => useContent<HeroSlide[]>("hero_slides", static
 export const useTestimonialGroups = () =>
   useContent<TestimonialGroup[]>("testimonial_groups", staticTestimonials);
 export const useReviews = () => useContent<Review[]>("reviews", staticReviews);
+
+/* ------------------------------------------------------------ about page -- */
+
+export type AboutContent = {
+  hero_heading: string;
+  hero_subheading: string;
+  about_heading: string;
+  about_body: string;
+  testimonials_heading: string;
+  who_heading: string;
+  who_body: string;
+};
+
+export const staticAbout: AboutContent = {
+  hero_heading: "Your vision, our craftsmanship",
+  hero_subheading: "personalized gifting made perfect.",
+  about_heading: "About us",
+  about_body:
+    "Bcube is a retail company that specializes in offering a diverse range of unique and captivating products with a “wow factor.” These items are designed to pique customers’ interest, stand out from the crowd, and create an unforgettable impression. By providing a constantly evolving inventory of innovative and eye-catching merchandise, Bcube aims to spark joy and excitement in every shopping experience.",
+  testimonials_heading: "What our customers love",
+  who_heading: "Who we are",
+  who_body:
+    "We are a team of young entrepreneurs having years of expertise in creating and selling the best customized smartphone accessories that suit your expectations, needs, and style. We have the motive to provide your devices a guaranteed protection without compromise.",
+};
+
+export const useAboutContent = () => {
+  const value = useContent<Partial<AboutContent>>("about_page", staticAbout);
+  return { ...staticAbout, ...(value ?? {}) };
+};
+
