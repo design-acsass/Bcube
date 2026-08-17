@@ -190,13 +190,15 @@ function ProductsTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("slug, name, category, mode, image_url, published, sort_order")
+        .select("slug, name, category, mode, image_url, published, sort_order, description")
         .order("sort_order");
       if (error) throw error;
       return data;
     },
   });
-  const [draft, setDraft] = useState<Record<string, { name?: string; image_url?: string; published?: boolean }>>({});
+  const [draft, setDraft] = useState<
+    Record<string, { name?: string; image_url?: string; published?: boolean; description?: string }>
+  >({});
   const [busy, setBusy] = useState(false);
 
   async function save() {
@@ -218,13 +220,13 @@ function ProductsTab() {
   return (
     <Card>
       <p className="mb-4 text-sm text-muted-foreground">
-        Rename products, swap their picture, or hide them from the shop.
+        Rename products, swap their picture, edit the description shown on the product page, or hide them from the shop.
       </p>
       <div className="space-y-4">
         {(data ?? []).map((p) => {
           const d = draft[p.slug] ?? {};
           return (
-            <div key={p.slug} className="grid gap-3 border-b border-border pb-4 last:border-0 sm:grid-cols-[90px_1fr_auto] sm:items-center">
+            <div key={p.slug} className="grid gap-3 border-b border-border pb-4 last:border-0 sm:grid-cols-[90px_1fr_auto] sm:items-start">
               <img src={d.image_url ?? p.image_url} alt="" className="h-16 w-20 rounded-lg bg-muted object-contain" />
               <div className="space-y-2">
                 <input
@@ -236,6 +238,13 @@ function ProductsTab() {
                   value={d.image_url ?? p.image_url}
                   onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], image_url: e.target.value } }))}
                   className="w-full rounded-full border border-border px-4 py-2 text-xs outline-none focus:border-brand-red"
+                />
+                <textarea
+                  rows={5}
+                  placeholder="Description shown on the product page. Start a line with “-” to make a bullet point."
+                  value={d.description ?? p.description ?? ""}
+                  onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], description: e.target.value } }))}
+                  className="w-full rounded-2xl border border-border p-3 text-xs outline-none focus:border-brand-red"
                 />
                 <p className="text-[11px] text-muted-foreground">
                   {p.category} · {p.mode === "wizard" ? "step-by-step designer" : p.mode === "bulk" ? "bulk quote" : "custom enquiry"}
@@ -253,6 +262,7 @@ function ProductsTab() {
           );
         })}
       </div>
+
       <div className="mt-5">
         <SaveButton onClick={() => void save()} busy={busy} />
       </div>
