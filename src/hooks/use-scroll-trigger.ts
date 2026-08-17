@@ -57,11 +57,15 @@ export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
 
     const onKeyDown = (e: KeyboardEvent) => {
       const scrollKeys = ["PageDown", "PageUp", "Space", "ArrowDown", "ArrowUp", "End", "Home"];
+      console.log("keydown", e.key, scrollKeys.includes(e.key));
       if (!scrollKeys.includes(e.key)) return;
       const now = Date.now();
-      if (now - lastKey < 400) return;
+      if (now - lastKey < 400) {
+        console.log("keydown too soon");
+        return;
+      }
       lastKey = now;
-      // Allow the native scroll to happen; we only count the scroll intent.
+      console.log("keydown counted", count + 1);
       increment();
     };
 
