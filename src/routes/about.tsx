@@ -2,20 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import logo from "@/assets/LOGO.png.asset.json";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Reveal } from "@/components/motion/Reveal";
-
-/** Static copy — swap for a CMS/API payload when a backend is wired up. */
-const sections = [
-  {
-    id: "about-us",
-    heading: "About us",
-    body: "Bcube is a retail company that specializes in offering a diverse range of unique and captivating products with a “wow factor.” These items are designed to pique customers’ interest, stand out from the crowd, and create an unforgettable impression. By providing a constantly evolving inventory of innovative and eye-catching merchandise, Bcube aims to spark joy and excitement in every shopping experience.",
-  },
-  {
-    id: "who-we-are",
-    heading: "Who we are",
-    body: "We are a team of young entrepreneurs having years of expertise in creating and selling the best customized smartphone accessories that suit your expectations, needs, and style. We have the motive to provide your devices a guaranteed protection without compromise.",
-  },
-];
+import { useAboutContent } from "@/lib/store";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -39,18 +26,22 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
-  const [aboutUs, whoWeAre] = sections;
+  /** Copy is editable by the shop owner in /admin -> About page. */
+  const about = useAboutContent();
+  const sections = about.sections ?? [];
   return (
     <>
-      <AboutHero />
-      <CopySection heading={aboutUs.heading} body={aboutUs.body} />
-      <Testimonials heading="What our customers love" />
-      <CopySection heading={whoWeAre.heading} body={whoWeAre.body} tone="yellow" />
+      <AboutHero heading={about.hero_heading} subheading={about.hero_subheading} />
+      {sections[0] && <CopySection heading={sections[0].heading} body={sections[0].body} />}
+      <Testimonials heading={about.testimonials_heading} />
+      {sections.slice(1).map((s, i) => (
+        <CopySection key={i} heading={s.heading} body={s.body} tone={i % 2 === 0 ? "yellow" : "plain"} />
+      ))}
     </>
   );
 }
 
-function AboutHero() {
+function AboutHero({ heading, subheading }: { heading: string; subheading: string }) {
   return (
     <section className="relative overflow-hidden bg-white">
       {/* Slow aurora mesh — keeps the white hero alive without distracting. */}
@@ -72,10 +63,10 @@ function AboutHero() {
           className="about-logo h-32 w-32 object-contain md:h-52 md:w-52"
         />
         <h1 className="about-line about-line-1 mt-8 font-display text-3xl italic text-brand-ink md:text-6xl">
-          Your vision, our craftsmanship
+          {heading}
         </h1>
         <p className="about-line about-line-2 mt-4 text-base text-brand-red md:text-2xl">
-          personalized gifting made perfect.
+          {subheading}
         </p>
         <span className="about-rule mt-8 block h-px w-40 bg-brand-red/40 md:w-64" />
       </div>
