@@ -175,7 +175,8 @@ function ProductPage() {
 
   /** Card artwork doubles as the preview image for non-configurable products.
       TODO(backend): let admins upload/replace both the card and preview image. */
-  const { image: catalogImage } = useProducts();
+  const { image: catalogImage, bySlug: catalogRow } = useProducts();
+
   const pricing = usePricing(product.slug);
   const productImage = catalogImage(product.slug) || imgBySlug[product.slug] || productImageFallback;
   const price = computePrice({
