@@ -254,7 +254,7 @@ function ProductPage() {
         </div>
       </section>
 
-      <ProductInfo name={product.name} />
+      <ProductInfo name={product.name} description={catalogRow(product.slug)?.description} />
       <Testimonials heading="Why customers love it" groupIds={[testimonialGroupFor(product.slug)]} />
       <CustomerStories />
       <ExploreMore currentSlug={product.slug} />
