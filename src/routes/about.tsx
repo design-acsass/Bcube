@@ -27,20 +27,21 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
-  const [aboutUs, whoWeAre] = sections;
+  const copy = useAboutContent();
   return (
     <>
-      <AboutHero />
-      <CopySection heading={aboutUs.heading} body={aboutUs.body} />
-      <Testimonials heading="What our customers love" />
-      <CopySection heading={whoWeAre.heading} body={whoWeAre.body} tone="yellow" />
+      <AboutHero heading={copy.hero_heading} subheading={copy.hero_subheading} />
+      <CopySection heading={copy.about_heading} body={copy.about_body} />
+      <Testimonials heading={copy.testimonials_heading} />
+      <CopySection heading={copy.who_heading} body={copy.who_body} tone="yellow" />
     </>
   );
 }
 
-function AboutHero() {
+function AboutHero({ heading, subheading }: { heading: string; subheading: string }) {
   return (
     <section className="relative overflow-hidden bg-white">
+
       {/* Slow aurora mesh — keeps the white hero alive without distracting. */}
       <div aria-hidden className="aurora">
         <span className="blob-1" />
