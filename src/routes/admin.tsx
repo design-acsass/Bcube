@@ -2,11 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Save, Image as ImageIcon, Package, IndianRupee, FileText, ShoppingBag, Mail, Info } from "lucide-react";
+import { Save, Image as ImageIcon, Package, IndianRupee, FileText, ShoppingBag, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatPrice } from "@/data/pricing";
-import { staticAbout, type AboutContent } from "@/lib/store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -28,7 +27,6 @@ const TABS = [
   { id: "products", label: "Products", Icon: Package },
   { id: "pricing", label: "Prices", Icon: IndianRupee },
   { id: "content", label: "Site text", Icon: FileText },
-  { id: "about", label: "About page", Icon: Info },
   { id: "orders", label: "Orders", Icon: ShoppingBag },
   { id: "enquiries", label: "Enquiries", Icon: Mail },
 ] as const;
@@ -82,7 +80,6 @@ function AdminPage() {
       {tab === "products" && <ProductsTab />}
       {tab === "pricing" && <PricingTab />}
       {tab === "content" && <ContentTab />}
-      {tab === "about" && <AboutTab />}
       {tab === "orders" && <OrdersTab />}
       {tab === "enquiries" && <EnquiriesTab />}
     </Shell>
@@ -193,15 +190,13 @@ function ProductsTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("slug, name, category, mode, image_url, published, sort_order, description")
+        .select("slug, name, category, mode, image_url, published, sort_order")
         .order("sort_order");
       if (error) throw error;
       return data;
     },
   });
-  const [draft, setDraft] = useState<
-    Record<string, { name?: string; image_url?: string; published?: boolean; description?: string }>
-  >({});
+  const [draft, setDraft] = useState<Record<string, { name?: string; image_url?: string; published?: boolean }>>({});
   const [busy, setBusy] = useState(false);
 
   async function save() {
@@ -223,7 +218,7 @@ function ProductsTab() {
   return (
     <Card>
       <p className="mb-4 text-sm text-muted-foreground">
-        Rename products, swap their picture, write the product-page description, or hide them from the shop.
+        Rename products, swap their picture, or hide them from the shop.
       </p>
       <div className="space-y-4">
         {(data ?? []).map((p) => {
@@ -241,13 +236,6 @@ function ProductsTab() {
                   value={d.image_url ?? p.image_url}
                   onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], image_url: e.target.value } }))}
                   className="w-full rounded-full border border-border px-4 py-2 text-xs outline-none focus:border-brand-red"
-                />
-                <textarea
-                  value={d.description ?? p.description ?? ""}
-                  onChange={(e) => setDraft((x) => ({ ...x, [p.slug]: { ...x[p.slug], description: e.target.value } }))}
-                  rows={5}
-                  placeholder={"Product description shown on the product page.\nStart a line with \"- \" to make a bullet point."}
-                  className="w-full rounded-2xl border border-border px-4 py-3 text-xs leading-relaxed outline-none focus:border-brand-red"
                 />
                 <p className="text-[11px] text-muted-foreground">
                   {p.category} · {p.mode === "wizard" ? "step-by-step designer" : p.mode === "bulk" ? "bulk quote" : "custom enquiry"}
@@ -440,100 +428,6 @@ function ContentTab() {
         className="mt-4 w-full rounded-2xl border border-border p-4 font-mono text-xs outline-none focus:border-brand-red"
       />
     </Card>
-  );
-}
-
-/* ------------------------------------------------------------- about page */
-
-function AboutTab() {
-  const qc = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ["admin", "about"],
-    queryFn: async (): Promise<AboutContent> => {
-      const { data, error } = await supabase.from("site_content").select("value").eq("key", "about_page").maybeSingle();
-      if (error) throw error;
-      return ((data?.value as AboutContent | null) ?? staticAbout);
-    },
-  });
-  const [draft, setDraft] = useState<AboutContent | null>(null);
-  const [busy, setBusy] = useState(false);
-  const value = draft ?? data ?? staticAbout;
-
-  const patch = (p: Partial<AboutContent>) => setDraft({ ...value, ...p });
-  const patchSection = (i: number, p: Partial<AboutContent["sections"][number]>) =>
-    patch({ sections: value.sections.map((s, k) => (k === i ? { ...s, ...p } : s)) });
-
-  async function save() {
-    setBusy(true);
-    const { error } = await supabase
-      .from("site_content")
-      .upsert({ key: "about_page", value: value as never }, { onConflict: "key" });
-    setBusy(false);
-    if (error) return toast.error("Could not save");
-    setDraft(null);
-    await qc.invalidateQueries();
-    toast.success("About page updated");
-  }
-
-  return (
-    <Card>
-      <p className="mb-4 text-sm text-muted-foreground">Edit every piece of text on the About us page.</p>
-      <div className="space-y-4">
-        <TextField label="Banner heading" value={value.hero_heading} onChange={(v) => patch({ hero_heading: v })} />
-        <TextField label="Banner sub-heading" value={value.hero_subheading} onChange={(v) => patch({ hero_subheading: v })} />
-        <TextField
-          label="Testimonials heading"
-          value={value.testimonials_heading}
-          onChange={(v) => patch({ testimonials_heading: v })}
-        />
-        {value.sections.map((s, i) => (
-          <div key={i} className="space-y-2 rounded-2xl border border-border p-4">
-            <TextField label={`Section ${i + 1} heading`} value={s.heading} onChange={(v) => patchSection(i, { heading: v })} />
-            <label className="block">
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Section {i + 1} text
-              </span>
-              <textarea
-                value={s.body}
-                rows={6}
-                onChange={(e) => patchSection(i, { body: e.target.value })}
-                className="mt-1 w-full rounded-2xl border border-border px-4 py-3 text-sm leading-relaxed outline-none focus:border-brand-red"
-              />
-            </label>
-            {value.sections.length > 1 && (
-              <button
-                onClick={() => patch({ sections: value.sections.filter((_, k) => k !== i) })}
-                className="text-xs font-semibold text-brand-red underline"
-              >
-                Remove this section
-              </button>
-            )}
-          </div>
-        ))}
-        <button
-          onClick={() => patch({ sections: [...value.sections, { heading: "New section", body: "" }] })}
-          className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-brand-ink hover:bg-muted"
-        >
-          + Add section
-        </button>
-      </div>
-      <div className="mt-5">
-        <SaveButton onClick={() => void save()} busy={busy} />
-      </div>
-    </Card>
-  );
-}
-
-function TextField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  return (
-    <label className="block">
-      <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</span>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-full border border-border px-4 py-2 text-sm outline-none focus:border-brand-red"
-      />
-    </label>
   );
 }
 
