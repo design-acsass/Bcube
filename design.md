@@ -55,6 +55,9 @@ Yellow full-width band, rotated red display heading on the left, 2-column form o
 ### Ad banners
 Full-width artwork images (`Advertisment_Card`, `Advertisement_card_2`, `Advertisement_card_3`).
 
+### Enquire Now modal
+Auto-triggered popup on the homepage after the user's third scroll action (wheel, swipe, or scroll key). Appears only once per session via `sessionStorage`. Yellow card (`bg-brand-yellow`, `rounded-[25px]`) with the same enquiry fields as the Enquire band: Name, Email, Phone, Message, agree checkbox, and a red Send CTA.
+
 ### Testimonials
 Full-width yellow cards, 6 autoplaying muted looping videos in a grid, copy column on the right.
 

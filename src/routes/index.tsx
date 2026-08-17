@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CustomerStories } from "@/components/sections/CustomerStories";
+import { EnquireModal } from "@/components/sections/EnquireModal";
 import { useMedia, useProducts, useHeroSlides } from "@/lib/store";
 import { submitEnquiry } from "@/lib/enquiries";
 import banner1 from "@/assets/banner-1.png.asset.json";
@@ -58,6 +59,7 @@ function HomePage() {
       <MakeSpecial />
       <PerfectGifts />
       <CustomerStories />
+      <EnquireModal />
     </>
   );
 }
