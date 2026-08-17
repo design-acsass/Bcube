@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "enquire-modal-shown";
 
@@ -8,6 +8,11 @@ const STORAGE_KEY = "enquire-modal-shown";
  */
 export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
   const [shouldOpen, setShouldOpen] = useState(false);
+  const onOpenRef = useRef(onOpen);
+
+  useEffect(() => {
+    onOpenRef.current = onOpen;
+  }, [onOpen]);
 
   useEffect(() => {
     // SSR-safe: only run in the browser.
@@ -26,7 +31,7 @@ export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
       if (count >= threshold) {
         sessionStorage.setItem(STORAGE_KEY, "1");
         setShouldOpen(true);
-        onOpen?.();
+        onOpenRef.current?.();
         removeListeners();
       }
     };
@@ -73,7 +78,7 @@ export function useScrollTrigger(threshold = 3, onOpen?: () => void) {
     window.addEventListener("keydown", onKeyDown);
 
     return removeListeners;
-  }, [threshold, onOpen]);
+  }, [threshold]); // Intentionally stable: does not re-run on every render when `onOpen` is a new arrow fn.
 
   return { shouldOpen, setShouldOpen };
 }
