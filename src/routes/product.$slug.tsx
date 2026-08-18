@@ -52,6 +52,8 @@ type Orientation = "portrait" | "landscape";
 type State = {
   step: number;
   imageUrl?: string;
+  /** Storage path in the `product-uploads` bucket (persist with the order). */
+  imagePath?: string;
   frame: FrameMode;
   shape: Shape;
   frameColor: string;
