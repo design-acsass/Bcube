@@ -15,6 +15,7 @@ import { flyToCart } from "@/lib/cart-fly";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { computePrice, formatPrice } from "@/data/pricing";
 import { useProducts, usePricing } from "@/lib/store";
+import { uploadProductPhoto } from "@/lib/uploads";
 import roomImg from "@/assets/room-preview.jpg";
 
 export const Route = createFileRoute("/product/$slug")({
