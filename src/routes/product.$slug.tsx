@@ -549,12 +549,27 @@ function ContinueButton({ onClick, disabled, price }: { onClick: () => void; dis
 
 // --- Steps ---
 
-function StepUpload({ state, dispatch, price }: { state: State; dispatch: React.Dispatch<Action>; price: number }) {
+function StepUpload({ state, dispatch, price, slug }: { state: State; dispatch: React.Dispatch<Action>; price: number; slug: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const accept = (f?: File) => {
-    if (!f) return;
+  const [uploading, setUploading] = useState(false);
+  const accept = async (f?: File) => {
+    if (!f || uploading) return;
     if (f.size > 50 * 1024 * 1024) { toast.error("Max 50MB"); return; }
-    dispatch({ type: "patch", patch: { imageUrl: URL.createObjectURL(f), imgScale: 1, imgX: 0, imgY: 0 } });
+    // Instant local preview, then swap in the stored file from the bucket.
+    const localUrl = URL.createObjectURL(f);
+    dispatch({ type: "patch", patch: { imageUrl: localUrl, imagePath: undefined, imgScale: 1, imgX: 0, imgY: 0 } });
+    setUploading(true);
+    try {
+      const { path, url } = await uploadProductPhoto(f, slug);
+      dispatch({ type: "patch", patch: { imageUrl: url, imagePath: path } });
+      URL.revokeObjectURL(localUrl);
+    } catch {
+      toast.error("Upload failed. Please try again.");
+      dispatch({ type: "patch", patch: { imageUrl: undefined, imagePath: undefined } });
+      URL.revokeObjectURL(localUrl);
+    } finally {
+      setUploading(false);
+    }
   };
   return (
     <div className="flex h-full flex-col">
