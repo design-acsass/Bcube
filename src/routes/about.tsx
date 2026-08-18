@@ -1,8 +1,11 @@
+import { assetUrl } from "@/data/media-map";
 import { createFileRoute } from "@tanstack/react-router";
-import logo from "@/assets/LOGO.png.asset.json";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Reveal } from "@/components/motion/Reveal";
 import { useAboutContent } from "@/lib/store";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const logo = { url: assetUrl("LOGO.png") };
 
 
 export const Route = createFileRoute("/about")({

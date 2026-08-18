@@ -1,3 +1,4 @@
+import { assetUrl } from "@/data/media-map";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ShoppingCart, LogIn, Home, Package, Info, Phone, LogOut, Shield } from "lucide-react";
@@ -8,8 +9,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { CART_ARRIVE_EVENT } from "@/lib/cart-fly";
-import logo from "@/assets/LOGO.png.asset.json";
 import { useMedia } from "@/lib/store";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const logo = { url: assetUrl("LOGO.png") };
 
 const navItems = [
   { to: "/", label: "B Cube", Icon: Home },

@@ -1,12 +1,15 @@
+import { assetUrl } from "@/data/media-map";
 import { createFileRoute } from "@tanstack/react-router";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
-import logo from "@/assets/LOGO.png.asset.json";
-import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
 import { submitEnquiry } from "@/lib/enquiries";
 import { useMedia } from "@/lib/store";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const logo = { url: assetUrl("LOGO.png") };
+const ad2 = { url: assetUrl("Advertisement_card_2.png") };
 
 export const Route = createFileRoute("/contact")({
   head: () => ({

@@ -1,27 +1,30 @@
-import v3 from "@/assets/3.mp4.asset.json";
-import v4 from "@/assets/4.mp4.asset.json";
-import v10 from "@/assets/10.mp4.asset.json";
-import v15 from "@/assets/15.mp4.asset.json";
-import v16 from "@/assets/16.mp4.asset.json";
-import v20 from "@/assets/20.mp4.asset.json";
-import v24 from "@/assets/24.mp4.asset.json";
-import v14 from "@/assets/14.mp4.asset.json";
-import v23 from "@/assets/23.mp4.asset.json";
-import v32 from "@/assets/32.mp4.asset.json";
-import v34 from "@/assets/34.mp4.asset.json";
-import v5 from "@/assets/5.mp4.asset.json";
-import v29 from "@/assets/29.mp4.asset.json";
-import v30 from "@/assets/30.mp4.asset.json";
-import v7 from "@/assets/7.mp4.asset.json";
-import v9 from "@/assets/9.mp4.asset.json";
-import v28 from "@/assets/28.mp4.asset.json";
-import v6 from "@/assets/6.mp4.asset.json";
-import v8 from "@/assets/8.mp4.asset.json";
-import v12 from "@/assets/12.mp4.asset.json";
-import v33 from "@/assets/33.mp4.asset.json";
-import v35 from "@/assets/35.mp4.asset.json";
-import v31 from "@/assets/31.mp4.asset.json";
-import v22 from "@/assets/22.mp4.asset.json";
+import { assetUrl } from "@/data/media-map";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const v3 = { url: assetUrl("3.mp4") };
+const v4 = { url: assetUrl("4.mp4") };
+const v10 = { url: assetUrl("10.mp4") };
+const v15 = { url: assetUrl("15.mp4") };
+const v16 = { url: assetUrl("16.mp4") };
+const v20 = { url: assetUrl("20.mp4") };
+const v24 = { url: assetUrl("24.mp4") };
+const v14 = { url: assetUrl("14.mp4") };
+const v23 = { url: assetUrl("23.mp4") };
+const v32 = { url: assetUrl("32.mp4") };
+const v34 = { url: assetUrl("34.mp4") };
+const v5 = { url: assetUrl("5.mp4") };
+const v29 = { url: assetUrl("29.mp4") };
+const v30 = { url: assetUrl("30.mp4") };
+const v7 = { url: assetUrl("7.mp4") };
+const v9 = { url: assetUrl("9.mp4") };
+const v28 = { url: assetUrl("28.mp4") };
+const v6 = { url: assetUrl("6.mp4") };
+const v8 = { url: assetUrl("8.mp4") };
+const v12 = { url: assetUrl("12.mp4") };
+const v33 = { url: assetUrl("33.mp4") };
+const v35 = { url: assetUrl("35.mp4") };
+const v31 = { url: assetUrl("31.mp4") };
+const v22 = { url: assetUrl("22.mp4") };
 
 export type TestimonialGroup = {
   /** Stable id — handy when this content moves to an API. */

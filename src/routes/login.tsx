@@ -1,11 +1,14 @@
+import { assetUrl } from "@/data/media-map";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { ArrowRight, Mail, Lock, User } from "lucide-react";
-import logo from "@/assets/LOGO.png.asset.json";
 import { MagneticButton } from "@/components/motion/MagneticButton";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const logo = { url: assetUrl("LOGO.png") };
 
 export const Route = createFileRoute("/login")({
   head: () => ({

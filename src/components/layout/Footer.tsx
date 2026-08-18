@@ -1,7 +1,10 @@
+import { assetUrl } from "@/data/media-map";
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Youtube, MessageCircle } from "lucide-react";
 import { NewsletterStrip } from "./NewsletterStrip";
-import logo from "@/assets/LOGO.png.asset.json";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const logo = { url: assetUrl("LOGO.png") };
 
 export function Footer() {
   return (
