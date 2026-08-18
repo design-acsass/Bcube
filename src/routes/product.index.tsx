@@ -1,20 +1,23 @@
+import { assetUrl } from "@/data/media-map";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 import { customAcrylic, corporateGifting, returnGifts } from "@/data/products";
 import { ProductTile } from "@/components/product/ProductTile";
-import cat1 from "@/assets/Cat1.png.asset.json";
-import cat2 from "@/assets/Cat2.png.asset.json";
-import cat3 from "@/assets/Cat3.png.asset.json";
-import catBg1 from "@/assets/Category_Bg1.png.asset.json";
-import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
-import ad1 from "@/assets/Advertisment_Card.png.asset.json";
-import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
-import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
-import gReturn from "@/assets/Return_Gifts.png.asset.json";
 import { imgBySlug } from "@/data/product-images";
 import { useProducts } from "@/lib/store";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const cat1 = { url: assetUrl("Cat1.png") };
+const cat2 = { url: assetUrl("Cat2.png") };
+const cat3 = { url: assetUrl("Cat3.png") };
+const catBg1 = { url: assetUrl("Category_Bg1.png") };
+const catBg2 = { url: assetUrl("Category_Bg2b.png") };
+const ad1 = { url: assetUrl("Advertisment_Card.png") };
+const ad2 = { url: assetUrl("Advertisement_card_2.png") };
+const gCorporate = { url: assetUrl("Corporate_gifting.png") };
+const gReturn = { url: assetUrl("Return_Gifts.png") };
 
 type Tab = "custom" | "corporate" | "return";
 

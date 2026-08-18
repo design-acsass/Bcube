@@ -1,3 +1,4 @@
+import { assetUrl } from "@/data/media-map";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -11,27 +12,29 @@ import { CustomerStories } from "@/components/sections/CustomerStories";
 import { EnquireModal } from "@/components/sections/EnquireModal";
 import { useMedia, useProducts, useHeroSlides } from "@/lib/store";
 import { submitEnquiry } from "@/lib/enquiries";
-import banner1 from "@/assets/banner-1.png.asset.json";
-import banner2 from "@/assets/banner-2.png.asset.json";
-import banner3 from "@/assets/banner-3.png.asset.json";
-import cat1 from "@/assets/Cat1.png.asset.json";
-import cat2 from "@/assets/Cat2.png.asset.json";
-import cat3 from "@/assets/Cat3.png.asset.json";
-import catBg1 from "@/assets/Category_Bg1.png.asset.json";
-import catBg2 from "@/assets/Category_Bg2b.png.asset.json";
-import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
-import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
-import pPillow from "@/assets/Custom_Pillows.png.asset.json";
-import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
-import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
-import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
-import ad1 from "@/assets/Advertisment_Card.png.asset.json";
-import ad2 from "@/assets/Advertisement_card_2.png.asset.json";
-import ad3 from "@/assets/Advertisement_card_3.png.asset.json";
-import gCorporate from "@/assets/Corporate_gifting.png.asset.json";
-import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
 
-import gReturn from "@/assets/Return_Gifts.png.asset.json";
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const banner1 = { url: assetUrl("banner-1.png") };
+const banner2 = { url: assetUrl("banner-2.png") };
+const banner3 = { url: assetUrl("banner-3.png") };
+const cat1 = { url: assetUrl("Cat1.png") };
+const cat2 = { url: assetUrl("Cat2.png") };
+const cat3 = { url: assetUrl("Cat3.png") };
+const catBg1 = { url: assetUrl("Category_Bg1.png") };
+const catBg2 = { url: assetUrl("Category_Bg2b.png") };
+const pPremium = { url: assetUrl("Premium_Acrylic_Photos.png") };
+const pFramed = { url: assetUrl("Framed_Acrylic_Photos.png") };
+const pPillow = { url: assetUrl("Custom_Pillows.png") };
+const pMagnet = { url: assetUrl("Fridge_magnets.png") };
+const pNamePlate = { url: assetUrl("Custom_name_plates.png") };
+const pKeychain = { url: assetUrl("Custom_Keychains.png") };
+const ad1 = { url: assetUrl("Advertisment_Card.png") };
+const ad2 = { url: assetUrl("Advertisement_card_2.png") };
+const ad3 = { url: assetUrl("Advertisement_card_3.png") };
+const gCorporate = { url: assetUrl("Corporate_gifting.png") };
+const gAcrylic = { url: assetUrl("Custom_acrylic_phots.png") };
+const gReturn = { url: assetUrl("Return_Gifts.png") };
+
 
 
 export const Route = createFileRoute("/")({

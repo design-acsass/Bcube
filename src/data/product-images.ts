@@ -1,31 +1,34 @@
-import pPremium from "@/assets/Premium_Acrylic_Photos.png.asset.json";
-import pFramed from "@/assets/Framed_Acrylic_Photos.png.asset.json";
-import pPillow from "@/assets/Custom_Pillows.png.asset.json";
-import pMagnet from "@/assets/Fridge_magnets.png.asset.json";
-import pNamePlate from "@/assets/Custom_name_plates.png.asset.json";
-import pKeychain from "@/assets/Custom_Keychains.png.asset.json";
-import pCutout from "@/assets/Acrylic_Cutout_Decor.png.asset.json";
-import pDesk from "@/assets/Acrylic_Desk_Photos.png.asset.json";
-import pMonogram from "@/assets/Acrylic_Monogram.png.asset.json";
-import pCap from "@/assets/Cap.png.asset.json";
-import pBottle from "@/assets/Cup_Waterbottle.png.asset.json";
-import pHoodie from "@/assets/Hoodies.png.asset.json";
-import pJute from "@/assets/Jute_Bag.png.asset.json";
-import pLaptop from "@/assets/Laptop_Bags.png.asset.json";
-import pLuggage from "@/assets/Luggage_tags.png.asset.json";
-import pContainer from "@/assets/Lunch_Container.png.asset.json";
-import pPenDrive from "@/assets/Pen_Drives.png.asset.json";
-import pAlbum from "@/assets/Photo_Albums.png.asset.json";
-import pCandle from "@/assets/Premium_Candle.png.asset.json";
-import pSweetBox from "@/assets/Sweet_Box.png.asset.json";
-import pTshirt from "@/assets/T_Shirt.png.asset.json";
-import pTote from "@/assets/Tote_Bag.png.asset.json";
-import pTravel from "@/assets/Travel_Bag.png.asset.json";
-import pUmbrella from "@/assets/Umbrella.png.asset.json";
-import pClock from "@/assets/Wall_Clocks.png.asset.json";
-import pPerfume from "@/assets/Perfume.png.asset.json";
-import pPlant from "@/assets/Potted_Plant.png.asset.json";
-import gAcrylic from "@/assets/Custom_acrylic_phots.png.asset.json";
+import { assetUrl } from "@/data/media-map";
+
+/* Site media — resolved from Supabase Storage when VITE_MEDIA_BASE_URL is set. */
+const pPremium = { url: assetUrl("Premium_Acrylic_Photos.png") };
+const pFramed = { url: assetUrl("Framed_Acrylic_Photos.png") };
+const pPillow = { url: assetUrl("Custom_Pillows.png") };
+const pMagnet = { url: assetUrl("Fridge_magnets.png") };
+const pNamePlate = { url: assetUrl("Custom_name_plates.png") };
+const pKeychain = { url: assetUrl("Custom_Keychains.png") };
+const pCutout = { url: assetUrl("Acrylic_Cutout_Decor.png") };
+const pDesk = { url: assetUrl("Acrylic_Desk_Photos.png") };
+const pMonogram = { url: assetUrl("Acrylic_Monogram.png") };
+const pCap = { url: assetUrl("Cap.png") };
+const pBottle = { url: assetUrl("Cup_Waterbottle.png") };
+const pHoodie = { url: assetUrl("Hoodies.png") };
+const pJute = { url: assetUrl("Jute_Bag.png") };
+const pLaptop = { url: assetUrl("Laptop_Bags.png") };
+const pLuggage = { url: assetUrl("Luggage_tags.png") };
+const pContainer = { url: assetUrl("Lunch_Container.png") };
+const pPenDrive = { url: assetUrl("Pen_Drives.png") };
+const pAlbum = { url: assetUrl("Photo_Albums.png") };
+const pCandle = { url: assetUrl("Premium_Candle.png") };
+const pSweetBox = { url: assetUrl("Sweet_Box.png") };
+const pTshirt = { url: assetUrl("T_Shirt.png") };
+const pTote = { url: assetUrl("Tote_Bag.png") };
+const pTravel = { url: assetUrl("Travel_Bag.png") };
+const pUmbrella = { url: assetUrl("Umbrella.png") };
+const pClock = { url: assetUrl("Wall_Clocks.png") };
+const pPerfume = { url: assetUrl("Perfume.png") };
+const pPlant = { url: assetUrl("Potted_Plant.png") };
+const gAcrylic = { url: assetUrl("Custom_acrylic_phots.png") };
 
 /** Product artwork by slug — swap for API-provided URLs at handover. */
 export const imgBySlug: Record<string, string> = {
