@@ -592,8 +592,9 @@ function StepUpload({ state, dispatch, price, slug }: { state: State; dispatch: 
         <span className="inline-block rounded-full border border-border bg-white px-6 py-2 text-sm">Browse File</span>
         <input ref={inputRef} type="file" accept="image/png,image/jpeg" onChange={(e: ChangeEvent<HTMLInputElement>) => accept(e.target.files?.[0])} className="hidden" />
       </div>
-      {state.imageUrl && <p className="mt-3 text-center text-xs text-emerald-600">Image uploaded ✓</p>}
-      <ContinueButton price={price} disabled={!state.imageUrl} onClick={() => dispatch({ type: "next" })} />
+      {uploading && <p className="mt-3 text-center text-xs text-muted-foreground">Uploading…</p>}
+      {!uploading && state.imagePath && <p className="mt-3 text-center text-xs text-emerald-600">Image uploaded ✓</p>}
+      <ContinueButton price={price} disabled={!state.imagePath || uploading} onClick={() => dispatch({ type: "next" })} />
     </div>
   );
 }
