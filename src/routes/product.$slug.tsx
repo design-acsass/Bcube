@@ -246,7 +246,7 @@ function ProductPage() {
                 <EnquiryCard mode={mode} name={product.name} onBuy={onBuy} />
               ) : (
                 <>
-                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} price={price} />}
+                  {state.step === 1 && <StepUpload state={state} dispatch={dispatch} price={price} slug={product.slug} />}
                   {state.step === 2 && <StepFrame state={state} dispatch={dispatch} price={price} />}
                   {state.step === 3 && <StepLayout state={state} dispatch={dispatch} price={price} />}
                   {state.step === 4 && <StepSize state={state} dispatch={dispatch} price={price} />}
